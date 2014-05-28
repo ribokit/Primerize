@@ -173,7 +173,7 @@ for i = 1:size(construct_names,1);
     fprintf([name(2:end),'\n']);
 end;
 
-fprintf('\n'); toc; fprint('\n');
+fprintf('\n'); toc; fprintf('\n');
 
 
 function mut_char = sequence_mutate_table(wt_char, mut_flag)
