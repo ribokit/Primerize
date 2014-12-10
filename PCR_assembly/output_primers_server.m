@@ -1,4 +1,4 @@
-function primer_sequences = output_primers( primers_all, sequence, tag )
+function primer_sequences = output_primers_server( primers_all, sequence, tag )
 
 if ~exist( 'tag','var' ); tag = 'primer'; end;
 OUTPUT_STAGGER = 1;
@@ -9,7 +9,7 @@ OUTPUT_STAGGER = 1;
 num_primers = size( primers_all,2);
 
 blank_line = '';
-COLWIDTH = 140;
+COLWIDTH = 138;
 for k = 1:max(length(sequence),COLWIDTH)
     blank_line(k) = ' ';
 end;
@@ -80,15 +80,21 @@ for j = 1:num_primers
     
     if (last_bp_pos > 1);
         Tm = calc_Tm( overlap_seq, 0.2e-6,0.1,0.0015);
-        Tm_text = num2str( Tm, '%6.1f' );
+        Tm_text = num2str( Tm, '{%2.1f}' );
         bp_line( last_bp_pos + [1:length(Tm_text)+1] ) = [' ',Tm_text];
     end;
-    
     bp_lines{j} = bp_line;
     seq_lines{j} = seq_line;
     %fprintf( '%s\n%s\n', bp_line, seq_line );
     seq_line_prev = seq_line;
 end;
+
+fprintf('#\n');
+fprintf('primers\t\tlength\tsequences\n');
+for j = 1:length( primer_sequences )
+    fprintf( '%s-%d\t%d\t%s\n', tag, j, length(primer_sequences{j}), primer_sequences{j} );
+end;
+fprintf('#\n');
 
 if ~OUTPUT_STAGGER;
     fprintf('%s',sequence);
@@ -102,21 +108,28 @@ else
         start_pos = COLWIDTH*(n-1) + 1;
         end_pos   = min( COLWIDTH*(n-1) + COLWIDTH, length(sequence));
         out_line = sequence(start_pos:end_pos);
-        fprintf( '%s\n', out_line);
+        fprintf( '~%s\n', out_line);
         for k = 1:length(seq_lines)
-            bp_line  = bp_lines{k} (start_pos:end_pos );
+            if ~isempty(strrep(bp_lines{k}(end_pos:end),' ','')) && isempty(strfind(strrep(bp_lines{k}(end_pos:end),' ',''),'|')) && isempty(strrep(bp_lines{k}(1:start_pos-1),' ',''));
+                bp_line = deblank(bp_lines{k} (start_pos:end ));
+            elseif isempty(strfind(bp_lines{k}(start_pos:end_pos),'|'));
+                bp_line = repmat(' ',1,end_pos-start_pos+1);
+            else
+                bp_line = bp_lines{k} (start_pos:end_pos );
+            end;                
             seq_line = seq_lines{k}(start_pos:end_pos );
             if ~isempty(strrep(bp_line,' ','')) || ~isempty(strrep(seq_line,' ',''));
-                fprintf( '%s\n%s\n',bp_line, seq_line );
+                fprintf( '$%s\n', bp_line);
+                if mod(k,2) == 0;
+                    fprintf('!');
+                else
+                    fprintf('^');
+                end;
+                fprintf('%s\n', seq_line);
             end;
         end;
-        fprintf( '\n%s\n\n', complement(out_line));
+        fprintf( '$%s\n=%s\n\n\n', repmat(' ', 1, end_pos - start_pos + 1), complement(out_line));
     end;
 end;
 
-fprintf('#\n');
-fprintf('primers\t\tlength\tsequences\n');
-for j = 1:length( primer_sequences )
-    fprintf( '%s-%d\t%d\t%s\n', tag, j, length(primer_sequences{j}), primer_sequences{j} );
-end;
 

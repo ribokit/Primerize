@@ -1,7 +1,7 @@
 #######################################################
 NA_Thermo, the Das lab in-house primer design tools
 
-(c) R. Das 2008-2013
+(c) R. Das 2008-2014
 #######################################################
 
 Quick README by R. Das on Apr. 18, 2011. Send questions and comments to rhiju [at] stanford.edu
