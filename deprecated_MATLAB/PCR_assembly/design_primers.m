@@ -199,7 +199,6 @@ while (n <= num_primer_sets_max);
     end;
     
     min_score = min( min ( scores_final(:,:,n) ) );
-    
     if (min_score < best_min_score || n == 1 );
         best_min_score = min_score;
         best_n = n;
@@ -362,7 +361,6 @@ if ~is_server;
                 fprintf( '\n' );
             end;
         else
-            
             endpos =  primers(1,m);
             if ( num_match_reverse( endpos ) > CUTOFF );
                 problem_primers = find_primers_affected( primers, best_match_reverse( endpos ) );
@@ -392,7 +390,6 @@ else
                 fprintf( '\n' );
             end;
         else
-            
             endpos =  primers(1,m);
             if ( num_match_reverse( endpos ) > CUTOFF );
                 problem_primers = find_primers_affected( primers, best_match_reverse( endpos ) );
@@ -407,7 +404,6 @@ else
     
     primer_sequences = output_primers_server( primers, sequence, tag );
 end;
-
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

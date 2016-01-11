@@ -61,7 +61,6 @@ for i = 1:(2*N-1)
 
 end
 
-% compare both neighbors
 match_max(1)   = match_to_next(1);
 best_match(1) = 2;
 misprime_score_max(1) = misprime_score_to_next(1);
