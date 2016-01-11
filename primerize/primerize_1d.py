@@ -106,7 +106,7 @@ class Primer_Assembly(object):
         return output + '\n'
 
 
-@jit(nopython=True, nogil=True, cache=True)
+@jit(nopython=True, nogil=True, cache=False)
 def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, min_Tm, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated):
     # could be zero, meaning user does not know.
     num_primer_sets = int(NUM_PRIMERS / 2)
