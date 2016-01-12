@@ -1,5 +1,5 @@
+import argparse
 import math
-import sys
 import time
 
 from util import *
@@ -86,7 +86,7 @@ class Mutate_Map(object):
 
                         self.construct_names[n] = well_name
                         self.plates[p][plate_num].set_well(well_tag, well_name, mut_primer)
-                        
+
         print '\033[92mSUCCESS\033[0m: Primerize 2D mutate_primers() finished.\n'
 
 
@@ -140,19 +140,39 @@ class Plate_96Well(object):
 
 def design_primers_2D(sequence, primer_set=[], offset=0, which_muts=[], which_libs=[1], prefix='lib'):
     plate = Mutate_Map(sequence, primer_set, offset, which_muts, which_libs, prefix)
-    plate.mutate_primers()
-    if plate.is_success:
-        print plate.print_constructs()
-        plate.output_constructs()
-        plate.output_spreadsheet()
+    if plate.is_success: plate.mutate_primers()
+    return plate
 
 
 def main():
-    if len(sys.argv) > 1:
-        for i in xrange(1):
-            t0 = time.time()
-            design_primers_2D(sys.argv[1])
-            print 'Time elapsed: %.1f s.' % (time.time() - t0)
+    parser = argparse.ArgumentParser(description='\033[92mPrimerize 2D Mutate-and-Map Plate Design\033[0m', epilog='\033[94mby Siqi Tian, 2016\033[0m', add_help=False)
+    parser.add_argument('sequence', type=str, help='DNA Template Sequence')
+    parser.add_argument('-p', metavar='prefix', type=str, help='Display Name of Construct', dest='prefix', default='lib')
+    group1 = parser.add_argument_group('advanced options')
+    group1.add_argument('-s', metavar='PRIMER_SET', type=str, help='Set of Primers for Assembly (Default runs Primerize 1D)', dest='primer_set', action='append')
+    group1.add_argument('-o', metavar='OFFSET', type=int, help='Sequence Numbering Offset', dest='offset', default=0)
+    group1.add_argument('-l', metavar='MUT_START', type=int, help='First Position of Mutagenesis (Inclusive)', dest='mut_start', default=None)
+    group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive)', dest='mut_end', default=None)
+    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
+    group2 = parser.add_argument_group('commandline options')
+    group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
+    group2.add_argument('-d', '--discard', action='store_true', dest='is_discard', help='Suppress Results Saving to File')
+    group2.add_argument('-h', '--help', action='help', help='Show this Help Message')
+    args = parser.parse_args()
+
+    t0 = time.time()
+    if args.primer_set == None: args.primer_set = []
+    if args.which_libs == None: args.which_libs = [1]
+    which_muts = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+
+    plate = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
+    if plate.is_success:
+        if not args.is_quiet:
+            print plate.print_constructs()
+        if not args.is_discard:
+            plate.output_constructs()
+            plate.output_spreadsheet()
+    print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 
 if __name__ == "__main__":

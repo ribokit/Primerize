@@ -138,6 +138,15 @@ def num_to_coord(num):
     return '%s%d' % (row, col)
 
 
+def get_mut_range(mut_start, mut_end, offset, sequence):
+    if (not mut_start) or (mut_start == None): mut_start = 1 - offset
+    mut_start = max(mut_start, 1 - offset)
+    if (not mut_end) or (mut_end == None): mut_end = len(sequence) - offset
+    mut_end = min(mut_end, len(sequence) - offset)
+
+    return range(mut_start, mut_end + 1)
+
+
 def get_primer_index(primer_set, sequence):
     N_primers = len(primer_set)
     primers = numpy.zeros((3, N_primers))

@@ -1,7 +1,7 @@
+import argparse
 import math
 from numba import jit
 import numpy
-import sys
 import time
 import traceback
 
@@ -322,22 +322,34 @@ def find_primers_affected(primers, pos):
     return primer_list
 
 
-def design_primers_1D(sequence, MIN_TM=60, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, prefix='primer'):
+def design_primers_1D(sequence, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, prefix='primer'):
     assembly = Primer_Assembly(sequence, MIN_TM, NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, prefix)
     assembly.design_primers()
-    if assembly.is_success:
+    return assembly
+
+
+def main():
+    parser = argparse.ArgumentParser(description='\033[92mPrimerize 1D PCR Assembly Design\033[0m', epilog='\033[94mby Siqi Tian, 2016\033[0m', add_help=False)
+    parser.add_argument('sequence', type=str, help='DNA Template Sequence')
+    parser.add_argument('-p', metavar='prefix', type=str, help='Display Name of Construct', dest='prefix', default='primer')
+    group1 = parser.add_argument_group('advanced options')
+    group1.add_argument('-t', metavar='MIN_TM', type=float, help='Minimum Annealing Temperature', dest='MIN_TM', default=60.0)
+    group1.add_argument('-n', metavar='NUM_PRIMERS', type=int, help='Number of Primers', dest='NUM_PRIMERS', default=0)
+    group1.add_argument('-l', metavar='MIN_LENGTH', type=int, help='Minimum Length of each Primer', dest='MIN_LENGTH', default=15)
+    group1.add_argument('-u', metavar='MAX_LENGTH', type=int, help='Maximum Length of each Primer', dest='MAX_LENGTH', default=60)
+    group2 = parser.add_argument_group('commandline options')
+    group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
+    group2.add_argument('-h', '--help', action='help', help='Show this Help Message')
+    args = parser.parse_args()
+
+    t0 = time.time()
+    assembly = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
+    if assembly.is_success and (not args.is_quiet):
         print assembly.print_misprime()
         print assembly.print_assembly()
         print assembly.print_primers()
         print assembly.print_warnings()
-
-
-def main():
-    if len(sys.argv) > 1:
-        for i in xrange(1):
-            t0 = time.time()
-            design_primers_1D(sys.argv[1])
-            print 'Time elapsed: %.1f s.' % (time.time() - t0)
+    print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 
 if __name__ == "__main__":
