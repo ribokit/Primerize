@@ -1,4 +1,5 @@
 import math
+import numpy
 import os
 import xlwt
 
@@ -148,14 +149,14 @@ def get_primer_index(primer_set, sequence):
         else:
             i = sequence.find(primer)
         if i == -1:
-            return ([], True)
+            return ([], False)
         else:
             start_pos = i
             end_pos = i + len(primer_set[n]) - 1
             seq_dir = math.copysign(1, 0.5 - n % 2)
             primers[:, n] = [start_pos, end_pos, seq_dir]
 
-    return (primers.astype(int), False)
+    return (primers.astype(int), True)
 
 
 def get_mutation(nt, lib):

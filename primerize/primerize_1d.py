@@ -23,7 +23,7 @@ class Primer_Assembly(object):
         self.COL_SIZE = 142
         self.WARN_CUTOFF = 3
 
-        self.is_solution = True
+        self.is_success = True
         self.primers = []
         self.warnings = []
         self.assembly = {}
@@ -39,10 +39,10 @@ class Primer_Assembly(object):
 
             print 'Doing dynamics programming calculation ...'
             (self.scores_start, self.scores_stop, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j, self.MAX_SCORE, self.N_primers) = dynamic_programming(self.NUM_PRIMERS, self.MIN_LENGTH, self.MAX_LENGTH, self.MIN_TM, self.N_BP, self.misprime_score_forward, self.misprime_score_reverse, self.Tm_precalculated)
-            print 'Doing backtracking ...\n'
-            (self.is_solution, self.primers, self.primer_set, self.warnings) = back_tracking(self.N_BP, self.sequence, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j, self.N_primers, self.MAX_SCORE, self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.WARN_CUTOFF)
+            print 'Doing backtracking ...'
+            (self.is_success, self.primers, self.primer_set, self.warnings) = back_tracking(self.N_BP, self.sequence, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j, self.N_primers, self.MAX_SCORE, self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.WARN_CUTOFF)
 
-            if self.is_solution:
+            if self.is_success:
                 allow_forward_line = list(' ' * self.N_BP)
                 allow_reverse_line = list(' ' * self.N_BP)
                 for i in xrange(self.N_BP):
@@ -51,17 +51,20 @@ class Primer_Assembly(object):
 
                 self.misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
                 self.assembly = draw_assembly(self.sequence, self.primers, self.name, self.COL_SIZE)
+                print '\033[92mSUCCESS\033[0m: Primerize 1D design_primers() finished.\n'
+            else:
+                print '\033[31mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
 
             del self.Tm_precalculated
             del self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.misprime_score_forward, self.misprime_score_reverse
             del self.scores_start, self.scores_stop, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j
         except:
-            self.is_solution = False
+            self.is_success = False
             print traceback.format_exc()
 
 
     def print_misprime(self):
-        if self.is_solution:
+        if self.is_success:
             output = ''
             for i in xrange(int(math.floor(self.N_BP / self.COL_SIZE)) + 1):
                 output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self.misprime_score[0][i * self.COL_SIZE:(i + 1) * self.COL_SIZE], self.sequence[i * self.COL_SIZE:(i + 1) * self.COL_SIZE], self.misprime_score[1][i * self.COL_SIZE:(i + 1) * self.COL_SIZE])
@@ -69,7 +72,7 @@ class Primer_Assembly(object):
 
 
     def print_assembly(self):
-        if self.is_solution:
+        if self.is_success:
             output = '\n'
             x = 0
             for i in xrange(len(self.assembly['print_lines'])):
@@ -91,7 +94,7 @@ class Primer_Assembly(object):
 
 
     def print_primers(self):
-        if self.is_solution:
+        if self.is_success:
             output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
             for i in xrange(len(self.primer_set)):
                 name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
@@ -100,7 +103,7 @@ class Primer_Assembly(object):
 
 
     def print_warnings(self):
-        if self.is_solution:
+        if self.is_success:
             output = ''
             for i in xrange(len(self.warnings)):
                 warning = self.warnings[i]
@@ -271,12 +274,12 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
     q = numpy.argmin(y)
     p = idx[q]
 
-    is_solution = True
+    is_success = True
     primer_set = []
     misprime_warn = []
     primers = numpy.zeros((3, 2 * N_primers))
     if (min_scroe == MAX_SCORE):
-        is_solution = False
+        is_success = False
     else:
         primers[:, 2 * N_primers - 1] = [q, N_BP - 1, -1]
         for m in xrange(N_primers - 1, 0, -1):
@@ -308,7 +311,7 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
                     problem_primer = find_primers_affected(primers, best_match_forward[0, end_pos])
                     misprime_warn.append((i + 1, num_match_forward[0, end_pos] + 1, best_match_forward[0, end_pos] + 1, problem_primer))
 
-    return (is_solution, primers, primer_set, misprime_warn)
+    return (is_success, primers, primer_set, misprime_warn)
 
 
 def find_primers_affected(primers, pos):
@@ -322,13 +325,11 @@ def find_primers_affected(primers, pos):
 def design_primers_1D(sequence, MIN_TM=60, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, prefix='primer'):
     assembly = Primer_Assembly(sequence, MIN_TM, NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, prefix)
     assembly.design_primers()
-    if assembly.is_solution:
+    if assembly.is_success:
         print assembly.print_misprime()
         print assembly.print_assembly()
         print assembly.print_primers()
         print assembly.print_warnings()
-    else:
-        print '** No solution found!'
 
 
 def main():

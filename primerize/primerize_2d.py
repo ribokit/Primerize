@@ -8,35 +8,39 @@ from primerize_1d import *
 
 class Mutate_Map(object):
     def __init__(self, sequence, primer_set=[], offset=0, which_muts=[], which_libs=[1], prefix='lib'):
+        self.name = prefix
         self.sequence = RNA2DNA(sequence)
+        self.N_BP = len(self.sequence)
 
         self.primer_set = primer_set
         self.offset = offset
         self.which_muts = which_muts
         self.which_libs = which_libs
-        self.name = prefix
+        self.is_success = True
 
-        self.N_BP = len(self.sequence)
         for i in xrange(len(self.primer_set)):
             self.primer_set[i] = RNA2DNA(self.primer_set[i])
         if not self.primer_set:
             assembly = Primer_Assembly(sequence)
-            self.primer_set = assembly.primer_set
+            assembly.design_primers()
+            if assembly.is_success:
+                self.primer_set = assembly.primer_set
+            else:
+                self.is_success = False
         if not self.which_muts:
             self.which_muts = range(1 - self.offset, self.N_BP + 1 - self.offset)
         self.construct_names = list(' ' * (len(self.which_muts) + 1))
 
-        self.is_error = False
         self.N_primers = len(self.primer_set)
         self.N_constructs = 1 + len(self.which_muts)
         self.N_plates = int(math.floor((self.N_constructs - 1) / 96.0) + 1)
 
-        self.mutate_primers()
-
 
     def mutate_primers(self):
-        (self.primers, self.is_error) = get_primer_index(self.primer_set, self.sequence)
-        if self.is_error: return
+        (self.primers, self.is_success) = get_primer_index(self.primer_set, self.sequence)
+        if not self.is_success: 
+            print '\033[31mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
+            return
         self.plates = [[Plate_96Well() for i in xrange(self.N_plates)] for i in xrange(self.N_primers)]
         print 'Filling out sequences ...'
 
@@ -82,21 +86,27 @@ class Mutate_Map(object):
 
                         self.construct_names[n] = well_name
                         self.plates[p][plate_num].set_well(well_tag, well_name, mut_primer)
+                        
+        print '\033[92mSUCCESS\033[0m: Primerize 2D mutate_primers() finished.\n'
 
 
     def print_constructs(self):
-        output = ''
-        for i in xrange(len(self.plates[0])):
-            for j in xrange(len(self.plates)):
-                output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                output += self.plates[j][i].print_constructs(self.primer_set[j])
-        return output
+        if self.is_success:
+            output = ''
+            for i in xrange(len(self.plates[0])):
+                for j in xrange(len(self.plates)):
+                    output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
+                    output += self.plates[j][i].print_constructs(self.primer_set[j])
+            return output
 
     def output_constructs(self, path='./'):
-        save_construct_key(self.construct_names, self.name, path)
+        if self.is_success:
+            save_construct_key(self.construct_names, self.name, path)
 
     def output_spreadsheet(self, path='./'):
-        save_plates_excel(self.plates, self.N_plates, self.N_primers, self.name, path)
+        if self.is_success:
+            save_plates_excel(self.plates, self.N_plates, self.N_primers, self.name, path)
+
 
 
 class Plate_96Well(object):
@@ -130,9 +140,8 @@ class Plate_96Well(object):
 
 def design_primers_2D(sequence, primer_set=[], offset=0, which_muts=[], which_libs=[1], prefix='lib'):
     plate = Mutate_Map(sequence, primer_set, offset, which_muts, which_libs, prefix)
-    if plate.is_error:
-        print '** Invalid input primer_set!'
-    else:
+    plate.mutate_primers()
+    if plate.is_success:
         print plate.print_constructs()
         plate.output_constructs()
         plate.output_spreadsheet()
