@@ -1,7 +1,8 @@
+import math
 import os
 import xlwt
 
-from thermo import *
+from thermo import calc_Tm
 
 
 def DNA2RNA(sequence):
@@ -117,7 +118,7 @@ def draw_assembly(sequence, primers, name, COL_SIZE=142):
         print_lines.append(('=', complement(out_line)))
         print_lines.append(('', '\n'))
 
-    return (bp_lines, seq_lines, print_lines, Tms)
+    return {'bp_lines': bp_lines, 'seq_lines': seq_lines, 'print_lines': print_lines, 'Tm_overlaps': Tms}
 
 
 def coord_to_num(coord):
