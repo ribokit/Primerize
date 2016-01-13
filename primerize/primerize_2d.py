@@ -1,6 +1,7 @@
 import argparse
 import math
 import matplotlib
+matplotlib.use('SVG')
 import matplotlib.pyplot as pyplot
 import time
 
