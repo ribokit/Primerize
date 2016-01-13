@@ -15,14 +15,40 @@ class Design_1D(object):
         (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
 
     def __repr__(self):
-        pass
+        return '\033[94m%s\033[0m\n\033[95msequence\033[0m = \'%s\'\n\033[95mname\033[0m = \'%s\'\n\033[95mis_success\033[0m = \033[41m%s\033[0m\n\033[95mprimer_set\033[0m = %s\n\033[95mparams\033[0m = %s\n\033[95mdata\033[0m = {\n    \033[92m\'primers\'\033[0m: %s, \n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: {\n        \033[93m\'seq_lines\'\033[0m: list(string * %d), \n        \033[93m\'bp_lines\'\033[0m: list(string * %d), \n        \033[93m\'print_lines\'\033[0m: list(tuple * %d)\n        \033[93m\'Tm_overlaps\'\033[0m: %s\n    }, \n    \033[92m\'warnings\'\033[0m: %s\n' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['primers']), repr(self._data['misprime_score']), len(self._data['assembly']['seq_lines']), len(self._data['assembly']['bp_lines']), len(self._data['assembly']['print_lines']), repr(self._data['assembly']['Tm_overlaps']), repr(self._data['warnings']))
 
     def __str__(self):
         return self.echo('misprime') + '\n' + self.echo('assembly') + '\n' + self.echo('primer') + '\n\n' + self.echo('warning') + '\n'
 
 
     def get(self, keyword):
-        pass
+        keyword = keyword.lower()
+        if keyword == 'sequence':
+            return self.sequence
+        elif keyword == 'name':
+            return self.name
+        elif keyword == 'success':
+            return self.is_success
+        elif keyword == 'primer':
+            return self.primer_set
+        elif keyword == 'warning_num':
+            return self._data['warnings']
+        elif keyword == 'primer_num':
+            return self._data['primers']
+        elif keyword == 'misprime':
+            return self._data['misprime_score']
+        elif keyword == 'min_tm':
+            return self._params['MIN_TM']
+        elif keyword == 'num_primers':
+            return self._params['NUM_PRIMERS']
+        elif keyword == 'min_length':
+            return self._params['MIN_LENGTH']
+        elif keyword == 'max_length':
+            return self._params['MAX_LENGTH']
+        elif keyword == 'n_bp' or keyword == 'length':
+            return self._params['N_BP']      
+        else:
+            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)
 
 
     def save(self, keyword):
@@ -31,6 +57,7 @@ class Design_1D(object):
 
     def echo(self, keyword):
         if self.is_success:
+            keyword = keyword.lower()
             if keyword == 'misprime':
                 output = ''
                 for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
@@ -81,7 +108,8 @@ class Design_1D(object):
 
 
 class Primerize_1D(object):
-    def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3):
+    def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3, prefix='primer'):
+        self.prefix = prefix
         self.MIN_TM = MIN_TM
         self.NUM_PRIMERS = NUM_PRIMERS
         self.MIN_LENGTH = MIN_LENGTH
@@ -90,21 +118,58 @@ class Primerize_1D(object):
         self.WARN_CUTOFF = WARN_CUTOFF
 
     def __repr__(self):
-        pass
+        return repr(self.__dict__)
 
     def __str__(self):
-        pass
+        return repr(self.__dict__)
 
 
     def set(self, keyword, value):
-        pass
+        keyword = keyword.lower()
+        if keyword == 'min_tm' and (isinstance(value, float) or isinstance(value, int)) and value > 0:
+            self.MIN_TM = float(value)
+        elif keyword == 'num_primers' and isinstance(value, int) and value >= 0 and (not value % 2):
+            self.NUM_PRIMERS = value
+        elif keyword == 'min_length' and isinstance(value, int) and value >= 0:
+            self.MIN_LENGTH = value
+            if self.MIN_LENGTH > self.MAX_LENGTH:
+                print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
+        elif keyword == 'max_length' and isinstance(value, int) and value > 0:
+            self.MAX_LENGTH = value
+            if self.MIN_LENGTH > self.MAX_LENGTH:
+                print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
+        elif keyword == 'col_size' and isinstance(value, int) and value > 0:
+            self.COL_SIZE = value
+        elif keyword == 'warn_cutoff' and isinstance(value, int) and value >= 0:
+            self.WARN_CUTOFF = value
+        elif keyword == 'prefix' and isinstance(value, str):
+            self.prefix = value
+        else:
+            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m or illegal value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (keyword, value, self.__class__)
 
 
     def get(self, keyword):
-        pass
+        keyword = keyword.lower()
+        if keyword == 'min_tm':
+            return self.MIN_TM
+        elif keyword == 'num_primers':
+            return self.NUM_PRIMERS
+        elif keyword == 'min_length':
+            return self.MIN_LENGTH
+        elif keyword == 'max_length':
+            return self.MAX_LENGTH
+        elif keyword == 'col_size':
+            return self.COL_SIZE
+        elif keyword == 'warn_cutoff':
+            return self.WARN_CUTOFF
+        elif keyword == 'prefix':
+            return self.prefix
+        else:
+            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)
 
 
     def reset(self):
+        self.prefix = 'primer'
         self.MIN_TM = 60.0
         self.NUM_PRIMERS = 0
         self.MIN_LENGTH = 15
@@ -113,16 +178,16 @@ class Primerize_1D(object):
         self.WARN_CUTOFF = 3
 
 
-    def design(self, sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix='primer'):
-        name = prefix
-        sequence = RNA2DNA(sequence)
-        N_BP = len(sequence)
-
+    def design(self, sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix=None):
         if MIN_TM is None: MIN_TM = self.MIN_TM
         if NUM_PRIMERS is None: NUM_PRIMERS = self.NUM_PRIMERS
         if MIN_LENGTH is None: MIN_LENGTH = self.MIN_LENGTH
         if MAX_LENGTH is None: MAX_LENGTH = self.MAX_LENGTH
-        if prefix is None: prefix = 'primer'
+        if prefix is None: prefix = self.prefix
+
+        name = prefix
+        sequence = RNA2DNA(sequence)
+        N_BP = len(sequence)
 
         is_success = True
         primers = []
@@ -394,11 +459,9 @@ def main():
 
     t0 = time.time()
     res = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
-    if res.is_success and (not res.is_quiet):
-        print res.print_misprime()
-        print res.print_assembly()
-        print res.print_primers()
-        print res.print_warnings()
+    if res.is_success:
+        if not args.is_quiet:
+            print str(res)
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 
