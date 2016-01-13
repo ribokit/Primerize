@@ -140,11 +140,11 @@ def num_to_coord(num):
 
 def get_mut_range(mut_start, mut_end, offset, sequence):
     if (not mut_start) or (mut_start == None): mut_start = 1 - offset
-    mut_start = max(mut_start, 1 - offset)
+    mut_start = min(max(mut_start, 1 - offset), len(sequence) - offset)
     if (not mut_end) or (mut_end == None): mut_end = len(sequence) - offset
-    mut_end = min(mut_end, len(sequence) - offset)
-
-    return range(mut_start, mut_end + 1)
+    mut_end = max(min(mut_end, len(sequence) - offset), 1 - offset)
+    which_muts = range(mut_start, mut_end + 1)
+    return (which_muts, mut_start, mut_end)
 
 
 def get_primer_index(primer_set, sequence):

@@ -41,6 +41,11 @@ class Mutate_Map(object):
         if not self.is_success: 
             print '\033[31mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
             return
+        if len(self.primer_set) % 2:
+            print '\033[31mFAIL\033[0m: \033[41mprimers\033[0m must come in pairs.\n'
+            self.is_success = False
+            return
+
         self.plates = [[Plate_96Well() for i in xrange(self.N_plates)] for i in xrange(self.N_primers)]
         print 'Filling out sequences ...'
 
@@ -149,11 +154,11 @@ def main():
     parser.add_argument('sequence', type=str, help='DNA Template Sequence')
     parser.add_argument('-p', metavar='prefix', type=str, help='Display Name of Construct', dest='prefix', default='lib')
     group1 = parser.add_argument_group('advanced options')
-    group1.add_argument('-s', metavar='PRIMER_SET', type=str, help='Set of Primers for Assembly (Default runs Primerize 1D)', dest='primer_set', action='append')
+    group1.add_argument('-s', metavar='PRIMER_SET', type=str, nargs='+', help='Set of Primers for Assembly (Default runs Primerize 1D)', dest='primer_set', action='append')
     group1.add_argument('-o', metavar='OFFSET', type=int, help='Sequence Numbering Offset', dest='offset', default=0)
     group1.add_argument('-l', metavar='MUT_START', type=int, help='First Position of Mutagenesis (Inclusive)', dest='mut_start', default=None)
     group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive)', dest='mut_end', default=None)
-    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
+    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), nargs='+', help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
     group2.add_argument('-d', '--discard', action='store_true', dest='is_discard', help='Suppress Results Saving to File')
@@ -161,9 +166,12 @@ def main():
     args = parser.parse_args()
 
     t0 = time.time()
-    if args.primer_set == None: args.primer_set = []
+    if args.primer_set == None:
+        args.primer_set = []
+    else:
+        args.primer_set = args.primer_set[0]
     if args.which_libs == None: args.which_libs = [1]
-    which_muts = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+    (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
 
     plate = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
     if plate.is_success:
