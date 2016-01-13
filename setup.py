@@ -1,11 +1,12 @@
 from setuptools import setup
 
+from primerize.__init__ import __version__
 
 setup(
     name='primerize',
     description='PCR Assembly Primer Design',
     keywords='primerize PCR assembly misprime',
-    version='1.0.0',
+    version=__version__,
 
     author='Siqi Tian, Rhiju Das',
     author_email='rhiju@stanford.edu',
