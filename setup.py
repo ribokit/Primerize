@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from primerize.__init__ import __version__
 
@@ -14,7 +14,7 @@ setup(
     url='https://github.com/DasLab/Primerize/',
     license='https://primerize.stanford.edu/license',
 
-    packages=['primerize'],
+    packages=find_packages(),
     install_requires=[
         'numpy >= 1.10.1',
         'numba >= 0.22.1',
@@ -22,6 +22,7 @@ setup(
         'xlwt >= 1.0.0'
     ],
     classifiers=(
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',

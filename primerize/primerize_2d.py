@@ -1,5 +1,7 @@
 import argparse
 import math
+import matplotlib
+import matplotlib.pyplot as pyplot
 import time
 
 from util import *
@@ -112,6 +114,10 @@ class Mutate_Map(object):
         if self.is_success:
             save_plates_excel(self.plates, self.N_plates, self.N_primers, self.name, path)
 
+    def output_layout(self, path='./'):
+        if self.is_success:
+            save_plate_layout(self.plates, self.N_plates, self.N_primers, self.name, path)
+
 
 
 class Plate_96Well(object):
@@ -142,6 +148,45 @@ class Plate_96Well(object):
     def print_constructs(self, ref_primer=''):
         return print_primer_plate(self, ref_primer)
 
+    def print_layout(self, file_name='./', title=''):
+        fig = pyplot.figure()
+        pyplot.axes().set_aspect('equal')
+        pyplot.axis([0, 13.875, 0, 9.375])
+        pyplot.xticks([x * 1.125 + 0.75 for x in range(12)], [str(x + 1) for x in range(12)], fontsize=14)
+        pyplot.yticks([y * 1.125 + 0.75 for y in range(8)], list('ABCDEFGH'), fontsize=14)
+        pyplot.suptitle(title, fontsize=16, fontweight='bold')
+        ax = pyplot.gca()
+        for edge in ('bottom', 'top', 'left', 'right'):
+            ax.spines[edge].set_color('w')
+        ax.invert_yaxis()
+        ax.xaxis.set_ticks_position('top')
+        for tic in ax.xaxis.get_major_ticks():
+            tic.tick1On = tic.tick2On = False
+        for tic in ax.yaxis.get_major_ticks():
+            tic.tick1On = tic.tick2On = False
+
+        (x_green, x_violet, x_gray, y_green, y_violet, y_gray) = ([], [], [], [], [], [])
+        for i in xrange(8):
+            for j in xrange(12):
+                num = i + j * 8 + 1
+                if num_to_coord(num) in self.coords:
+                    if 'WT' in self.data[num][0]:
+                        x_green.append(j * 1.125 + 0.75)
+                        y_green.append(i * 1.125 + 0.75)
+                    else:
+                        x_violet.append(j * 1.125 + 0.75)
+                        y_violet.append(i * 1.125 + 0.75)
+                else:
+                    x_gray.append(j * 1.125 + 0.75)
+                    y_gray.append(i * 1.125 + 0.75)
+        pyplot.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
+        pyplot.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
+        pyplot.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
+
+        matplotlib.rcParams['svg.fonttype'] = 'none'
+        pyplot.savefig(file_name, orientation='landscape', format='svg')
+
+
 
 def design_primers_2D(sequence, primer_set=[], offset=0, which_muts=[], which_libs=[1], prefix='lib'):
     plate = Mutate_Map(sequence, primer_set, offset, which_muts, which_libs, prefix)
@@ -161,7 +206,8 @@ def main():
     group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), nargs='+', help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
-    group2.add_argument('-d', '--discard', action='store_true', dest='is_discard', help='Suppress Results Saving to File')
+    group2.add_argument('-e', '--no_excel', action='store_true', dest='is_excel', help='Suppress Results Saving to Excel File(s)')
+    group2.add_argument('-i', '--no_image', action='store_true', dest='is_image', help='Suppress Layout Saving to Image File(s)')
     group2.add_argument('-h', '--help', action='help', help='Show this Help Message')
     args = parser.parse_args()
 
@@ -177,9 +223,12 @@ def main():
     if plate.is_success:
         if not args.is_quiet:
             print plate.print_constructs()
-        if not args.is_discard:
+        if not args.is_excel:
             plate.output_constructs()
             plate.output_spreadsheet()
+        if not args.is_image:
+            plate.output_layout()
+
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 

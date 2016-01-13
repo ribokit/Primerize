@@ -203,6 +203,19 @@ def print_primer_plate(plate, ref_primer):
     return string
 
 
+def save_plate_layout(plates, N_plates, N_primers, prefix, path):
+    for k in xrange(N_plates):
+        for p in xrange(N_primers):
+            primer_sequences = plates[p][k]
+            num_primers_on_plate = primer_sequences.get_count()
+
+            if num_primers_on_plate:
+                file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (prefix, k + 1, p + 1))
+                print 'Creating plate image: \033[94m%s\033[0m.' % file_name
+                title = '%s_plate_%d_primer_%d' % (prefix, k + 1, p + 1)
+                primer_sequences.print_layout(file_name, title)
+
+
 def save_construct_key(keys, prefix, path):
     f = open(os.path.join(path, '%s_keys.txt' % prefix), 'w')
     print 'Creating keys file ...'
