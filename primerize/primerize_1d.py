@@ -2,6 +2,7 @@ import argparse
 import math
 from numba import jit
 import numpy
+import os
 import time
 import traceback
 
@@ -51,11 +52,33 @@ class Design_1D(object):
             print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)
 
 
-    def save(self, keyword):
-        pass
+    def save(self, path='./', name=None):
+        if name is None: name = self.name
+        f = open(os.path.join(path, '%s.txt' % name), 'w')
+
+        f.write('Primerize Result\n\nINPUT\n=====\n%s\n' % self.sequence)
+        f.write('#\nMIN_TM: %.1f\n' % self._params['MIN_TM'])
+        if not self._params['NUM_PRIMERS']:
+            f.write('NUM_PRIMERS: auto (unspecified)')
+        else:
+            f.write('NUM_PRIMERS: %d' % self._params['NUM_PRIMERS'])
+        f.write('\nMAX_LENGTH: %d\nMIN_LENGTH: %d\n' % (self._params['MAX_LENGTH'], self._params['MIN_LENGTH']))
+
+        f.write('\n\nOUTPUT\n======\n')
+        lines = str(self).replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
+        f.write(lines)
+        f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
+        for i in xrange(len(self.primer_set)):
+            if i % 2:
+                suffix = 'R'
+            else:
+                suffix = 'F'
+            f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
+        f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
+        f.close()
 
 
-    def echo(self, keyword):
+    def echo(self, keyword=''):
         if self.is_success:
             keyword = keyword.lower()
             if keyword == 'misprime':
@@ -99,6 +122,9 @@ class Design_1D(object):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
                     output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
                 return output
+
+            elif not keyword:
+                return str(self)
  
             else:
                 print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (keyword, self.__class__)
@@ -454,6 +480,7 @@ def main():
     group1.add_argument('-u', metavar='MAX_LENGTH', type=int, help='Maximum Length of each Primer', dest='MAX_LENGTH', default=60)
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
+    group2.add_argument('-f', '--file', action='store_true', dest='is_file', help='Write Results to Text File')
     group2.add_argument('-h', '--help', action='help', help='Show this Help Message')
     args = parser.parse_args()
 
@@ -462,6 +489,8 @@ def main():
     if res.is_success:
         if not args.is_quiet:
             print str(res)
+        if args.is_file:
+            res.save()
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 
