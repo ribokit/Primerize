@@ -10,107 +10,157 @@ from thermo import *
 from util import *
 
 
-class Primer_Assembly(object):
-    def __init__(self, sequence, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, prefix='primer'):
-        self.name = prefix
-        self.sequence = RNA2DNA(sequence)
-        self.N_BP = len(self.sequence)
+class Design_1D(object):
+    def __init__(self, sequence, name, is_success, primer_set, params, data):
+        (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
 
+    def __repr__(self):
+        pass
+
+    def __str__(self):
+        return self.echo('misprime') + '\n' + self.echo('assembly') + '\n' + self.echo('primer') + '\n\n' + self.echo('warning') + '\n'
+
+
+    def get(self, keyword):
+        pass
+
+
+    def save(self, keyword):
+        pass
+
+
+    def echo(self, keyword):
+        if self.is_success:
+            if keyword == 'misprime':
+                output = ''
+                for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
+                    output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self._data['misprime_score'][0][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self.sequence[i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self._data['misprime_score'][1][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']])
+                return output[:-1]
+ 
+            elif keyword == 'assembly':
+                output = ''
+                x = 0
+                for i in xrange(len(self._data['assembly']['print_lines'])):
+                    (flag, string) = self._data['assembly']['print_lines'][i]
+                    if (flag == '$' and 'xx' in string):
+                        Tm = '%2.1f' % self._data['assembly']['Tm_overlaps'][x]
+                        output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
+                        x += 1
+                    elif (flag == '^' or flag == '!'):
+                        num = string.replace(' ', '').replace('A', '').replace('G', '').replace('C', '').replace('T', '').replace('-', '').replace('>', '').replace('<', '')
+                        output += string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
+                    elif (flag == '~'):
+                        output += '\033[92m%s\033[0m' % string + '\n'
+                    elif (flag == '='):
+                        output += '\033[96m%s\033[0m' % string + '\n'
+                    else:
+                        output += string + '\n'
+                return output[:-1]
+ 
+            elif keyword == 'warning':
+                output = ''
+                for i in xrange(len(self._data['warnings'])):
+                    warning = self._data['warnings'][i]
+                    p_1 = '\033[100m%d\033[0m%s' % (warning[0], primer_suffix(warning[0] - 1))
+                    p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, primer_suffix(x - 1)) for x in warning[3])
+                    output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
+                return output[:-1]
+ 
+            elif keyword == 'primer':
+                output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
+                for i in xrange(len(self.primer_set)):
+                    name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
+                    output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
+                return output
+ 
+            else:
+                print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (keyword, self.__class__)
+        else:
+            print '\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)
+
+
+
+class Primerize_1D(object):
+    def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3):
         self.MIN_TM = MIN_TM
         self.NUM_PRIMERS = NUM_PRIMERS
         self.MIN_LENGTH = MIN_LENGTH
         self.MAX_LENGTH = MAX_LENGTH
+        self.COL_SIZE = COL_SIZE
+        self.WARN_CUTOFF = WARN_CUTOFF
+
+    def __repr__(self):
+        pass
+
+    def __str__(self):
+        pass
+
+
+    def set(self, keyword, value):
+        pass
+
+
+    def get(self, keyword):
+        pass
+
+
+    def reset(self):
+        self.MIN_TM = 60.0
+        self.NUM_PRIMERS = 0
+        self.MIN_LENGTH = 15
+        self.MAX_LENGTH = 60
         self.COL_SIZE = 142
         self.WARN_CUTOFF = 3
 
-        self.is_success = True
-        self.primers = []
-        self.warnings = []
-        self.assembly = {}
-        self.misprime_score = ['', '']
 
+    def design(self, sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix='primer'):
+        name = prefix
+        sequence = RNA2DNA(sequence)
+        N_BP = len(sequence)
 
-    def design_primers(self):
+        if MIN_TM is None: MIN_TM = self.MIN_TM
+        if NUM_PRIMERS is None: NUM_PRIMERS = self.NUM_PRIMERS
+        if MIN_LENGTH is None: MIN_LENGTH = self.MIN_LENGTH
+        if MAX_LENGTH is None: MAX_LENGTH = self.MAX_LENGTH
+        if prefix is None: prefix = 'primer'
+
+        is_success = True
+        primers = []
+        warnings = []
+        assembly = {}
+        misprime_score = ['', '']
+
         try:
             print 'Precalculataing Tm matrix ...'
-            self.Tm_precalculated = precalculate_Tm(self.sequence)
+            Tm_precalculated = precalculate_Tm(sequence)
             print 'Precalculataing misprime score ...'
-            (self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.misprime_score_forward, self.misprime_score_reverse) = check_misprime(self.sequence)
+            (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = check_misprime(sequence)
 
             print 'Doing dynamics programming calculation ...'
-            (self.scores_start, self.scores_stop, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j, self.MAX_SCORE, self.N_primers) = dynamic_programming(self.NUM_PRIMERS, self.MIN_LENGTH, self.MAX_LENGTH, self.MIN_TM, self.N_BP, self.misprime_score_forward, self.misprime_score_reverse, self.Tm_precalculated)
+            (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers) = dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated)
             print 'Doing backtracking ...'
-            (self.is_success, self.primers, self.primer_set, self.warnings) = back_tracking(self.N_BP, self.sequence, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j, self.N_primers, self.MAX_SCORE, self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.WARN_CUTOFF)
+            (is_success, primers, primer_set, warnings) = back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, self.WARN_CUTOFF)
 
-            if self.is_success:
-                allow_forward_line = list(' ' * self.N_BP)
-                allow_reverse_line = list(' ' * self.N_BP)
-                for i in xrange(self.N_BP):
-                    allow_forward_line[i] = str(int(min(self.num_match_forward[0, i] + 1, 9)))
-                    allow_reverse_line[i] = str(int(min(self.num_match_reverse[0, i] + 1, 9)))
+            if is_success:
+                allow_forward_line = list(' ' * N_BP)
+                allow_reverse_line = list(' ' * N_BP)
+                for i in xrange(N_BP):
+                    allow_forward_line[i] = str(int(min(num_match_forward[0, i] + 1, 9)))
+                    allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
-                self.misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
-                self.assembly = draw_assembly(self.sequence, self.primers, self.name, self.COL_SIZE)
+                misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
+                assembly = draw_assembly(sequence, primers, name, self.COL_SIZE)
                 print '\033[92mSUCCESS\033[0m: Primerize 1D design_primers() finished.\n'
             else:
                 print '\033[31mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
-
-            del self.Tm_precalculated
-            del self.num_match_forward, self.num_match_reverse, self.best_match_forward, self.best_match_reverse, self.misprime_score_forward, self.misprime_score_reverse
-            del self.scores_start, self.scores_stop, self.scores_final, self.choice_start_p, self.choice_start_q, self.choice_stop_i, self.choice_stop_j
         except:
-            self.is_success = False
+            is_success = False
             print traceback.format_exc()
 
+        params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
+        data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings, 'primers': primers}
+        return Design_1D(sequence, name, is_success, primer_set, params, data)
 
-    def print_misprime(self):
-        if self.is_success:
-            output = ''
-            for i in xrange(int(math.floor(self.N_BP / self.COL_SIZE)) + 1):
-                output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self.misprime_score[0][i * self.COL_SIZE:(i + 1) * self.COL_SIZE], self.sequence[i * self.COL_SIZE:(i + 1) * self.COL_SIZE], self.misprime_score[1][i * self.COL_SIZE:(i + 1) * self.COL_SIZE])
-            return output[:-1]
-
-
-    def print_assembly(self):
-        if self.is_success:
-            output = '\n'
-            x = 0
-            for i in xrange(len(self.assembly['print_lines'])):
-                (flag, string) = self.assembly['print_lines'][i]
-                if (flag == '$' and 'xx' in string):
-                    Tm = '%2.1f' % self.assembly['Tm_overlaps'][x]
-                    output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
-                    x += 1
-                elif (flag == '^' or flag == '!'):
-                    num = string.replace(' ', '').replace('A', '').replace('G', '').replace('C', '').replace('T', '').replace('-', '').replace('>', '').replace('<', '')
-                    output += string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
-                elif (flag == '~'):
-                    output += '\033[92m%s\033[0m' % string + '\n'
-                elif (flag == '='):
-                    output += '\033[96m%s\033[0m' % string + '\n'
-                else:
-                    output += string + '\n'
-            return output
-
-
-    def print_primers(self):
-        if self.is_success:
-            output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
-            for i in xrange(len(self.primer_set)):
-                name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
-                output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
-            return output + '\n'
-
-
-    def print_warnings(self):
-        if self.is_success:
-            output = ''
-            for i in xrange(len(self.warnings)):
-                warning = self.warnings[i]
-                p_1 = '\033[100m%d\033[0m%s' % (warning[0], primer_suffix(warning[0] - 1))
-                p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, primer_suffix(x - 1)) for x in warning[3])
-                output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
-            return output + '\n'
 
 
 
@@ -322,10 +372,10 @@ def find_primers_affected(primers, pos):
     return primer_list
 
 
-def design_primers_1D(sequence, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, prefix='primer'):
-    assembly = Primer_Assembly(sequence, MIN_TM, NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, prefix)
-    assembly.design_primers()
-    return assembly
+def design_primers_1D(sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix=None):
+    prm = Primerize_1D()
+    res = prm.design(sequence, MIN_TM, NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, prefix)
+    return res
 
 
 def main():
@@ -343,12 +393,12 @@ def main():
     args = parser.parse_args()
 
     t0 = time.time()
-    assembly = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
-    if assembly.is_success and (not args.is_quiet):
-        print assembly.print_misprime()
-        print assembly.print_assembly()
-        print assembly.print_primers()
-        print assembly.print_warnings()
+    res = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
+    if res.is_success and (not res.is_quiet):
+        print res.print_misprime()
+        print res.print_assembly()
+        print res.print_primers()
+        print res.print_warnings()
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
 
