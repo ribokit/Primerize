@@ -6,6 +6,39 @@ import xlwt
 from thermo import calc_Tm
 
 
+class Assembly(object):
+    def __init__(self, sequence, name, primers, bp_lines, seq_lines, print_lines, Tm_overlaps):
+        (self.sequence, self.name, self.primers, self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = (sequence, name, primers, bp_lines, seq_lines, print_lines, Tm_overlaps)
+
+    def __repr__(self):
+        return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: list(string * %d), \n    \033[93m\'bp_lines\'\033[0m: list(string * %d), \n    \033[93m\'print_lines\'\033[0m: list(tuple * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
+
+    def __str__(self):
+        return self.echo()
+
+
+    def echo(self):
+        output = ''
+        x = 0
+        for i in xrange(len(self.print_lines)):
+            (flag, string) = self.print_lines[i]
+            if (flag == '$' and 'xx' in string):
+                Tm = '%2.1f' % self.Tm_overlaps[x]
+                output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
+                x += 1
+            elif (flag == '^' or flag == '!'):
+                num = string.replace(' ', '').replace('A', '').replace('G', '').replace('C', '').replace('T', '').replace('-', '').replace('>', '').replace('<', '')
+                output += string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
+            elif (flag == '~'):
+                output += '\033[92m%s\033[0m' % string + '\n'
+            elif (flag == '='):
+                output += '\033[96m%s\033[0m' % string + '\n'
+            else:
+                output += string + '\n'
+        return output[:-1]
+
+
+
 def DNA2RNA(sequence):
     return sequence.upper().replace('T', 'U')
 
@@ -111,15 +144,12 @@ def draw_assembly(sequence, primers, name, COL_SIZE=142):
 
             if len(bp_line.replace(' ', '')) or len(seq_line.replace(' ', '')):
                 print_lines.append(('$', bp_line))
-                if j % 2:
-                    print_lines.append(('!', seq_line))
-                else:
-                    print_lines.append(('^', seq_line))
+                print_lines.append(('^!'[j % 2], seq_line))
         print_lines.append(('$', ' ' * (end_pos - start_pos + 1)))
         print_lines.append(('=', complement(out_line)))
         print_lines.append(('', '\n'))
 
-    return {'bp_lines': bp_lines, 'seq_lines': seq_lines, 'print_lines': print_lines, 'Tm_overlaps': Tms}
+    return Assembly(sequence, name, primers, bp_lines, seq_lines, print_lines, Tms)
 
 
 def coord_to_num(coord):

@@ -16,40 +16,24 @@ class Design_1D(object):
         (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m\n\033[95msequence\033[0m = \'%s\'\n\033[95mname\033[0m = \'%s\'\n\033[95mis_success\033[0m = \033[41m%s\033[0m\n\033[95mprimer_set\033[0m = %s\n\033[95mparams\033[0m = %s\n\033[95mdata\033[0m = {\n    \033[92m\'primers\'\033[0m: %s, \n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: {\n        \033[93m\'seq_lines\'\033[0m: list(string * %d), \n        \033[93m\'bp_lines\'\033[0m: list(string * %d), \n        \033[93m\'print_lines\'\033[0m: list(tuple * %d)\n        \033[93m\'Tm_overlaps\'\033[0m: %s\n    }, \n    \033[92m\'warnings\'\033[0m: %s\n' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['primers']), repr(self._data['misprime_score']), len(self._data['assembly']['seq_lines']), len(self._data['assembly']['bp_lines']), len(self._data['assembly']['print_lines']), repr(self._data['assembly']['Tm_overlaps']), repr(self._data['warnings']))
+        return '\033[94m%s\033[0m\n\033[95msequence\033[0m = \'%s\'\n\033[95mname\033[0m = \'%s\'\n\033[95mis_success\033[0m = \033[41m%s\033[0m\n\033[95mprimer_set\033[0m = %s\n\033[95mparams\033[0m = %s\n\033[95mdata\033[0m = {\n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'warnings\'\033[0m: %s\n' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['misprime_score']), repr(self._data['assembly']), repr(self._data['warnings']))
 
     def __str__(self):
-        return self.echo('misprime') + '\n' + self.echo('assembly') + '\n' + self.echo('primer') + '\n\n' + self.echo('warning') + '\n'
+        return self.echo()
 
 
     def get(self, keyword):
-        keyword = keyword.lower()
-        if keyword == 'sequence':
-            return self.sequence
-        elif keyword == 'name':
-            return self.name
-        elif keyword == 'success':
-            return self.is_success
-        elif keyword == 'primer':
-            return self.primer_set
-        elif keyword == 'warning_num':
+        keyword = keyword.upper()
+        if self._params.has_key(keyword):
+            return self._params[keyword]
+        elif keyword == 'WARNING':
             return self._data['warnings']
-        elif keyword == 'primer_num':
-            return self._data['primers']
-        elif keyword == 'misprime':
+        elif keyword == 'PRIMER':
+            return self._data['asssembly'].primers
+        elif keyword == 'MISPRIME':
             return self._data['misprime_score']
-        elif keyword == 'min_tm':
-            return self._params['MIN_TM']
-        elif keyword == 'num_primers':
-            return self._params['NUM_PRIMERS']
-        elif keyword == 'min_length':
-            return self._params['MIN_LENGTH']
-        elif keyword == 'max_length':
-            return self._params['MAX_LENGTH']
-        elif keyword == 'n_bp' or keyword == 'length':
-            return self._params['N_BP']      
         else:
-            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)) 
 
 
     def save(self, path='./', name=None):
@@ -69,10 +53,7 @@ class Design_1D(object):
         f.write(lines)
         f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
         for i in xrange(len(self.primer_set)):
-            if i % 2:
-                suffix = 'R'
-            else:
-                suffix = 'F'
+            suffix = 'FR'[i % 2]
             f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
         f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
         f.close()
@@ -85,26 +66,6 @@ class Design_1D(object):
                 output = ''
                 for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
                     output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self._data['misprime_score'][0][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self.sequence[i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self._data['misprime_score'][1][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']])
-                return output[:-1]
- 
-            elif keyword == 'assembly':
-                output = ''
-                x = 0
-                for i in xrange(len(self._data['assembly']['print_lines'])):
-                    (flag, string) = self._data['assembly']['print_lines'][i]
-                    if (flag == '$' and 'xx' in string):
-                        Tm = '%2.1f' % self._data['assembly']['Tm_overlaps'][x]
-                        output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
-                        x += 1
-                    elif (flag == '^' or flag == '!'):
-                        num = string.replace(' ', '').replace('A', '').replace('G', '').replace('C', '').replace('T', '').replace('-', '').replace('>', '').replace('<', '')
-                        output += string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
-                    elif (flag == '~'):
-                        output += '\033[92m%s\033[0m' % string + '\n'
-                    elif (flag == '='):
-                        output += '\033[96m%s\033[0m' % string + '\n'
-                    else:
-                        output += string + '\n'
                 return output[:-1]
  
             elif keyword == 'warning':
@@ -123,13 +84,15 @@ class Design_1D(object):
                     output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
                 return output
 
+            elif keyword == 'assembly':
+                return self._data['assembly'].echo()
             elif not keyword:
-                return str(self)
- 
+                return self.echo('misprime') + '\n' + self.echo('assembly') + '\n' + self.echo('primer') + '\n\n' + self.echo('warning') + '\n'
+
             else:
-                print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (keyword, self.__class__)
+                raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (keyword, self.__class__)) 
         else:
-            print '\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
 
 
 
@@ -150,51 +113,37 @@ class Primerize_1D(object):
         return repr(self.__dict__)
 
 
-    def set(self, keyword, value):
-        keyword = keyword.lower()
-        if keyword == 'min_tm' and (isinstance(value, float) or isinstance(value, int)) and value > 0:
-            self.MIN_TM = float(value)
-        elif keyword == 'num_primers' and isinstance(value, int) and value >= 0 and (not value % 2):
-            self.NUM_PRIMERS = value
-        elif keyword == 'min_length' and isinstance(value, int) and value >= 0:
-            self.MIN_LENGTH = value
-            if self.MIN_LENGTH > self.MAX_LENGTH:
-                print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
-        elif keyword == 'max_length' and isinstance(value, int) and value > 0:
-            self.MAX_LENGTH = value
-            if self.MIN_LENGTH > self.MAX_LENGTH:
-                print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
-        elif keyword == 'col_size' and isinstance(value, int) and value > 0:
-            self.COL_SIZE = value
-        elif keyword == 'warn_cutoff' and isinstance(value, int) and value >= 0:
-            self.WARN_CUTOFF = value
-        elif keyword == 'prefix' and isinstance(value, str):
-            self.prefix = value
-        else:
-            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m or illegal value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (keyword, value, self.__class__)
-
-
-    def get(self, keyword):
-        keyword = keyword.lower()
-        if keyword == 'min_tm':
-            return self.MIN_TM
-        elif keyword == 'num_primers':
-            return self.NUM_PRIMERS
-        elif keyword == 'min_length':
-            return self.MIN_LENGTH
-        elif keyword == 'max_length':
-            return self.MAX_LENGTH
-        elif keyword == 'col_size':
-            return self.COL_SIZE
-        elif keyword == 'warn_cutoff':
-            return self.WARN_CUTOFF
-        elif keyword == 'prefix':
+   def get(self, keyword):
+        keyword = keyword.upper()
+        if hasattr(self, keyword):
+            return exec('self.%s' % keyword)
+        elif keyword == 'PREFIX':
             return self.prefix
         else:
-            print '\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
 
 
-    def reset(self):
+    def set(self, keyword, value):
+        keyword = keyword.upper()
+        if hasattr(self, keyword) or keyword == 'PREFIX':
+            if keyword == 'PREFIX' and isinstance(value, str):
+                self.prefix = value
+            elif isinstance(value, (int, float)) and value > 0:
+                if keyword == 'MIN_TM':
+                    self.MIN_TM = float(value)
+                else:
+                    exec('self.%s = %d' % (keyword, value))
+                    if self.MIN_LENGTH > self.MAX_LENGTH:
+                        print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
+                    elif self.NUM_PRIMERS % 2:
+                        print '\033[93mWARNING\033[0m: \033[92mNUM_PRIMERs\033[0m should be even number only.'
+            else:
+                raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for keyword \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, keyword, self.__class__)) 
+        else:
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+
+
+     def reset(self):
         self.prefix = 'primer'
         self.MIN_TM = 60.0
         self.NUM_PRIMERS = 0
@@ -249,7 +198,7 @@ class Primerize_1D(object):
             print traceback.format_exc()
 
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
-        data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings, 'primers': primers}
+        data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings}
         return Design_1D(sequence, name, is_success, primer_set, params, data)
 
 
