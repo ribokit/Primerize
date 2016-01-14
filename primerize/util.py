@@ -179,6 +179,7 @@ def get_mut_range(mut_start, mut_end, offset, sequence):
 
 def get_primer_index(primer_set, sequence):
     N_primers = len(primer_set)
+    coverage = numpy.zeros((1, len(sequence)))
     primers = numpy.zeros((3, N_primers))
 
     for n in xrange(N_primers):
@@ -194,8 +195,9 @@ def get_primer_index(primer_set, sequence):
             end_pos = i + len(primer_set[n]) - 1
             seq_dir = math.copysign(1, 0.5 - n % 2)
             primers[:, n] = [start_pos, end_pos, seq_dir]
+            coverage[0, start_pos:(end_pos + 1)] = 1
 
-    return (primers.astype(int), True)
+    return (primers.astype(int), coverage.all())
 
 
 def get_mutation(nt, lib):

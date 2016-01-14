@@ -39,12 +39,17 @@ class Design_2D(object):
         if self.is_success:
             if name is None: name = self.name
             keyword = keyword.lower()
-            if keyword == 'excel':
+            if keyword == 'table':
                 save_plates_excel(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
             elif keyword == 'image':
                 save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif keyword == 'plain' or keyword == 'text':
+            elif keyword == 'construct':
                 save_construct_key(self._data['construct_names'], name, path)
+            elif keyword == 'assembly':
+                f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
+                lines = self._data['assembly'].echo().replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
+                f.write(lines)
+                f.close()
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.sav()\033[0m.\n' % (keyword, self.__class__)) 
         else:
@@ -54,10 +59,10 @@ class Design_2D(object):
     def echo(self):
         if self.is_success:
             output = ''
-            for i in xrange(len(self.plates[0])):
-                for j in xrange(len(self.plates)):
+            for i in xrange(len(self._data['plates'][0])):
+                for j in xrange(len(self._data['plates'])):
                     output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                    output += self.plates[j][i].print_constructs(self.primer_set[j])
+                    output += self._data['plates'][j][i].print_constructs(self.primer_set[j])
             return output[:-1]
         else:
             raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
@@ -110,8 +115,7 @@ class Primerize_2D(object):
         self.which_libs = [1]
 
 
-    def design(self, sequence, primer_set=None, offset=None, which_muts=None, which_libs=None, prefix=None):
-        if primer_set is None: primer_set = self.primer_set
+    def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
         if offset is None: offset = self.offset
         if which_muts is None: which_muts = self.which_muts
         if which_libs is None: which_libs = self.which_libs
@@ -122,7 +126,7 @@ class Primerize_2D(object):
 
         name = prefix
         sequence = RNA2DNA(sequence)
-        N_BP = len(self.sequence)
+        N_BP = len(sequence)
 
         is_success = True
         assembly = {}
@@ -156,7 +160,7 @@ class Primerize_2D(object):
             return Design_2D(sequence, name, is_success, primer_set, params, data)
         assembly = draw_assembly(sequence, primers, name)
 
-        plates = [[Plate_96Well() for i in xrange(self.N_plates)] for i in xrange(self.N_primers)]
+        plates = [[Plate_96Well() for i in xrange(N_plates)] for i in xrange(N_primers)]
         print 'Filling out sequences ...'
 
         try:
@@ -283,7 +287,7 @@ class Plate_96Well(object):
 
 
 
-def design_primers_2D(sequence, primer_set=None, offset=None, which_muts=None, which_libs=None, prefix=None):
+def design_primers_2D(sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
     prm = Primerize_2D()
     res = prm.design(sequence, primer_set, offset, which_muts, which_libs, prefix)
     return res
@@ -301,28 +305,31 @@ def main():
     group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), nargs='+', help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
-    group2.add_argument('-e', '--excel', action='store_true', dest='is_excel', help='Write Results to Excel File(s)')
+    group2.add_argument('-e', '--excel', action='store_true', dest='is_excel', help='Write Order Table to Excel File(s)')
     group2.add_argument('-i', '--image', action='store_true', dest='is_image', help='Save Layout to Image File(s)')
+    group2.add_argument('-t', '--text', action='store_true', dest='is_text', help='Save Construct and Assembly to Text File(s)')
     group2.add_argument('-h', '--help', action='help', help='Show this Help Message')
     args = parser.parse_args()
 
     t0 = time.time()
-    # if args.primer_set == None:
-    #     args.primer_set = []
-    # else:
-    #     args.primer_set = args.primer_set[0]
-    # if args.which_libs == None: args.which_libs = [1]
-    # (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
-
+    if args.primer_set == None:
+        args.primer_set = []
+    else:
+        args.primer_set = args.primer_set[0]
+    (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+    
     res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
     if res.is_success:
-        if not res.is_quiet:
+        if not args.is_quiet:
             print res
         if args.is_excel:
-            res.save('excel')
-            res.save('text')
+            res.save('table')
         if args.is_image:
             res.save('image')
+        if args.is_text:
+            res.save('construct')
+            res.save('assembly')
+    print res._data['assembly'].primers
 
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 
