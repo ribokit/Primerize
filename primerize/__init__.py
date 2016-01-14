@@ -3,4 +3,4 @@ import util
 from primerize_1d import Primerize_1D
 from primerize_2d import Primerize_2D
 
-__version__ = '1.0.4'
+__version__ = '1.0.5'

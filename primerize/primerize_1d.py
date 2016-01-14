@@ -37,26 +37,29 @@ class Design_1D(object):
 
 
     def save(self, path='./', name=None):
-        if name is None: name = self.name
-        f = open(os.path.join(path, '%s.txt' % name), 'w')
+        if self.is_success:
+            if name is None: name = self.name
+            f = open(os.path.join(path, '%s.txt' % name), 'w')
 
-        f.write('Primerize Result\n\nINPUT\n=====\n%s\n' % self.sequence)
-        f.write('#\nMIN_TM: %.1f\n' % self._params['MIN_TM'])
-        if not self._params['NUM_PRIMERS']:
-            f.write('NUM_PRIMERS: auto (unspecified)')
+            f.write('Primerize Result\n\nINPUT\n=====\n%s\n' % self.sequence)
+            f.write('#\nMIN_TM: %.1f\n' % self._params['MIN_TM'])
+            if not self._params['NUM_PRIMERS']:
+                f.write('NUM_PRIMERS: auto (unspecified)')
+            else:
+                f.write('NUM_PRIMERS: %d' % self._params['NUM_PRIMERS'])
+            f.write('\nMAX_LENGTH: %d\nMIN_LENGTH: %d\n' % (self._params['MAX_LENGTH'], self._params['MIN_LENGTH']))
+
+            f.write('\n\nOUTPUT\n======\n')
+            lines = str(self).replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
+            f.write(lines)
+            f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
+            for i in xrange(len(self.primer_set)):
+                suffix = 'FR'[i % 2]
+                f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
+            f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
+            f.close()
         else:
-            f.write('NUM_PRIMERS: %d' % self._params['NUM_PRIMERS'])
-        f.write('\nMAX_LENGTH: %d\nMIN_LENGTH: %d\n' % (self._params['MAX_LENGTH'], self._params['MIN_LENGTH']))
-
-        f.write('\n\nOUTPUT\n======\n')
-        lines = str(self).replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
-        f.write(lines)
-        f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
-        for i in xrange(len(self.primer_set)):
-            suffix = 'FR'[i % 2]
-            f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
-        f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
-        f.close()
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
 
 
     def echo(self, keyword=''):
@@ -82,7 +85,7 @@ class Design_1D(object):
                 for i in xrange(len(self.primer_set)):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
                     output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
-                return output
+                return output[:-1]
 
             elif keyword == 'assembly':
                 return self._data['assembly'].echo()
@@ -113,10 +116,10 @@ class Primerize_1D(object):
         return repr(self.__dict__)
 
 
-   def get(self, keyword):
+    def get(self, keyword):
         keyword = keyword.upper()
         if hasattr(self, keyword):
-            return exec('self.%s' % keyword)
+            return getattr(self, keyword)
         elif keyword == 'PREFIX':
             return self.prefix
         else:
@@ -126,24 +129,24 @@ class Primerize_1D(object):
     def set(self, keyword, value):
         keyword = keyword.upper()
         if hasattr(self, keyword) or keyword == 'PREFIX':
-            if keyword == 'PREFIX' and isinstance(value, str):
-                self.prefix = value
+            if keyword == 'PREFIX':
+                self.prefix = str(value)
             elif isinstance(value, (int, float)) and value > 0:
                 if keyword == 'MIN_TM':
                     self.MIN_TM = float(value)
                 else:
-                    exec('self.%s = %d' % (keyword, value))
+                    setattr(self, keyword, int(value))
                     if self.MIN_LENGTH > self.MAX_LENGTH:
                         print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
                     elif self.NUM_PRIMERS % 2:
-                        print '\033[93mWARNING\033[0m: \033[92mNUM_PRIMERs\033[0m should be even number only.'
+                        print '\033[93mWARNING\033[0m: \033[92mNUM_PRIMERS\033[0m should be even number only.'
             else:
                 raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for keyword \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, keyword, self.__class__)) 
         else:
             raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
 
 
-     def reset(self):
+    def reset(self):
         self.prefix = 'primer'
         self.MIN_TM = 60.0
         self.NUM_PRIMERS = 0
@@ -190,12 +193,13 @@ class Primerize_1D(object):
 
                 misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
                 assembly = draw_assembly(sequence, primers, name, self.COL_SIZE)
-                print '\033[92mSUCCESS\033[0m: Primerize 1D design_primers() finished.\n'
+                print '\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n'
             else:
-                print '\033[31mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
+                print '\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
         except:
             is_success = False
             print traceback.format_exc()
+            print '\033[41mERROR\033[0m: Primerize 1D design() encountered error.\n'
 
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
         data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings}
@@ -437,7 +441,7 @@ def main():
     res = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
     if res.is_success:
         if not args.is_quiet:
-            print str(res)
+            print res
         if args.is_file:
             res.save()
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
