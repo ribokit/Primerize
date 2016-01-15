@@ -1,6 +1,6 @@
 # Primerize (NA_Thermo)
 
-<img src="https://primerize.stanford.edu/site_media/images/logo_primerize.png" alt="Primerize Logo" width="160" align="right">
+<img src="https://primerize.stanford.edu/site_media/images/logo_primerize.png" alt="Primerize Logo" width="200" align="right">
 
 **Primerize** (previously named **NA_thermo**), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the [Das Lab](https://daslab.stanford.edu/) at Stanford University for high-throughput RNA synthesis and design.
 
@@ -75,13 +75,17 @@ prm_1d.set('MIN_LENGTH', 30)
 prm_1d.reset()
 ```
 
-##### MATLAB Code (Deprecated)
+#### MATLAB Code (Deprecated)
 
-Please see the old [README.md](https://github.com/DasLab/Primerize/blob/master/deprecated_MATLAB/README.md) for instructions.
+Instructions on MATLAB usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/deprecated_MATLAB/README.md).
 
 ## Documentation
 
 Documentation is available at https://primerize.stanford.edu/docs/.
+
+## License
+
+Copyright &copy; of **Primerize** source code is described in [LICENSE.md](https://github.com/DasLab/Primerize/blob/master/LICENSE.md).
 
 ## Reference
 
@@ -94,5 +98,6 @@ Documentation is available at https://primerize.stanford.edu/docs/.
 >[On the Design of Oligos for Gene Synthesis.](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554)<br/>
 >*Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
+<br/>
 by [**t47**](http://t47.io/), *Jan 2016*.
 
