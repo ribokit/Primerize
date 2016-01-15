@@ -1,8 +1,5 @@
 import argparse
 import math
-import matplotlib
-matplotlib.use('SVG')
-import matplotlib.pyplot as pyplot
 import time
 import traceback
 
@@ -15,45 +12,42 @@ class Design_2D(object):
         (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
 
     def __repr__(self):
-        pass
+        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'construct_names\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), len(self._data['construct_names']), repr(self._data['assembly']), repr(self._data['plates']))
 
     def __str__(self):
         return self.echo()
 
 
-    def get(self, keyword):
-        keyword = keyword.upper()
-        if self._params.has_key(keyword):
-            return self._params[keyword]
-        elif self._params.has_key(keyword.lower()):
-            return self._params[keyword.lower()]
-        elif keyword == 'PRIMER':
+    def get(self, key):
+        key = key.upper()
+        if self._params.has_key(key):
+            return self._params[key]
+        elif self._params.has_key(key.lower()):
+            return self._params[key.lower()]
+        elif key == 'PRIMER':
             return self._data['assembly'].primers
-        elif keyword == 'CONSTRUCT':
+        elif key == 'CONSTRUCT':
             return self._data['construct_names']
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
 
-    def save(self, keyword='', path='./', name=None):
+    def save(self, key='', path='./', name=None):
         if self.is_success:
             if name is None: name = self.name
-            keyword = keyword.lower()
-            if keyword == 'table':
+            key = key.lower()
+            if key == 'table':
                 save_plates_excel(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif keyword == 'image':
+            elif key == 'image':
                 save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif keyword == 'construct':
+            elif key == 'construct':
                 save_construct_key(self._data['construct_names'], name, path)
-            elif keyword == 'assembly':
-                f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
-                lines = self._data['assembly'].echo().replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
-                f.write(lines)
-                f.close()
+            elif key == 'assembly':
+                self._data['assembly'].save(path, name)
             else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.sav()\033[0m.\n' % (keyword, self.__class__)) 
+                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.sav()\033[0m.\n' % (key, self.__class__)) 
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
     def echo(self):
@@ -62,10 +56,10 @@ class Design_2D(object):
             for i in xrange(len(self._data['plates'][0])):
                 for j in xrange(len(self._data['plates'])):
                     output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                    output += self._data['plates'][j][i].print_constructs(self.primer_set[j])
+                    output += self._data['plates'][j][i].echo(self.primer_set[j])
             return output[:-1]
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
 
@@ -83,29 +77,29 @@ class Primerize_2D(object):
         return repr(self.__dict__)
 
 
-    def get(self, keyword):
-        keyword = keyword.lower()
-        if hasattr(self, keyword):
-            return getattr(self, keyword)
+    def get(self, key):
+        key = key.lower()
+        if hasattr(self, key):
+            return getattr(self, key)
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
 
-    def set(self, keyword, value):
-        keyword = keyword.lower()
-        if hasattr(self, keyword):
-            if keyword == 'prefix':
+    def set(self, key, value):
+        key = key.lower()
+        if hasattr(self, key):
+            if key == 'prefix':
                 self.prefix = str(value)
-            elif keyword == 'offset' and isinstance(value, (int, float)):
+            elif key == 'offset' and isinstance(value, (int, float)):
                 self.offset = int(value)
-            elif keyword == 'which_libs' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value) and all(x in (1, 2, 3) for x in value)):
+            elif key == 'which_libs' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value) and all(x in (1, 2, 3) for x in value)):
                 self.which_libs = sorted(set(value))
-            elif keyword == 'which_muts' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value)):
+            elif key == 'which_muts' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value)):
                 self.which_muts = sorted(set(value))
             else:
-                raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for keyword \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, keyword, self.__class__)) 
+                raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, key, self.__class__)) 
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
 
     def reset(self):
@@ -205,7 +199,7 @@ class Primerize_2D(object):
                                     mut_primer = reverse_complement(mut_primer)
 
                             construct_names[n] = well_name
-                            plates[p][plate_num].set_well(well_tag, well_name, mut_primer)
+                            plates[p][plate_num].set(well_tag, well_name, mut_primer)
 
             print '\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n'
         except:
@@ -216,74 +210,6 @@ class Primerize_2D(object):
         params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
         data = {'plates': plates, 'assembly': assembly, 'construct_names': construct_names}
         return Design_2D(sequence, name, is_success, primer_set, params, data)
-
-
-
-class Plate_96Well(object):
-    def __init__(self):
-        self.coords = set()
-        self.data = {}
-
-    def set_well(self, coord, tag, primer):
-        if coord_to_num(coord) == -1:
-            print 'Invalid 96 well coordinate: %s.' % coord
-        else:
-            self.coords.add(coord)
-            self.data[coord_to_num(coord)] = (tag, primer)
-
-    def get_well(self, coord):
-        if coord_to_num(coord) == -1:
-            print 'Invalid 96 well coordinate: %s.' % coord
-            return
-        else:
-            if coord in self.coords:
-                return self.data[coord_to_num(coord)]
-            else:
-                return
-
-    def get_count(self):
-        return len(self.coords)
-
-    def print_constructs(self, ref_primer=''):
-        return print_primer_plate(self, ref_primer)
-
-    def print_layout(self, file_name='./', title=''):
-        fig = pyplot.figure()
-        pyplot.axes().set_aspect('equal')
-        pyplot.axis([0, 13.875, 0, 9.375])
-        pyplot.xticks([x * 1.125 + 0.75 for x in range(12)], [str(x + 1) for x in range(12)], fontsize=14)
-        pyplot.yticks([y * 1.125 + 0.75 for y in range(8)], list('ABCDEFGH'), fontsize=14)
-        pyplot.suptitle(title, fontsize=16, fontweight='bold')
-        ax = pyplot.gca()
-        for edge in ('bottom', 'top', 'left', 'right'):
-            ax.spines[edge].set_color('w')
-        ax.invert_yaxis()
-        ax.xaxis.set_ticks_position('top')
-        for tic in ax.xaxis.get_major_ticks():
-            tic.tick1On = tic.tick2On = False
-        for tic in ax.yaxis.get_major_ticks():
-            tic.tick1On = tic.tick2On = False
-
-        (x_green, x_violet, x_gray, y_green, y_violet, y_gray) = ([], [], [], [], [], [])
-        for i in xrange(8):
-            for j in xrange(12):
-                num = i + j * 8 + 1
-                if num_to_coord(num) in self.coords:
-                    if 'WT' in self.data[num][0]:
-                        x_green.append(j * 1.125 + 0.75)
-                        y_green.append(i * 1.125 + 0.75)
-                    else:
-                        x_violet.append(j * 1.125 + 0.75)
-                        y_violet.append(i * 1.125 + 0.75)
-                else:
-                    x_gray.append(j * 1.125 + 0.75)
-                    y_gray.append(i * 1.125 + 0.75)
-        pyplot.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
-        pyplot.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
-        pyplot.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
-
-        matplotlib.rcParams['svg.fonttype'] = 'none'
-        pyplot.savefig(file_name, orientation='landscape', format='svg')
 
 
 
@@ -329,7 +255,6 @@ def main():
         if args.is_text:
             res.save('construct')
             res.save('assembly')
-    print res._data['assembly'].primers
 
     print 'Time elapsed: %.1f s.' % (time.time() - t0)
 

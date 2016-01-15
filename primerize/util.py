@@ -1,4 +1,7 @@
 import math
+import matplotlib
+matplotlib.use('SVG')
+import matplotlib.pyplot as pyplot
 import numpy
 import os
 import xlwt
@@ -11,7 +14,7 @@ class Assembly(object):
         (self.sequence, self.name, self.primers, self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = (sequence, name, primers, bp_lines, seq_lines, print_lines, Tm_overlaps)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: list(string * %d), \n    \033[93m\'bp_lines\'\033[0m: list(string * %d), \n    \033[93m\'print_lines\'\033[0m: list(tuple * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
+        return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[31mlist\033[0m(\033[31mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
 
     def __str__(self):
         return self.echo()
@@ -36,6 +39,95 @@ class Assembly(object):
             else:
                 output += string + '\n'
         return output[:-1]
+
+
+    def save(self, path='./', name=None):
+        if name is None: name = self.name
+        f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
+        lines = self.echo().replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
+        f.write(lines)
+        f.close()
+
+
+
+class Plate_96Well(object):
+    def __init__(self):
+        self.coords = set()
+        self._data = {}
+
+    def __repr__(self):
+        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[31mlist\033[0m(\033[31mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
+
+    def __str__(self):
+        return self.echo()
+
+
+    def get(self, coord):
+        if coord.lower() == 'count':
+            return len(self.coords)
+        else:
+            if coord_to_num(coord) == -1:
+                raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__)) 
+            elif coord in self.coords:
+                return self._data[coord_to_num(coord)]
+            else:
+                raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__)) 
+
+
+    def set(self, coord, tag, primer):
+        if coord_to_num(coord) == -1:
+            raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (coord, self.__class__))
+        else:
+            self.coords.add(coord)
+            self._data[coord_to_num(coord)] = (tag, primer)
+
+
+    def reset(self):
+        self.coords = set()
+        self._data = {}
+
+
+    def echo(self, ref_primer=''):
+        return print_primer_plate(self, ref_primer)
+
+
+    def save(self, file_name='./', title=''):
+        fig = pyplot.figure()
+        pyplot.axes().set_aspect('equal')
+        pyplot.axis([0, 13.875, 0, 9.375])
+        pyplot.xticks([x * 1.125 + 0.75 for x in range(12)], [str(x + 1) for x in range(12)], fontsize=14)
+        pyplot.yticks([y * 1.125 + 0.75 for y in range(8)], list('ABCDEFGH'), fontsize=14)
+        pyplot.suptitle(title, fontsize=16, fontweight='bold')
+        ax = pyplot.gca()
+        for edge in ('bottom', 'top', 'left', 'right'):
+            ax.spines[edge].set_color('w')
+        ax.invert_yaxis()
+        ax.xaxis.set_ticks_position('top')
+        for tic in ax.xaxis.get_major_ticks():
+            tic.tick1On = tic.tick2On = False
+        for tic in ax.yaxis.get_major_ticks():
+            tic.tick1On = tic.tick2On = False
+
+        (x_green, x_violet, x_gray, y_green, y_violet, y_gray) = ([], [], [], [], [], [])
+        for i in xrange(8):
+            for j in xrange(12):
+                num = i + j * 8 + 1
+                if num_to_coord(num) in self.coords:
+                    if 'WT' in self._data[num][0]:
+                        x_green.append(j * 1.125 + 0.75)
+                        y_green.append(i * 1.125 + 0.75)
+                    else:
+                        x_violet.append(j * 1.125 + 0.75)
+                        y_violet.append(i * 1.125 + 0.75)
+                else:
+                    x_gray.append(j * 1.125 + 0.75)
+                    y_gray.append(i * 1.125 + 0.75)
+        pyplot.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
+        pyplot.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
+        pyplot.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
+
+        matplotlib.rcParams['svg.fonttype'] = 'none'
+        pyplot.savefig(file_name, orientation='landscape', format='svg')
 
 
 
@@ -212,9 +304,9 @@ def get_mutation(nt, lib):
 
 def print_primer_plate(plate, ref_primer):
     string = ''
-    for key in sorted(plate.data):
+    for key in sorted(plate._data):
         string += '\033[94m%s\033[0m' % num_to_coord(key).ljust(5)
-        mut = plate.data[key][0]
+        mut = plate._data[key][0]
         if mut[-2:] == 'WT':
             string += ('%s\033[100m%s\033[0m' % (mut[:-2], mut[-2:])).ljust(28)
         else:
@@ -222,13 +314,12 @@ def print_primer_plate(plate, ref_primer):
 
         if ref_primer:
             for i in xrange(len(ref_primer)):
-                if ref_primer[i] != plate.data[key][1][i]:
-                    string += '\033[41m%s\033[0m' % plate.data[key][1][i]
+                if ref_primer[i] != plate._data[key][1][i]:
+                    string += '\033[41m%s\033[0m' % plate._data[key][1][i]
                 else:
-                    string += plate.data[key][1][i]
-
+                    string += plate._data[key][1][i]
         else:
-            string += plate.data[key][1]
+            string += plate._data[key][1]
         string += '\n'
 
     if not string: string = '(empty)\n'
@@ -239,13 +330,13 @@ def save_plate_layout(plates, N_plates, N_primers, prefix, path):
     for k in xrange(N_plates):
         for p in xrange(N_primers):
             primer_sequences = plates[p][k]
-            num_primers_on_plate = primer_sequences.get_count()
+            num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
                 file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (prefix, k + 1, p + 1))
                 print 'Creating plate image: \033[94m%s\033[0m.' % file_name
                 title = '%s_plate_%d_primer_%d' % (prefix, k + 1, p + 1)
-                primer_sequences.print_layout(file_name, title)
+                primer_sequences.save(file_name, title)
 
 
 def save_construct_key(keys, prefix, path):
@@ -263,7 +354,7 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
 
         for p in xrange(N_primers):
             primer_sequences = plates[p][k]
-            num_primers_on_plate = primer_sequences.get_count()
+            num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
                 sheet = workbook.add_sheet('primer_%d' % (p + 1))
@@ -275,15 +366,15 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
                 sheet.write(0, 2, 'Sequence', xlwt.easyxf('font: bold 1'))
                 sheet.write(0, 3, 'Notes', xlwt.easyxf('font: bold 1'))
 
-                for i, row in enumerate(sorted(primer_sequences.data)):
-                    if 'WT' in primer_sequences.data[row][0]:
+                for i, row in enumerate(sorted(primer_sequences._data)):
+                    if 'WT' in primer_sequences._data[row][0]:
                         sheet.write(i + 1, 0, num_to_coord(row), xlwt.easyxf('font: color blue, italic 1'))
-                        sheet.write(i + 1, 1, primer_sequences.data[row][0], xlwt.easyxf('font: color blue'))
-                        sheet.write(i + 1, 2, primer_sequences.data[row][1], xlwt.easyxf('font: color blue'))
+                        sheet.write(i + 1, 1, primer_sequences._data[row][0], xlwt.easyxf('font: color blue'))
+                        sheet.write(i + 1, 2, primer_sequences._data[row][1], xlwt.easyxf('font: color blue'))
                     else:
                         sheet.write(i + 1, 0, num_to_coord(row), xlwt.easyxf('font: italic 1'))
-                        sheet.write(i + 1, 1, primer_sequences.data[row][0])
-                        sheet.write(i + 1, 2, primer_sequences.data[row][1])
+                        sheet.write(i + 1, 1, primer_sequences._data[row][0])
+                        sheet.write(i + 1, 2, primer_sequences._data[row][1])
 
         workbook.save(file_name)    
 

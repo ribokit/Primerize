@@ -16,24 +16,24 @@ class Design_1D(object):
         (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m\n\033[95msequence\033[0m = \'%s\'\n\033[95mname\033[0m = \'%s\'\n\033[95mis_success\033[0m = \033[41m%s\033[0m\n\033[95mprimer_set\033[0m = %s\n\033[95mparams\033[0m = %s\n\033[95mdata\033[0m = {\n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'warnings\'\033[0m: %s\n' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['misprime_score']), repr(self._data['assembly']), repr(self._data['warnings']))
+        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'warnings\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['misprime_score']), repr(self._data['assembly']), repr(self._data['warnings']))
 
     def __str__(self):
         return self.echo()
 
 
-    def get(self, keyword):
-        keyword = keyword.upper()
-        if self._params.has_key(keyword):
-            return self._params[keyword]
-        elif keyword == 'WARNING':
+    def get(self, key):
+        key = key.upper()
+        if self._params.has_key(key):
+            return self._params[key]
+        elif key == 'WARNING':
             return self._data['warnings']
-        elif keyword == 'PRIMER':
+        elif key == 'PRIMER':
             return self._data['asssembly'].primers
-        elif keyword == 'MISPRIME':
+        elif key == 'MISPRIME':
             return self._data['misprime_score']
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__)) 
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__)) 
 
 
     def save(self, path='./', name=None):
@@ -59,19 +59,19 @@ class Design_1D(object):
             f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
             f.close()
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
-    def echo(self, keyword=''):
+    def echo(self, key=''):
         if self.is_success:
-            keyword = keyword.lower()
-            if keyword == 'misprime':
+            key = key.lower()
+            if key == 'misprime':
                 output = ''
                 for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
                     output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self._data['misprime_score'][0][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self.sequence[i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self._data['misprime_score'][1][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']])
                 return output[:-1]
  
-            elif keyword == 'warning':
+            elif key == 'warning':
                 output = ''
                 for i in xrange(len(self._data['warnings'])):
                     warning = self._data['warnings'][i]
@@ -80,22 +80,22 @@ class Design_1D(object):
                     output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
                 return output[:-1]
  
-            elif keyword == 'primer':
+            elif key == 'primer':
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
                 for i in xrange(len(self.primer_set)):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
                     output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
                 return output[:-1]
 
-            elif keyword == 'assembly':
+            elif key == 'assembly':
                 return self._data['assembly'].echo()
-            elif not keyword:
+            elif not key:
                 return self.echo('misprime') + '\n' + self.echo('assembly') + '\n' + self.echo('primer') + '\n\n' + self.echo('warning') + '\n'
 
             else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (keyword, self.__class__)) 
+                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__)) 
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of keyword \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (keyword, self.__class__)) 
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
 
@@ -116,34 +116,34 @@ class Primerize_1D(object):
         return repr(self.__dict__)
 
 
-    def get(self, keyword):
-        keyword = keyword.upper()
-        if hasattr(self, keyword):
-            return getattr(self, keyword)
-        elif keyword == 'PREFIX':
+    def get(self, key):
+        key = key.upper()
+        if hasattr(self, key):
+            return getattr(self, key)
+        elif key == 'PREFIX':
             return self.prefix
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
 
-    def set(self, keyword, value):
-        keyword = keyword.upper()
-        if hasattr(self, keyword) or keyword == 'PREFIX':
-            if keyword == 'PREFIX':
+    def set(self, key, value):
+        key = key.upper()
+        if hasattr(self, key) or key == 'PREFIX':
+            if key == 'PREFIX':
                 self.prefix = str(value)
             elif isinstance(value, (int, float)) and value > 0:
-                if keyword == 'MIN_TM':
+                if key == 'MIN_TM':
                     self.MIN_TM = float(value)
                 else:
-                    setattr(self, keyword, int(value))
+                    setattr(self, key, int(value))
                     if self.MIN_LENGTH > self.MAX_LENGTH:
                         print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
                     elif self.NUM_PRIMERS % 2:
                         print '\033[93mWARNING\033[0m: \033[92mNUM_PRIMERS\033[0m should be even number only.'
             else:
-                raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for keyword \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, keyword, self.__class__)) 
+                raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, key, self.__class__)) 
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized keyword \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (keyword, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
 
     def reset(self):
