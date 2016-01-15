@@ -15,12 +15,7 @@ setup(
     license='https://primerize.stanford.edu/license',
 
     packages=find_packages(),
-    install_requires=[
-        'numpy >= 1.10.1',
-        'numba >= 0.22.1',
-        'matplotlib >= 1.5.0',
-        'xlwt >= 1.0.0'
-    ],
+    install_requires=open('requirements.txt', 'r').readlines(),
     classifiers=(
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',

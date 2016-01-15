@@ -1,33 +1,98 @@
-#######################################################
-NA_Thermo, the Das lab in-house primer design tools
+# Primerize (NA_Thermo)
 
-(c) R. Das 2008-2014
-#######################################################
+<img src="https://primerize.stanford.edu/site_media/images/logo_primerize.png" alt="Primerize Logo" width="160" align="right">
 
-Quick README by R. Das on Apr. 18, 2011. Send questions and comments to rhiju [at] stanford.edu
-  [updated 22 June, 2012]
+**Primerize** (previously named **NA_thermo**), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the [Das Lab](https://daslab.stanford.edu/) at Stanford University for high-throughput RNA synthesis and design.
 
-To design primers for your sequence, just follow these easy steps:
+The algorithm designs *forward* (sense strand) and *reverse* (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, **Primerize** is a special case of the general ‘*Gapped Oligo Design*’ algorithm, optimizing the mispriming score and sequence span instead of *T<sub>m<sub>*.
 
-1. Start MATLAB.  Either add this 'na_thermo' directory to your path, or stay inside it.
+An online user-friendly GUI is available as the [**Primerize Server**](https://primerize.stanford.edu/).
 
-2. Define your sequence. For example:
+## Installation
 
- sequence = 'TTCTAATACGACTCACTATAGGCCAAAACAACGGAATTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGGGGAAACTTTGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAGCCAAGTCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCAAAGAAACAACAACAACAAC';
- tag = 'P4P6';
+To install **Primerize**, simply:
+```bash
+cd path/to/primerize/repo
+python setup.py install
+```
 
-This sequences includes a 20-nucleotide T7 promoter sequence at the beginning, and then a construct (starting with 'GG...') encoding the P4-P6 domain of the Tetrahymena ribozyme along with flanking sequences.
+For system-wide installation, you must have permissions and use with `sudo`.
 
-3. Type:
+**Primerize** requires the following *Python* packages as dependencies, all of which can be installed through [`pip`](https://pip.pypa.io/).
+```json
+numpy >= 1.10.1
+numba == 0.22.1
+matplotlib >= 1.5.0
+xlwt >= 1.0.0
+```
 
- primers = design_primers( sequence, tag );
-
-4. This will compute primers with minimal length, annealing temperatures above a cutoff (60 C, by default), through a recursive strategy. An additional score term helps avoid primers that share multiple 3' nucleotides with other parts of the sequence, as a heuristic to reduce mispriming. The algorithm has similarities (but was developed independently) of Thachuk & Condon (2007), BIBE, Proc. of 7th IEEE International Conf., p. 123-130.
-
-  If you want to use our original script (in use from 2008-2011), use design_primers_OLD:. (This was slower and did not rigorously optimize length.)
+Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.22.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*.
 
 
-6. We usually copy/paste these to a Word or Excel document for easy look-up later. If you add primer labels, you can copy/paste these to the IDT website or wherever.
+## Usage
 
- 
+For simple Primer Design tasks, follow this example:
+
+```python
+import primerize
+
+prm_1d = primerize.Primerize_1D()
+job_1d = prm_1d.design('TTCTAATACGACTCACTATA...AAAAAGAAACAACAACAACAAC', MIN_TM=60.0, NUM_PRIMERS=None, MIN_LENGTH=15, MAX_LENGTH=60, prefix='P4P6_2HP')
+if job_1d.is_success:
+	print job_1d
+
+prm_2d = primerize.Primerize_2D()
+job_2d = prm_2d.design('TTCTAATACGACTCACTATA...AAAAAGAAACAACAACAACAAC', offset=-51, which_muts=range(102, 261 + 1), which_libs=[1], prefix='P4P6_2HP')
+if job_2d.is_success:
+	print job_2d
+	job_2d.save('table')
+	job_2d.save('image')
+	job_2d.save('construct')
+```
+
+For advanced users, the returned `Design_1D` and `Design_2D` classes offer methods for `get()`, `save()` and `echo()`:
+
+```python
+MIN_TM = job_1d.get('MIN_TM')
+print job_1d.get('MISPRIME')
+print job_1d.echo('WARNING')
+if job_1d.is_success:
+	job_1d.save(path='result/', name='Primer')
+
+LIB = job_2d.get('which_libs')
+N_PRIMER = job_2d.get('N_PRIMER')
+print job_2d.get('CONSTRUCT')
+if job_2d.is_success:
+	print job_2d.echo()
+	job_2d.save('assembly', path='result/', name='Lib')
+```
+
+Besides `design()`, the root `Primerize_1D` and `Primerize_2D` classes offer methods for `get()`, `set()`, and `reset()`:
+
+```python
+COL_SIZE = prm_1d.get('COL_SIZE')
+prm_1d.set('MIN_LENGTH', 30)
+prm_1d.reset()
+```
+
+##### MATLAB Code (Deprecated)
+
+Please see the old [README.md](https://github.com/DasLab/Primerize/blob/master/deprecated_MATLAB/README.md) for instructions.
+
+## Documentation
+
+Documentation is available at https://primerize.stanford.edu/docs/.
+
+## Reference
+
+>Tian, S., *et al.* (**2015**)<br/>
+>[Primerize: Automated Primer Assembly for Transcribing Interesting RNAs.](http://nar.oxfordjournals.org/content/43/W1/W522.full)<br/>
+>*Nucleic Acid Research* **43 (W1)**: W522-W526.
+
+
+>Thachuk, C., and Condon, A. (**2007**)<br/>
+>[On the Design of Oligos for Gene Synthesis.](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554)<br/>
+>*Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
+
+by [**t47**](http://t47.io/), *Jan 2016*.
 
