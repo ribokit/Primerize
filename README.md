@@ -50,7 +50,7 @@ if job_2d.is_success:
 	job_2d.save('construct')
 ```
 
-For advanced users, the returned `Design_1D` and `Design_2D` classes offer methods for `get()`, `save()` and `echo()`:
+For advanced users, the returned `Design_1D` and `Design_2D` result classes offer methods for `get()`, `save()` and `echo()`:
 
 ```python
 MIN_TM = job_1d.get('MIN_TM')
@@ -67,13 +67,16 @@ if job_2d.is_success:
 	job_2d.save('assembly', path='result/', name='Lib')
 ```
 
-Besides `design()`, the root `Primerize_1D` and `Primerize_2D` classes offer methods for `get()`, `set()`, and `reset()`:
+Besides `design()`, the `Primerize_1D` and `Primerize_2D` worker classes offer methods for `get()`, `set()`, and `reset()`:
 
 ```python
 COL_SIZE = prm_1d.get('COL_SIZE')
 prm_1d.set('MIN_LENGTH', 30)
 prm_1d.reset()
 ```
+
+There are also `Assembly` and `Plate_96Well` helper classes. For more details, please refer to the **Documentation**.
+
 
 #### MATLAB Code (Deprecated)
 
