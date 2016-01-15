@@ -88,7 +88,7 @@ Documentation is available at https://primerize.stanford.edu/docs/.
 
 ## License
 
-Copyright &copy; of **Primerize** source code is described in [LICENSE.md](https://github.com/DasLab/Primerize/blob/master/LICENSE.md).
+Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](https://github.com/DasLab/Primerize/blob/master/LICENSE.md).
 
 ## Reference
 
@@ -102,5 +102,5 @@ Copyright &copy; of **Primerize** source code is described in [LICENSE.md](https
 >*Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
 <br/>
-by [**t47**](http://t47.io/), *Jan 2016*.
+by [**t47**](http://t47.io/), *January 2016*.
 
