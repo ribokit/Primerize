@@ -56,7 +56,7 @@ class Plate_96Well(object):
         self._data = {}
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[31mlist\033[0m(\033[31mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
+        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[31mdict\033[0m(\033[31mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
 
     def __str__(self):
         return self.echo()
