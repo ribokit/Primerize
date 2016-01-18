@@ -6,7 +6,10 @@ import numpy
 import os
 import xlwt
 
-from .thermo import calc_Tm
+if __package__ is None or not __package__:
+    from thermo import calc_Tm
+else:
+    from .thermo import calc_Tm
 
 
 class Assembly(object):

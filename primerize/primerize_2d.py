@@ -3,8 +3,12 @@ import math
 import time
 import traceback
 
-from .util import *
-from .primerize_1d import Primerize_1D
+if __package__ is None or not __package__:
+    from util import *
+    from primerize_1d import Primerize_1D
+else:
+    from .util import *
+    from .primerize_1d import Primerize_1D
 
 
 class Design_2D(object):

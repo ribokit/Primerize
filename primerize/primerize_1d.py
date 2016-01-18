@@ -6,9 +6,14 @@ import os
 import time
 import traceback
 
-from .misprime import *
-from .thermo import *
-from .util import *
+if __package__ is None or not __package__:
+    from misprime import *
+    from thermo import *
+    from util import *
+else:
+    from .misprime import *
+    from .thermo import *
+    from .util import *
 
 
 class Design_1D(object):

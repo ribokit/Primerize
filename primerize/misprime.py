@@ -1,6 +1,9 @@
 import numpy
 
-from .util import reverse_complement
+if __package__ is None or not __package__:
+    from util import reverse_complement
+else:
+    from .util import reverse_complement
 
 
 def check_misprime(sequence):
