@@ -10,8 +10,11 @@ from thermo import calc_Tm
 
 
 class Assembly(object):
-    def __init__(self, sequence, name, primers, bp_lines, seq_lines, print_lines, Tm_overlaps):
-        (self.sequence, self.name, self.primers, self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = (sequence, name, primers, bp_lines, seq_lines, print_lines, Tm_overlaps)
+    def __init__(self, sequence, primers, name, COL_SIZE=142):
+        self.sequence = sequence
+        self.primers = primers
+        self.name = name
+        (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = draw_assembly(self.sequence, self.primers, COL_SIZE)
 
     def __repr__(self):
         return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[31mlist\033[0m(\033[31mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
@@ -159,7 +162,7 @@ def primer_suffix(num):
         return '\033[94m F\033[0m'
 
 
-def draw_assembly(sequence, primers, name, COL_SIZE=142):
+def draw_assembly(sequence, primers, COL_SIZE):
     N_primers = primers.shape[1]
     seq_line_prev = list(' ' * max(len(sequence), COL_SIZE))
     bp_lines = []
@@ -241,7 +244,7 @@ def draw_assembly(sequence, primers, name, COL_SIZE=142):
         print_lines.append(('=', complement(out_line)))
         print_lines.append(('', '\n'))
 
-    return Assembly(sequence, name, primers, bp_lines, seq_lines, print_lines, Tms)
+    return (bp_lines, seq_lines, print_lines, Tms)
 
 
 def coord_to_num(coord):

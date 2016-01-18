@@ -44,31 +44,45 @@ class Design_2D(object):
                 save_construct_key(self._data['construct_names'], name, path)
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
+
+            elif not key:
+                for key in ['table', 'image', 'construct', 'assembly']:
+                    self.save(key, path, name)
             else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.sav()\033[0m.\n' % (key, self.__class__)) 
+                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.save()\033[0m.\n' % (key, self.__class__)) 
         else:
             raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
-    def echo(self):
+    def echo(self, key=''):
         if self.is_success:
-            output = ''
-            for i in xrange(len(self._data['plates'][0])):
-                for j in xrange(len(self._data['plates'])):
-                    output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                    output += self._data['plates'][j][i].echo(self.primer_set[j])
-            return output[:-1]
+            key = key.lower()
+            if key == 'plate':
+                output = ''
+                for i in xrange(len(self._data['plates'][0])):
+                    for j in xrange(len(self._data['plates'])):
+                        output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
+                        output += self._data['plates'][j][i].echo(self.primer_set[j])
+                return output[:-1]
+            elif key == 'assembly':
+                return self._data['assembly'].echo()
+
+            elif not key:
+                return self.echo('assembly') + '\n\n' + self.echo('plate')
+            else:
+                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__)) 
         else:
             raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__)) 
 
 
 
 class Primerize_2D(object):
-    def __init__(self, offset=0, which_muts=[], which_libs=[1], prefix='lib'):
+    def __init__(self, offset=0, which_muts=[], which_libs=[1], COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
         self.which_muts = which_muts
         self.which_libs = which_libs
+        self.COL_SIZE = COL_SIZE
 
     def __repr__(self):
         return repr(self.__dict__)
@@ -81,6 +95,8 @@ class Primerize_2D(object):
         key = key.lower()
         if hasattr(self, key):
             return getattr(self, key)
+        elif key == 'col_size':
+            return self.COL_SIZE
         else:
             raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
@@ -96,6 +112,8 @@ class Primerize_2D(object):
                 self.which_libs = sorted(set(value))
             elif key == 'which_muts' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value)):
                 self.which_muts = sorted(set(value))
+            elif key == 'col_size' and isinstance(value, int) and value > 0:
+                self.COL_SIZE = int(value)
             else:
                 raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, key, self.__class__)) 
         else:
@@ -107,6 +125,7 @@ class Primerize_2D(object):
         self.offset = 0
         self.which_muts = []
         self.which_libs = [1]
+        self.COL_SIZE = 142
 
 
     def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
@@ -152,7 +171,7 @@ class Primerize_2D(object):
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'construct_names': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
-        assembly = draw_assembly(sequence, primers, name)
+        assembly = Assembly(sequence, primers, name, self.COL_SIZE)
 
         plates = [[Plate_96Well() for i in xrange(N_plates)] for i in xrange(N_primers)]
         print 'Filling out sequences ...'

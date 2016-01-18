@@ -102,12 +102,12 @@ class Design_1D(object):
 class Primerize_1D(object):
     def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3, prefix='primer'):
         self.prefix = prefix
-        self.MIN_TM = MIN_TM
-        self.NUM_PRIMERS = NUM_PRIMERS
-        self.MIN_LENGTH = MIN_LENGTH
-        self.MAX_LENGTH = MAX_LENGTH
-        self.COL_SIZE = COL_SIZE
-        self.WARN_CUTOFF = WARN_CUTOFF
+        self.MIN_TM = max(MIN_TM, 0)
+        self.NUM_PRIMERS = max(NUM_PRIMERS, 0)
+        self.MIN_LENGTH = max(MIN_LENGTH, 0)
+        self.MAX_LENGTH = max(MAX_LENGTH, 0)
+        self.COL_SIZE = max(COL_SIZE, 0)
+        self.WARN_CUTOFF = max(WARN_CUTOFF, 0)
 
     def __repr__(self):
         return repr(self.__dict__)
@@ -192,7 +192,7 @@ class Primerize_1D(object):
                     allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
                 misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
-                assembly = draw_assembly(sequence, primers, name, self.COL_SIZE)
+                assembly = Assembly(sequence, primers, name, self.COL_SIZE)
                 print '\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n'
             else:
                 print '\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
