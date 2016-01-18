@@ -45,9 +45,7 @@ prm_2d = primerize.Primerize_2D()
 job_2d = prm_2d.design('TTCTAATACGACTCACTATA...AAAAAGAAACAACAACAACAAC', offset=-51, which_muts=range(102, 261 + 1), which_libs=[1], prefix='P4P6_2HP')
 if job_2d.is_success:
 	print job_2d
-	job_2d.save('table')
-	job_2d.save('image')
-	job_2d.save('construct')
+	job_2d.save()
 ```
 
 For advanced users, the returned `Design_1D` and `Design_2D` result classes offer methods for `get()`, `save()` and `echo()`:
