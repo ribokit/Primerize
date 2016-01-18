@@ -1,6 +1,6 @@
 import numpy
 
-from util import reverse_complement
+from .util import reverse_complement
 
 
 def check_misprime(sequence):
@@ -10,7 +10,7 @@ def check_misprime(sequence):
     subset_str = []
 
     # match to sequence
-    for i in xrange(N):
+    for i in range(N):
         start_pos = max(i - m, 0) - 1
         if start_pos == -1:
             subset_str.append(sequence[i::-1])
@@ -19,7 +19,7 @@ def check_misprime(sequence):
 
     # match to reverse complement of sequence
     sequence_rc = reverse_complement(sequence)
-    for i in xrange(N):
+    for i in range(N):
         end_pos = N - i - 1
         start_pos = max(end_pos - m - 1, 0) - 1
         if start_pos == -1:
@@ -33,7 +33,7 @@ def check_misprime(sequence):
     # how close is match to neighbor?
     match_next = numpy.zeros((1, 2 * N - 1))
     misprime_score_next = numpy.zeros((1, 2 * N - 1))
-    for i in xrange(2 * N - 1):
+    for i in range(2 * N - 1):
         count = -1
         misprime_score = 0
         str_1 = subset_str[i]
@@ -65,7 +65,7 @@ def check_misprime(sequence):
     best_match[0, 2 * N - 1] = 2 * N - 2
     misprime_score_max[0, 2 * N - 1] = misprime_score_next[0, 2 * N - 2]
 
-    for i in xrange(1, 2 * N - 1):
+    for i in range(1, 2 * N - 1):
         if (match_next[0, i - 1] > match_next[0, i]):
             best_match[0, i] = i - 1
             match_max[0, i] = match_next[0, i - 1]
@@ -82,7 +82,7 @@ def check_misprime(sequence):
     misprime_score_reverse = numpy.zeros((1, N))
     best_match_reverse = numpy.zeros((1, N))
 
-    for i in xrange(2 * N):
+    for i in range(2 * N):
         if (sort_idx[i] <= N - 1):
             num_match_foward[0, sort_idx[i]] = match_max[0, i]
             misprime_score_forward[0, sort_idx[i]] = misprime_score_max[0, i]

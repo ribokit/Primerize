@@ -6,7 +6,7 @@ import numpy
 import os
 import xlwt
 
-from thermo import calc_Tm
+from .thermo import calc_Tm
 
 
 class Assembly(object):
@@ -26,7 +26,7 @@ class Assembly(object):
     def echo(self):
         output = ''
         x = 0
-        for i in xrange(len(self.print_lines)):
+        for i in range(len(self.print_lines)):
             (flag, string) = self.print_lines[i]
             if (flag == '$' and 'xx' in string):
                 Tm = '%2.1f' % self.Tm_overlaps[x]
@@ -112,8 +112,8 @@ class Plate_96Well(object):
             tic.tick1On = tic.tick2On = False
 
         (x_green, x_violet, x_gray, y_green, y_violet, y_gray) = ([], [], [], [], [], [])
-        for i in xrange(8):
-            for j in xrange(12):
+        for i in range(8):
+            for j in range(12):
                 num = i + j * 8 + 1
                 if num_to_coord(num) in self.coords:
                     if 'WT' in self._data[num][0]:
@@ -169,13 +169,13 @@ def draw_assembly(sequence, primers, COL_SIZE):
     seq_lines = []
     Tms = []
 
-    for i in xrange(N_primers):
+    for i in range(N_primers):
         primer = primers[:, i]
         seq_line = list(' ' * max(len(sequence), COL_SIZE))
         (seg_start, seg_end, seg_dir) = primer
 
         if (seg_dir == 1):
-            for j in xrange(seg_start, seg_end + 1):
+            for j in range(seg_start, seg_end + 1):
                 seq_line[j] = sequence[j]
 
             if (seg_end + 1 < len(sequence)):
@@ -188,7 +188,7 @@ def draw_assembly(sequence, primers, COL_SIZE):
                 offset = seg_end + 4
                 seq_line[offset:(offset + len(num_txt))] = num_txt
         else:
-            for j in xrange(seg_start, seg_end + 1):
+            for j in range(seg_start, seg_end + 1):
                 seq_line[j] = reverse_complement(sequence[j])
 
             if (seg_start - 1 >= 0):
@@ -204,7 +204,7 @@ def draw_assembly(sequence, primers, COL_SIZE):
         bp_line = list(' ' * max(len(sequence), COL_SIZE))
         overlap_seq = ''
         last_bp_pos = 1
-        for j in xrange(len(sequence)):
+        for j in range(len(sequence)):
             if (seq_line_prev[j] in 'ACGT' and seq_line[j] in 'ACGT'):
                 bp_line[j] = '|'
                 last_bp_pos = j
@@ -222,13 +222,13 @@ def draw_assembly(sequence, primers, COL_SIZE):
         seq_line_prev = seq_line
 
     print_lines = []
-    for i in xrange(int(math.floor((len(sequence) - 1) / COL_SIZE)) + 1):
+    for i in range(int(math.floor((len(sequence) - 1) / COL_SIZE)) + 1):
         start_pos = COL_SIZE * i
         end_pos = min(COL_SIZE * (i + 1), len(sequence))
         out_line = sequence[start_pos:end_pos]
         print_lines.append(('~', out_line))
 
-        for j in xrange(len(seq_lines)):
+        for j in range(len(seq_lines)):
             if (len(bp_lines[j][end_pos:].replace(' ', '')) and ('|' not in bp_lines[j][end_pos:].replace(' ', '')) and (not len(bp_lines[j][:start_pos].replace(' ', '')))):
                 bp_line = bp_lines[j][start_pos:].rstrip()
             elif ('|' not in bp_lines[j][start_pos:end_pos]):
@@ -268,7 +268,7 @@ def get_mut_range(mut_start, mut_end, offset, sequence):
     mut_start = min(max(mut_start, 1 - offset), len(sequence) - offset)
     if (not mut_end) or (mut_end is None): mut_end = len(sequence) - offset
     mut_end = max(min(mut_end, len(sequence) - offset), 1 - offset)
-    which_muts = range(mut_start, mut_end + 1)
+    which_muts = list(range(mut_start, mut_end + 1))
     return (which_muts, mut_start, mut_end)
 
 
@@ -277,7 +277,7 @@ def get_primer_index(primer_set, sequence):
     coverage = numpy.zeros((1, len(sequence)))
     primers = numpy.zeros((3, N_primers))
 
-    for n in xrange(N_primers):
+    for n in range(N_primers):
         primer = RNA2DNA(primer_set[n])
         if n % 2:
             i = sequence.find(reverse_complement(primer))
@@ -316,7 +316,7 @@ def print_primer_plate(plate, ref_primer):
             string += ('%s\033[96m%s\033[0m\033[93m%s\033[0m\033[91m%s\033[0m' % (mut[:5], mut[5], mut[6:-1], mut[-1])).ljust(45)
 
         if ref_primer:
-            for i in xrange(len(ref_primer)):
+            for i in range(len(ref_primer)):
                 if ref_primer[i] != plate._data[key][1][i]:
                     string += '\033[41m%s\033[0m' % plate._data[key][1][i]
                 else:
@@ -330,32 +330,32 @@ def print_primer_plate(plate, ref_primer):
 
 
 def save_plate_layout(plates, N_plates, N_primers, prefix, path):
-    for k in xrange(N_plates):
-        for p in xrange(N_primers):
+    for k in range(N_plates):
+        for p in range(N_primers):
             primer_sequences = plates[p][k]
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
                 file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (prefix, k + 1, p + 1))
-                print 'Creating plate image: \033[94m%s\033[0m.' % file_name
+                print('Creating plate image: \033[94m%s\033[0m.' % file_name)
                 title = '%s_plate_%d_primer_%d' % (prefix, k + 1, p + 1)
                 primer_sequences.save(file_name, title)
 
 
 def save_construct_key(keys, prefix, path):
     f = open(os.path.join(path, '%s_keys.txt' % prefix), 'w')
-    print 'Creating keys file ...'
+    print('Creating keys file ...')
     f.write('\n'.join(keys))
     f.close()
 
 
 def save_plates_excel(plates, N_plates, N_primers, prefix, path):
-    for k in xrange(N_plates):
+    for k in range(N_plates):
         file_name = os.path.join(path, '%s_plate_%d.xls' % (prefix, k + 1))
-        print 'Creating plate file: \033[94m%s\033[0m.' % file_name
+        print('Creating plate file: \033[94m%s\033[0m.' % file_name)
         workbook = xlwt.Workbook()
 
-        for p in xrange(N_primers):
+        for p in range(N_primers):
             primer_sequences = plates[p][k]
             num_primers_on_plate = primer_sequences.get('count')
 

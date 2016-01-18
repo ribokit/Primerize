@@ -6,9 +6,9 @@ import os
 import time
 import traceback
 
-from misprime import *
-from thermo import *
-from util import *
+from .misprime import *
+from .thermo import *
+from .util import *
 
 
 class Design_1D(object):
@@ -24,7 +24,7 @@ class Design_1D(object):
 
     def get(self, key):
         key = key.upper()
-        if self._params.has_key(key):
+        if key in self._params:
             return self._params[key]
         elif key == 'WARNING':
             return self._data['warnings']
@@ -53,7 +53,7 @@ class Design_1D(object):
             lines = str(self).replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
             f.write(lines)
             f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
-            for i in xrange(len(self.primer_set)):
+            for i in range(len(self.primer_set)):
                 suffix = 'FR'[i % 2]
                 f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
             f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
@@ -67,13 +67,13 @@ class Design_1D(object):
             key = key.lower()
             if key == 'misprime':
                 output = ''
-                for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
+                for i in range(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
                     output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self._data['misprime_score'][0][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self.sequence[i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self._data['misprime_score'][1][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']])
                 return output[:-1]
  
             elif key == 'warning':
                 output = ''
-                for i in xrange(len(self._data['warnings'])):
+                for i in range(len(self._data['warnings'])):
                     warning = self._data['warnings'][i]
                     p_1 = '\033[100m%d\033[0m%s' % (warning[0], primer_suffix(warning[0] - 1))
                     p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, primer_suffix(x - 1)) for x in warning[3])
@@ -82,7 +82,7 @@ class Design_1D(object):
  
             elif key == 'primer':
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
-                for i in xrange(len(self.primer_set)):
+                for i in range(len(self.primer_set)):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
                     output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
                 return output[:-1]
@@ -137,9 +137,9 @@ class Primerize_1D(object):
                 else:
                     setattr(self, key, int(value))
                     if self.MIN_LENGTH > self.MAX_LENGTH:
-                        print '\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.'
+                        print('\033[93mWARNING\033[0m: \033[92mMIN_LENGTH\033[0m is greater than \033[92mMAX_LENGTH\033[0m.')
                     elif self.NUM_PRIMERS % 2:
-                        print '\033[93mWARNING\033[0m: \033[92mNUM_PRIMERS\033[0m should be even number only.'
+                        print('\033[93mWARNING\033[0m: \033[92mNUM_PRIMERS\033[0m should be even number only.')
             else:
                 raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, key, self.__class__)) 
         else:
@@ -174,32 +174,32 @@ class Primerize_1D(object):
         misprime_score = ['', '']
 
         try:
-            print 'Precalculataing Tm matrix ...'
+            print('Precalculataing Tm matrix ...')
             Tm_precalculated = precalculate_Tm(sequence)
-            print 'Precalculataing misprime score ...'
+            print('Precalculataing misprime score ...')
             (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = check_misprime(sequence)
 
-            print 'Doing dynamics programming calculation ...'
+            print('Doing dynamics programming calculation ...')
             (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers) = dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated)
-            print 'Doing backtracking ...'
+            print('Doing backtracking ...')
             (is_success, primers, primer_set, warnings) = back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, self.WARN_CUTOFF)
 
             if is_success:
                 allow_forward_line = list(' ' * N_BP)
                 allow_reverse_line = list(' ' * N_BP)
-                for i in xrange(N_BP):
+                for i in range(N_BP):
                     allow_forward_line[i] = str(int(min(num_match_forward[0, i] + 1, 9)))
                     allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
                 misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
                 assembly = Assembly(sequence, primers, name, self.COL_SIZE)
-                print '\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n'
+                print('\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n')
             else:
-                print '\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n'
+                print('\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n')
         except:
             is_success = False
-            print traceback.format_exc()
-            print '\033[41mERROR\033[0m: Primerize 1D design() encountered error.\n'
+            print(traceback.format_exc())
+            print('\033[41mERROR\033[0m: Primerize 1D design() encountered error.\n')
 
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
         data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings}
@@ -236,12 +236,12 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
     #                   <-----...
     #                   q
     #
-    for p in xrange(MIN_LENGTH, MAX_LENGTH + 1):
+    for p in range(MIN_LENGTH, MAX_LENGTH + 1):
         # STOP[reverse](1)
         q_min = max(1, p - MAX_LENGTH + 1)
         q_max = p
 
-        for q in xrange(q_min, q_max + 1):
+        for q in range(q_min, q_max + 1):
             if (Tm_precalculated[q - 1, p - 1] > MIN_TM):
                 scores_stop[p - 1, q - 1, 0] = (q - 1) + 2 * (p - q + 1)
                 scores_stop[p - 1, q - 1, 0] += misprime_score_weight * (misprime_score_forward[0, p - 1] + misprime_score_reverse[0, q - 1])
@@ -257,12 +257,12 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
         #            <---------------------
         #            q                    N_BP
         #
-        for p in xrange(1, N_BP + 1):
+        for p in range(1, N_BP + 1):
             q_min = max(1, p - MAX_LENGTH + 1)
             q_max = p
 
             # STOP[reverse]
-            for q in xrange(q_min, q_max + 1):
+            for q in range(q_min, q_max + 1):
                 # previous primer ends had overlap with good Tm and were scored
                 if (scores_stop[p - 1, q - 1, n - 1] < MAX_SCORE):
                     i = N_BP + 1
@@ -292,25 +292,25 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
         #    <------------------------
         #    q                       j
         #
-        for p in xrange(1, N_BP + 1):
+        for p in range(1, N_BP + 1):
             # STOP[forward](1)
             q_min = max(1, p - MAX_LENGTH + 1)
             q_max = p
 
             # STOP[reverse](1)
-            for q in xrange(q_min, q_max + 1):
+            for q in range(q_min, q_max + 1):
                 # previous primer ends had overlap with good Tm and were scored
                 if (scores_stop[p - 1, q - 1, n - 2] < MAX_SCORE):
                     # START[reverse](1)
                     min_j = max(p + 1, q + MIN_LENGTH - 1)
                     max_j = min(N_BP, q + MAX_LENGTH - 1)
 
-                    for j in xrange(min_j, max_j + 1):
+                    for j in range(min_j, max_j + 1):
                         # start[reverse](2)
                         min_i = max(p + 1, j - MAX_LENGTH + 1)
                         max_i = j
 
-                        for i in xrange(min_i, max_i + 1):
+                        for i in range(min_i, max_i + 1):
                             # at some PCR starge thiw will be an endpoint!
                             if (Tm_precalculated[i - 1, j - 1] > MIN_TM):
                                 potential_score = scores_stop[p - 1, q - 1, n - 2] + (i - p - 1) + 2 * (j - i + 1)
@@ -328,24 +328,24 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
         #
     
         # START[reverse](1)
-        for j in xrange(1, N_BP + 1):
+        for j in range(1, N_BP + 1):
             # START[reverse](2)
             min_i = max(1, j - MAX_LENGTH + 1)
             max_i = j
 
-            for i in xrange(min_i, max_i + 1):
+            for i in range(min_i, max_i + 1):
                 # could also just make this 1:N_BP, but that would wast a little time.
                 if (scores_start[i - 1, j - 1, n - 2] < MAX_SCORE):
                     # STOP[reverse](1)
                     min_p = max(j + 1, i + MIN_LENGTH - 1)
                     max_p = min(N_BP, i + MAX_LENGTH - 1)
 
-                    for p in xrange(min_p, max_p + 1):
+                    for p in range(min_p, max_p + 1):
                         # STOP[reverse](2)
                         min_q = max(j + 1, p - MAX_LENGTH + 1)
                         max_q = p
 
-                        for q in xrange(min_q, max_q + 1):
+                        for q in range(min_q, max_q + 1):
                             if (Tm_precalculated[q - 1, p - 1] > MIN_TM):
                                 potential_score = scores_start[i - 1, j - 1, n - 2] + (q - j - 1) + 2 * (p - q + 1)
                                 potential_score += misprime_score_weight * (misprime_score_forward[0, p - 1] + misprime_score_reverse[0, q - 1])
@@ -376,7 +376,7 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
         is_success = False
     else:
         primers[:, 2 * N_primers - 1] = [q, N_BP - 1, -1]
-        for m in xrange(N_primers - 1, 0, -1):
+        for m in range(N_primers - 1, 0, -1):
             i = choice_stop_i[p, q, m]
             j = choice_stop_j[p, q, m]
             primers[:, 2 * m] = [i, p, 1]
@@ -386,7 +386,7 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
         primers[:, 0] = [0, p, 1]
         primers = primers.astype(int)
 
-        for i in xrange(2 * N_primers):
+        for i in range(2 * N_primers):
             primer_seq = sequence[primers[0, i]:primers[1, i] + 1]
             if primers[2, i] == -1:
                 primer_set.append(reverse_complement(primer_seq))
@@ -410,7 +410,7 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
 
 def find_primers_affected(primers, pos):
     primer_list = []
-    for i in xrange(primers.shape[1]):
+    for i in range(primers.shape[1]):
         if (pos >= primers[0, i] and pos <= primers[1, i]):
             primer_list.append(i + 1)
     return primer_list
@@ -441,10 +441,10 @@ def main():
     res = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
     if res.is_success:
         if not args.is_quiet:
-            print res
+            print(res)
         if args.is_file:
             res.save()
-    print 'Time elapsed: %.1f s.' % (time.time() - t0)
+    print('Time elapsed: %.1f s.' % (time.time() - t0))
 
 
 if __name__ == "__main__":

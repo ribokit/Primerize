@@ -3,8 +3,8 @@ import math
 import time
 import traceback
 
-from util import *
-from primerize_1d import Primerize_1D
+from .util import *
+from .primerize_1d import Primerize_1D
 
 
 class Design_2D(object):
@@ -20,9 +20,9 @@ class Design_2D(object):
 
     def get(self, key):
         key = key.upper()
-        if self._params.has_key(key):
+        if key in self._params:
             return self._params[key]
-        elif self._params.has_key(key.lower()):
+        elif key.lower() in self._params:
             return self._params[key.lower()]
         elif key == 'PRIMER':
             return self._data['assembly'].primers
@@ -59,8 +59,8 @@ class Design_2D(object):
             key = key.lower()
             if key == 'plate':
                 output = ''
-                for i in xrange(len(self._data['plates'][0])):
-                    for j in xrange(len(self._data['plates'])):
+                for i in range(len(self._data['plates'][0])):
+                    for j in range(len(self._data['plates'])):
                         output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
                         output += self._data['plates'][j][i].echo(self.primer_set[j])
                 return output[:-1]
@@ -143,7 +143,7 @@ class Primerize_2D(object):
 
         is_success = True
         assembly = {}
-        for i in xrange(len(primer_set)):
+        for i in range(len(primer_set)):
             primer_set[i] = RNA2DNA(primer_set[i])
         if not primer_set:
             prm = Primerize_1D()
@@ -152,12 +152,12 @@ class Primerize_2D(object):
                 primer_set = res.primer_set
             else:
                 is_success = False
-                print '\033[41mFAIL\033[0m: \033[31mNO Solution\033[0m found under given contraints.\n'
+                print('\033[41mFAIL\033[0m: \033[31mNO Solution\033[0m found under given contraints.\n')
                 params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
                 data = {'plates': [], 'assembly': [], 'construct_names': []}
                 return Design_2D(sequence, name, is_success, primer_set, params, data)
         if not which_muts:
-            which_muts = range(1 - offset, N_BP + 1 - offset)
+            which_muts = list(range(1 - offset, N_BP + 1 - offset))
         construct_names = list(' ' * (len(which_muts) + 1))
 
         N_primers = len(primer_set)
@@ -167,22 +167,22 @@ class Primerize_2D(object):
 
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success: 
-            print '\033[41mFAIL\033[0m: \033[31mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n'
+            print('\033[41mFAIL\033[0m: \033[31mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'construct_names': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
 
-        plates = [[Plate_96Well() for i in xrange(N_plates)] for i in xrange(N_primers)]
-        print 'Filling out sequences ...'
+        plates = [[Plate_96Well() for i in range(N_plates)] for i in range(N_primers)]
+        print('Filling out sequences ...')
 
         try:
-            for p in xrange(N_primers):
-                for l_pos in xrange(len(which_libs)):
+            for p in range(N_primers):
+                for l_pos in range(len(which_libs)):
                     # lib should be a number: 1, 2, or 3 for the different possible mutations.
                     lib = which_libs[l_pos]
 
-                    for m_pos in xrange(-1, len(which_muts)):
+                    for m_pos in range(-1, len(which_muts)):
                         # which construct is this?
                         n = m_pos + 1
                         plate_num = int(math.floor(n / 96.0))
@@ -220,11 +220,11 @@ class Primerize_2D(object):
                             construct_names[n] = well_name
                             plates[p][plate_num].set(well_tag, well_name, mut_primer)
 
-            print '\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n'
+            print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
             is_success = False
-            print traceback.format_exc()
-            print '\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n'
+            print(traceback.format_exc())
+            print('\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n')
 
         params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
         data = {'plates': plates, 'assembly': assembly, 'construct_names': construct_names}
@@ -266,7 +266,7 @@ def main():
     res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
     if res.is_success:
         if not args.is_quiet:
-            print res
+            print(res)
         if args.is_excel:
             res.save('table')
         if args.is_image:
@@ -275,7 +275,7 @@ def main():
             res.save('construct')
             res.save('assembly')
 
-    print 'Time elapsed: %.1f s.' % (time.time() - t0)
+    print('Time elapsed: %.1f s.' % (time.time() - t0))
 
 
 if __name__ == "__main__":
