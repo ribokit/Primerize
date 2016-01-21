@@ -21,7 +21,7 @@ For system-wide installation, you must have permissions and use with `sudo`.
 **Primerize** requires the following *Python* packages as dependencies, all of which can be installed through [`pip`](https://pip.pypa.io/).
 ```json
 matplotlib >= 1.5.0
-numba == 0.22.1
+numba >= 0.23.1
 numpy >= 1.10.1
 xlwt >= 1.0.0
 ```
