@@ -73,11 +73,11 @@ class Plate_96Well(object):
             return len(self.coords)
         else:
             if coord_to_num(coord) == -1:
-                raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__)) 
+                raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
             elif coord in self.coords:
                 return self._data[coord_to_num(coord)]
             else:
-                raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__)) 
+                raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
 
 
     def set(self, coord, tag, primer):
@@ -382,5 +382,5 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
                         sheet.write(i + 1, 1, primer_sequences._data[row][0])
                         sheet.write(i + 1, 2, primer_sequences._data[row][1])
 
-        workbook.save(file_name)    
+        workbook.save(file_name)
 
