@@ -68,6 +68,10 @@ class Plate_96Well(object):
         return self.echo()
 
 
+    def has(self, coord):
+        return coord in self.coords
+
+
     def get(self, coord):
         if coord.lower() == 'count':
             return len(self.coords)
@@ -363,6 +367,9 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
+                if num_primers_on_plate == 1 and primer_sequences.has('A1') and 'WT' in primer_sequences.get('A1')[0]:
+                    continue
+
                 sheet = workbook.add_sheet('primer_%d' % (p + 1))
                 sheet.col(1).width = 256 * 15
                 sheet.col(2).width = 256 * 75

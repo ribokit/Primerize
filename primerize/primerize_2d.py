@@ -5,10 +5,10 @@ import traceback
 
 if __package__ is None or not __package__:
     from util import *
-    from primerize_1d import Primerize_1D
+    from primerize_1d import Primerize_1D, Design_1D
 else:
     from .util import *
-    from .primerize_1d import Primerize_1D
+    from .primerize_1d import Primerize_1D, Design_1D
 
 
 class Design_2D(object):
@@ -132,7 +132,14 @@ class Primerize_2D(object):
         self.COL_SIZE = 142
 
 
-    def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
+    def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None, is_force=False):
+
+        if isinstance(sequence, Design_1D):
+            design_1d = sequence
+            sequence = design_1d.sequence
+            primer_set = design_1d.primer_set
+            prefix = design_1d.name
+
         if offset is None: offset = self.offset
         if which_muts is None: which_muts = self.which_muts
         if which_libs is None: which_libs = self.which_libs
@@ -149,7 +156,7 @@ class Primerize_2D(object):
         assembly = {}
         for i in range(len(primer_set)):
             primer_set[i] = RNA2DNA(primer_set[i])
-        if not primer_set:
+        if not primer_set and is_force:
             prm = Primerize_1D()
             res = prm.design(sequence)
             if res.is_success:
@@ -157,9 +164,15 @@ class Primerize_2D(object):
             else:
                 is_success = False
                 print('\033[41mFAIL\033[0m: \033[31mNO Solution\033[0m found under given contraints.\n')
-                params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
-                data = {'plates': [], 'assembly': [], 'construct_names': []}
-                return Design_2D(sequence, name, is_success, primer_set, params, data)
+        else:
+            print('\033[93mWARNING\033[0m: Please run \033[31mPrimerize_1D.design()\033[0m first to get a solution for \033[94mprimer_set\033[0m.\n')
+            is_success = False
+
+        if not is_success:
+            params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
+            data = {'plates': [], 'assembly': [], 'construct_names': []}
+            return Design_2D(sequence, name, is_success, primer_set, params, data)
+
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
         construct_names = list(' ' * (len(which_muts) + 1))
@@ -175,8 +188,8 @@ class Primerize_2D(object):
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'construct_names': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
-        assembly = Assembly(sequence, primers, name, self.COL_SIZE)
 
+        assembly = Assembly(sequence, primers, name, self.COL_SIZE)
         plates = [[Plate_96Well() for i in range(N_plates)] for i in range(N_primers)]
         print('Filling out sequences ...')
 
@@ -238,7 +251,7 @@ class Primerize_2D(object):
 
 def design_primers_2D(sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
     prm = Primerize_2D()
-    res = prm.design(sequence, primer_set, offset, which_muts, which_libs, prefix)
+    res = prm.design(sequence, primer_set, offset, which_muts, which_libs, prefix, True)
     return res
 
 
@@ -266,6 +279,7 @@ def main():
     else:
         args.primer_set = args.primer_set[0]
     (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+
 
     res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
     if res.is_success:
