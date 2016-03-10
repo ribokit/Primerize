@@ -14,9 +14,10 @@ else:
 class Design_2D(object):
     def __init__(self, sequence, name, is_success, primer_set, params, data):
         (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
+        self._data['illustration'] = draw_region(self.sequence, self._params)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'construct_names\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), len(self._data['construct_names']), repr(self._data['assembly']), repr(self._data['plates']))
+        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'construct_names\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), len(self._data['construct_names']), repr(self._data['assembly']), repr(self._data['plates']))
 
     def __str__(self):
         return self.echo()
@@ -70,9 +71,11 @@ class Design_2D(object):
                 return output[:-1]
             elif key == 'assembly':
                 return self._data['assembly'].echo()
+            elif key == 'region':
+                return '\n'.join(self._data['illustration']['lines'])
 
             elif not key:
-                return self.echo('assembly') + '\n\n' + self.echo('plate')
+                return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__))
         else:
@@ -163,9 +166,9 @@ class Primerize_2D(object):
                 primer_set = res.primer_set
             else:
                 is_success = False
-                print('\033[41mFAIL\033[0m: \033[31mNO Solution\033[0m found under given contraints.\n')
+                print('\033[41mFAIL\033[0m: \033[91mNO Solution\033[0m found under given contraints.\n')
         else:
-            print('\033[93mWARNING\033[0m: Please run \033[31mPrimerize_1D.design()\033[0m first to get a solution for \033[94mprimer_set\033[0m.\n')
+            print('\033[93mWARNING\033[0m: Please run \033[34mPrimerize_1D.design()\033[0m first to get a solution for \033[92mprimer_set\033[0m.\n')
             is_success = False
 
         if not is_success:
@@ -184,13 +187,13 @@ class Primerize_2D(object):
 
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
-            print('\033[41mFAIL\033[0m: \033[31mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
+            print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'construct_names': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
-        plates = [[Plate_96Well() for i in range(N_plates)] for i in range(N_primers)]
+        plates = [[Plate_96Well() for i in range(N_plates)] for j in range(N_primers)]
         print('Filling out sequences ...')
 
         try:
@@ -285,6 +288,7 @@ def main():
     if res.is_success:
         if not args.is_quiet:
             print(res)
+            print repr(res)
         if args.is_excel:
             res.save('table')
         if args.is_image:

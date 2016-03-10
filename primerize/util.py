@@ -20,7 +20,7 @@ class Assembly(object):
         (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = draw_assembly(self.sequence, self.primers, COL_SIZE)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[31mlist\033[0m(\033[31mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[31mlist\033[0m(\033[31mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
+        return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[91mlist\033[0m(\033[91mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
 
     def __str__(self):
         return self.echo()
@@ -62,7 +62,7 @@ class Plate_96Well(object):
         self._data = {}
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[31mdict\033[0m(\033[31mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
+        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[91mdict\033[0m(\033[91mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
 
     def __str__(self):
         return self.echo()
@@ -76,6 +76,7 @@ class Plate_96Well(object):
         if coord.lower() == 'count':
             return len(self.coords)
         else:
+            coord = format_coord(coord)
             if coord_to_num(coord) == -1:
                 raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
             elif coord in self.coords:
@@ -85,6 +86,7 @@ class Plate_96Well(object):
 
 
     def set(self, coord, tag, primer):
+        coord = format_coord(coord)
         if coord_to_num(coord) == -1:
             raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (coord, self.__class__))
         else:
@@ -158,8 +160,7 @@ def complement(sequence):
 
 
 def reverse_complement(sequence):
-    sequence = sequence[::-1]
-    return complement(sequence)
+    return complement(sequence[::-1])
 
 
 def primer_suffix(num):
@@ -252,6 +253,10 @@ def draw_assembly(sequence, primers, COL_SIZE):
         print_lines.append(('', '\n'))
 
     return (bp_lines, seq_lines, print_lines, Tms)
+
+
+def format_coord(coord):
+    return coord[0] + coord[1:].zfill(2)
 
 
 def coord_to_num(coord):
@@ -390,4 +395,67 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
                         sheet.write(i + 1, 2, primer_sequences._data[row][1])
 
         workbook.save(file_name)
+
+
+def draw_region(sequence, params):
+    offset = params['offset']
+    start = params['which_muts'][0] + offset - 1
+    end = params['which_muts'][-1] + offset - 1
+    fragments = []
+
+    if start <= 20:
+        fragments.append(sequence[:start])
+    else:
+        fragments.append(sequence[:10] + '......' + sequence[start - 10:start])
+    if end - start <= 40:
+        fragments.append(sequence[start:end + 1])
+    else:
+        fragments.append(sequence[start:start + 20] + '......' + sequence[end - 19:end + 1])
+    if len(sequence) - end <= 20:
+        fragments.append(sequence[end + 1:])
+    else:
+        fragments.append(sequence[end + 1:end + 11] + '......' + sequence[-10:])
+
+    labels = ['%d' % (1 - offset), '%d' % params['which_muts'][0], '%d' % params['which_muts'][-1], '%d' % (len(sequence) - offset)]
+    (illustration_1, illustration_2, illustration_3) = ('', '', '')
+
+    if len(fragments[0]) >= len(labels[0]):
+        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m' + fragments[0][1:]
+        illustration_2 += '\033[91m|\033[0m%s' % (' ' * (len(fragments[0]) - 1))
+        illustration_3 += '\033[91m%s\033[0m%s' % (labels[0], ' ' * (len(fragments[0]) - len(labels[0])))
+    elif fragments[0]:
+        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m' + fragments[0][1:]
+        illustration_2 += ' ' * len(fragments[0])
+        illustration_3 += ' ' * len(fragments[0])
+
+    if len(fragments[1]) >= len(labels[1]) + len(labels[2]):
+        illustration_1 += '\033[44m' + fragments[1][0] + '\033[0m\033[46m' + fragments[1][1:-1] + '\033[0m\033[44m' + fragments[1][-1] + '\033[0m'
+        illustration_2 += '\033[92m|%s|\033[0m' % (' ' * (len(fragments[1]) - 2))
+        illustration_3 += '\033[92m%s%s%s\033[0m' % (labels[1], ' ' * (len(fragments[1]) - len(labels[1]) - len(labels[2])), labels[2])
+    elif fragments[1]:
+        if len(fragments[1]) >= len(labels[1]):
+            illustration_1 += '\033[44m' + fragments[1][0] + '\033[0m\033[46m' + fragments[1][1:] + '\033[0m'
+            illustration_2 += '\033[92m|%s\033[0m' % (' ' * (len(fragments[1]) - 1))
+            illustration_3 += '\033[92m%s%s\033[0m' % (labels[1], ' ' * (len(fragments[1]) - len(labels[1])))
+        else:
+            illustration_1 += '\033[46m' + fragments[1] + '\033[0m'
+            illustration_2 += ' ' * len(fragments[1])
+            illustration_3 += ' ' * len(fragments[1])
+
+    if len(fragments[2]) >= len(labels[3]):
+        illustration_1 += fragments[2][:-1] + '\033[91m' + fragments[2][-1] + '\033[0m'
+        illustration_2 += '%s\033[91m|\033[0m' % (' ' * (len(fragments[2]) - 1))
+        illustration_3 += '%s\033[91m%s\033[0m' % (' ' * (len(fragments[2]) - len(labels[3])), labels[3])
+    elif fragments[2]:
+        illustration_1 += fragments[2][:-1] + '\033[91m' + fragments[2][-1] + '\033[0m'
+        illustration_2 += ' ' * len(fragments[2])
+        illustration_3 += ' ' * len(fragments[2])
+
+    return {'labels': labels, 'fragments': fragments, 'lines': (illustration_1, illustration_2, illustration_3)}
+
+
+
+
+
+
 
