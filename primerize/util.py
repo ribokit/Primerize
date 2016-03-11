@@ -278,7 +278,7 @@ def num_to_coord(num):
     if num < 0 or num > 96: return -1
     row = 'ABCDEFGH'[(num - 1) % 8]
     col = (num - 1) / 8 + 1
-    return '%s%d' % (row, col)
+    return '%s%0*d' % (row, 2, col)
 
 
 def get_mut_range(mut_start, mut_end, offset, sequence):
@@ -354,6 +354,8 @@ def save_plate_layout(plates, N_plates, N_primers, prefix, path):
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
+                if num_primers_on_plate == 1 and primer_sequences.has('A01') and 'WT' in primer_sequences.get('A01')[0]: continue
+
                 file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (prefix, k + 1, p + 1))
                 print('Creating plate image: \033[94m%s\033[0m.' % file_name)
                 title = '%s_plate_%d_primer_%d' % (prefix, k + 1, p + 1)
@@ -378,8 +380,7 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
-                if num_primers_on_plate == 1 and primer_sequences.has('A1') and 'WT' in primer_sequences.get('A1')[0]:
-                    continue
+                if num_primers_on_plate == 1 and primer_sequences.has('A01') and 'WT' in primer_sequences.get('A01')[0]: continue
 
                 sheet = workbook.add_sheet('primer_%d' % (p + 1))
                 sheet.col(1).width = 256 * 15

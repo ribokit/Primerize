@@ -26,7 +26,7 @@ numpy >= 1.10.1
 xlwt >= 1.0.0
 ```
 
-Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.22.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*.
+Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.22.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. The compatibilities between `numba`, `llvm`, and `llvm` needs to pay special attention to.
 
 
 ## Usage
@@ -42,7 +42,7 @@ if job_1d.is_success:
 	print job_1d
 
 prm_2d = primerize.Primerize_2D()
-job_2d = prm_2d.design('TTCTAATACGACTCACTATAGGCCAAAGGCGUCGAGUAGACGCCAACAACGGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACCAAACCGUCAGCGAGUAGCUGACAAAAAGAAACAACAACAACAAC', offset=-51, which_muts=range(102, 261 + 1), which_libs=[1], prefix='P4P6_2HP', is_force=True)
+job_2d = prm_2d.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_libs=[1])
 if job_2d.is_success:
 	print job_2d
 	job_2d.save()
