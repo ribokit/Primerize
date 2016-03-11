@@ -143,10 +143,10 @@ class Primerize_2D(object):
             primer_set = design_1d.primer_set
             prefix = design_1d.name
 
-        if offset is None: offset = self.offset
-        if which_muts is None: which_muts = self.which_muts
-        if which_libs is None: which_libs = self.which_libs
-        if prefix is None: prefix = self.prefix
+        offset = self.offset if offset is None else offset
+        which_muts = self.which_muts if which_muts is None else which_muts
+        which_libs = self.which_libs if which_libs is None else which_libs
+        prefix = self.prefix if prefix is None else prefix
 
         if len(primer_set) % 2:
             raise ValueError('\033[41mERROR\033[0m: Illegal length \033[95m%s\033[0m of value for params \033[92mprimer_set\033[0m for \033[94m%s.set()\033[0m.\n' % (len(primer_set), self.__class__))
@@ -159,17 +159,18 @@ class Primerize_2D(object):
         assembly = {}
         for i in range(len(primer_set)):
             primer_set[i] = RNA2DNA(primer_set[i])
-        if not primer_set and is_force:
-            prm = Primerize_1D()
-            res = prm.design(sequence)
-            if res.is_success:
-                primer_set = res.primer_set
+        if not primer_set:
+            if is_force:
+                prm = Primerize_1D()
+                res = prm.design(sequence)
+                if res.is_success:
+                    primer_set = res.primer_set
+                else:
+                    is_success = False
+                    print('\033[41mFAIL\033[0m: \033[91mNO Solution\033[0m found under given contraints.\n')
             else:
+                print('\033[93mWARNING\033[0m: Please run \033[34mPrimerize_1D.design()\033[0m first to get a solution for \033[92mprimer_set\033[0m.\n')
                 is_success = False
-                print('\033[41mFAIL\033[0m: \033[91mNO Solution\033[0m found under given contraints.\n')
-        else:
-            print('\033[93mWARNING\033[0m: Please run \033[34mPrimerize_1D.design()\033[0m first to get a solution for \033[92mprimer_set\033[0m.\n')
-            is_success = False
 
         if not is_success:
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
@@ -183,7 +184,6 @@ class Primerize_2D(object):
         N_primers = len(primer_set)
         N_constructs = 1 + len(which_muts)
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-
 
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
@@ -288,7 +288,6 @@ def main():
     if res.is_success:
         if not args.is_quiet:
             print(res)
-            print repr(res)
         if args.is_excel:
             res.save('table')
         if args.is_image:

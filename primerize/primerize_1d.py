@@ -43,7 +43,7 @@ class Design_1D(object):
 
     def save(self, path='./', name=None):
         if self.is_success:
-            if name is None: name = self.name
+            name = self.name if name is None else name
             f = open(os.path.join(path, '%s.txt' % name), 'w')
 
             f.write('Primerize Result\n\nINPUT\n=====\n%s\n' % self.sequence)
@@ -89,7 +89,7 @@ class Design_1D(object):
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
                 for i in range(len(self.primer_set)):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
-                    output += '%s%s\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), self.primer_set[i])
+                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
                 return output[:-1]
 
             elif key == 'assembly':
@@ -162,11 +162,11 @@ class Primerize_1D(object):
 
 
     def design(self, sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix=None):
-        if MIN_TM is None: MIN_TM = self.MIN_TM
-        if NUM_PRIMERS is None: NUM_PRIMERS = self.NUM_PRIMERS
-        if MIN_LENGTH is None: MIN_LENGTH = self.MIN_LENGTH
-        if MAX_LENGTH is None: MAX_LENGTH = self.MAX_LENGTH
-        if prefix is None: prefix = self.prefix
+        MIN_TM = self.MIN_TM if MIN_TM is None else MIN_TM
+        NUM_PRIMERS = self.NUM_PRIMERS if NUM_PRIMERS is None else NUM_PRIMERS
+        MIN_LENGTH = self.MIN_LENGTH if MIN_LENGTH is None else MIN_LENGTH
+        MAX_LENGTH = self.MAX_LENGTH if MAX_LENGTH is None else MAX_LENGTH
+        prefix = self.prefix if prefix is None else prefix
 
         name = prefix
         sequence = RNA2DNA(sequence)

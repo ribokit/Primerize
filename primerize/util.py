@@ -4,6 +4,7 @@ matplotlib.use('SVG')
 import matplotlib.pyplot as pyplot
 import numpy
 import os
+import re
 import xlwt
 
 if __package__ is None or not __package__:
@@ -36,8 +37,13 @@ class Assembly(object):
                 output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
                 x += 1
             elif (flag == '^' or flag == '!'):
-                num = string.replace(' ', '').replace('A', '').replace('G', '').replace('C', '').replace('T', '').replace('-', '').replace('>', '').replace('<', '')
-                output += string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
+                num = ''.join(re.findall("[0-9]+", string))
+                string = string.replace(num, '\033[100m%s\033[0m' % num) + '\n'
+                if flag == '^':
+                    string = string.replace('A', '\033[94mA\033[0m').replace('G', '\033[94mG\033[0m').replace('C', '\033[94mC\033[0m').replace('T', '\033[94mT\033[0m')
+                else:
+                    string = string.replace('A', '\033[95mA\033[0m').replace('G', '\033[95mG\033[0m').replace('C', '\033[95mC\033[0m').replace('T', '\033[95mT\033[0m')
+                output += string
             elif (flag == '~'):
                 output += '\033[92m%s\033[0m' % string + '\n'
             elif (flag == '='):
@@ -420,13 +426,13 @@ def draw_region(sequence, params):
     (illustration_1, illustration_2, illustration_3) = ('', '', '')
 
     if len(fragments[0]) >= len(labels[0]):
-        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m' + fragments[0][1:]
-        illustration_2 += '\033[91m|\033[0m%s' % (' ' * (len(fragments[0]) - 1))
-        illustration_3 += '\033[91m%s\033[0m%s' % (labels[0], ' ' * (len(fragments[0]) - len(labels[0])))
+        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m\033[40m' + fragments[0][1:] + '\033[0m'
+        illustration_2 += '\033[91m|%s\033[0m' % (' ' * (len(fragments[0]) - 1))
+        illustration_3 += '\033[91m%s%s\033[0m' % (labels[0], ' ' * (len(fragments[0]) - len(labels[0])))
     elif fragments[0]:
-        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m' + fragments[0][1:]
-        illustration_2 += ' ' * len(fragments[0])
-        illustration_3 += ' ' * len(fragments[0])
+        illustration_1 += '\033[91m' + fragments[0][0] + '\033[0m\033[40m' + fragments[0][1:] + '\033[0m'
+        illustration_2 += '\033[91m|%s\033[0m' % (' ' * len(fragments[0]))
+        illustration_3 += '\033[91m|%s\033[0m' % (' ' * len(fragments[0]))
 
     if len(fragments[1]) >= len(labels[1]) + len(labels[2]):
         illustration_1 += '\033[44m' + fragments[1][0] + '\033[0m\033[46m' + fragments[1][1:-1] + '\033[0m\033[44m' + fragments[1][-1] + '\033[0m'
@@ -439,23 +445,17 @@ def draw_region(sequence, params):
             illustration_3 += '\033[92m%s%s\033[0m' % (labels[1], ' ' * (len(fragments[1]) - len(labels[1])))
         else:
             illustration_1 += '\033[46m' + fragments[1] + '\033[0m'
-            illustration_2 += ' ' * len(fragments[1])
-            illustration_3 += ' ' * len(fragments[1])
+            illustration_2 += '\033[92m|%s\033[0m' % (' ' * len(fragments[1]))
+            illustration_3 += '\033[92m|%s\033[0m' % (' ' * len(fragments[1]))
 
     if len(fragments[2]) >= len(labels[3]):
-        illustration_1 += fragments[2][:-1] + '\033[91m' + fragments[2][-1] + '\033[0m'
-        illustration_2 += '%s\033[91m|\033[0m' % (' ' * (len(fragments[2]) - 1))
-        illustration_3 += '%s\033[91m%s\033[0m' % (' ' * (len(fragments[2]) - len(labels[3])), labels[3])
+        illustration_1 += '\033[40m' + fragments[2][:-1] + '\033[0m\033[91m' + fragments[2][-1] + '\033[0m'
+        illustration_2 += '\033[91m%s|\033[0m' % (' ' * (len(fragments[2]) - 1))
+        illustration_3 += '\033[91m%s%s\033[0m' % (' ' * (len(fragments[2]) - len(labels[3])), labels[3])
     elif fragments[2]:
-        illustration_1 += fragments[2][:-1] + '\033[91m' + fragments[2][-1] + '\033[0m'
-        illustration_2 += ' ' * len(fragments[2])
-        illustration_3 += ' ' * len(fragments[2])
+        illustration_1 += '\033[40m' + fragments[2][:-1] + '\033[0m\033[91m' + fragments[2][-1] + '\033[0m'
+        illustration_2 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
+        illustration_3 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
 
     return {'labels': labels, 'fragments': fragments, 'lines': (illustration_1, illustration_2, illustration_3)}
-
-
-
-
-
-
 
