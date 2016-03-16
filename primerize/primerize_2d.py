@@ -5,85 +5,12 @@ import traceback
 
 if __package__ is None or not __package__:
     from util import *
-    from primerize_1d import Primerize_1D, Design_Single
+    from primerize_1d import Primerize_1D
+    from wrapper import Design_Single, Design_Plate
 else:
     from .util import *
-    from .primerize_1d import Primerize_1D, Design_Single
-
-
-class Design_Plate(object):
-    def __init__(self, init_dict):
-        for key in init_dict:
-            key_rename = '_' + key if key in ['params', 'data'] else key
-            setattr(self, key_rename, init_dict[key])
-        if self.get('TYPE') == 'Mutate-and-Map':
-            self._data['illustration'] = draw_region(self.sequence, self._params)
-
-    def __repr__(self):
-        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
-
-    def __str__(self):
-        return self.echo()
-
-
-    def get(self, key):
-        key = key.upper()
-        if key in self._params:
-            return self._params[key]
-        elif key.lower() in self._params:
-            return self._params[key.lower()]
-        elif key == 'PRIMER':
-            return self._data['assembly'].primers
-        elif key == 'CONSTRUCT':
-            return self._data['constructs']
-        else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
-
-
-    def save(self, key='', path='./', name=None):
-        if self.is_success:
-            if name is None: name = self.name
-            key = key.lower()
-            if key == 'table':
-                save_plates_excel(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif key == 'image':
-                save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif key == 'construct':
-                save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
-            elif key == 'assembly':
-                self._data['assembly'].save(path, name)
-
-            elif not key:
-                for key in ['table', 'image', 'construct', 'assembly']:
-                    self.save(key, path, name)
-            else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.save()\033[0m.\n' % (key, self.__class__))
-        else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
-
-
-    def echo(self, key=''):
-        if self.is_success:
-            key = key.lower()
-            if key == 'plate':
-                output = ''
-                for i in range(len(self._data['plates'][0])):
-                    for j in range(len(self._data['plates'])):
-                        output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                        output += self._data['plates'][j][i].echo(self.primer_set[j])
-                return output[:-1]
-            elif key == 'assembly':
-                return self._data['assembly'].echo()
-            elif key == 'region' and self.get('TYPE') == 'Mutate-and-Map':
-                return '\n'.join(self._data['illustration']['lines'])
-
-            elif not key:
-                return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')
-            else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__))
-        else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
-
+    from .primerize_1d import Primerize_1D
+    from .wrapper import Design_Single, Design_Plate
 
 
 class Primerize_2D(object):

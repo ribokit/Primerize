@@ -5,12 +5,12 @@ import traceback
 
 if __package__ is None or not __package__:
     from util import *
-    from primerize_1d import Primerize_1D, Design_Single
-    from primerize_2d import Design_Plate
+    from primerize_1d import Primerize_1D
+    from wrapper import Design_Single, Design_Plate
 else:
     from .util import *
-    from .primerize_1d import Primerize_1D, Design_Single
-    from .primerize_2d import Design_Plate
+    from .primerize_1d import Primerize_1D
+    from .wrapper import Design_Single, Design_Plate
 
 
 class Primerize_3D(object):
