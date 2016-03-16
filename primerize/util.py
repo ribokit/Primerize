@@ -615,7 +615,7 @@ def diff_bps(structures, offset=0):
     bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str2bps(x, offset)]
     bps = []
     for pair in set(bps_all):
-        if bps_all.count(pair) == 1:
+        if bps_all.count(pair) < len(structures):
             bp = pair.split('-')
             bps.append((int(bp[0]), int(bp[1])))
 

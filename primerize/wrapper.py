@@ -10,6 +10,8 @@ else:
 class Design_Single(object):
     def __init__(self, init_dict):
         for key in init_dict:
+            if key not in ['sequence', 'name', 'is_success', 'primer_set', 'params', 'data']:
+                raise ValueError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s\033[0m.\n' % (key, self.__class__))
             key_rename = '_' + key if key in ['params', 'data'] else key
             setattr(self, key_rename, init_dict[key])
 
@@ -100,13 +102,16 @@ class Design_Single(object):
 class Design_Plate(object):
     def __init__(self, init_dict):
         for key in init_dict:
+            if key not in ['sequence', 'name', 'is_success', 'primer_set', 'structures', 'params', 'data']:
+                raise ValueError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s\033[0m.\n' % (key, self.__class__))
             key_rename = '_' + key if key in ['params', 'data'] else key
             setattr(self, key_rename, init_dict[key])
         if self.get('TYPE') == 'Mutate-and-Map':
             self._data['illustration'] = draw_region(self.sequence, self._params)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
+        structures = '\033[95mstructures\033[0m = %s, \n' % repr(self.structures) if self.get('TYPE') == 'Mutation/Rescue' else ''
+        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n%s\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), structures, repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
 
     def __str__(self):
         return self.echo()
@@ -164,7 +169,8 @@ class Design_Plate(object):
                 return '\n'.join(self._data['illustration']['lines'])
 
             elif not key:
-                return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')
+                region = '\n\n' + self.echo('region') if self.get('TYPE') == 'Mutate-and-Map' else ''
+                return self.echo('assembly') + '\n\n' + self.echo('plate') + region
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__))
         else:

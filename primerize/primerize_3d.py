@@ -17,11 +17,11 @@ class Primerize_3D(object):
     def __init__(self, offset=0, N_mutations=1, which_lib=1, is_single=True, is_fillWT=False, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
-        self.N_mutations = N_mutations
-        self.which_lib = which_lib
-        self.is_single = is_single
-        self.is_fillWT = is_fillWT
-        self.COL_SIZE = COL_SIZE
+        self.N_mutations = max(min(N_mutations, 3), 1)
+        self.which_lib = max(min(which_lib, 5), 1)
+        self.is_single = bool(is_single)
+        self.is_fillWT = bool(is_fillWT)
+        self.COL_SIZE = max(COL_SIZE, 0)
 
     def __repr__(self):
         return repr(self.__dict__)
@@ -100,6 +100,8 @@ class Primerize_3D(object):
         name = prefix
         sequence = RNA2DNA(sequence)
         N_BP = len(sequence)
+        params = {'offset': offset, 'which_lib': which_lib, 'is_single': is_single, 'is_fillWT': is_fillWT, 'N_MUTATION': N_mutations, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
+        data = {'plates': [], 'assembly': [], 'constructs': []}
 
         is_success = True
         assembly = {}
@@ -119,8 +121,6 @@ class Primerize_3D(object):
                 is_success = False
 
         if not is_success:
-            params = {'offset': offset, 'N_mutations': N_mutations, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
-            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         if not which_muts:
@@ -129,16 +129,16 @@ class Primerize_3D(object):
             which_muts = [x for x in which_muts if x >= 1 - offset and x < N_BP + 1 - offset]
         which_lib = which_lib[0] if isinstance(which_lib, list) else which_lib
         N_primers = len(primer_set)
+        params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers})
 
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
-            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = Construct_List()
+        data.update({'assembly': assembly, 'constructs': constructs})
 
         bps = diff_bps(structures)
         for pair in list(bps):
@@ -146,8 +146,6 @@ class Primerize_3D(object):
                 bps.remove(pair)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
-            data = {'plates': [], 'assembly': assembly, 'constructs': constructs}
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 
@@ -183,8 +181,8 @@ class Primerize_3D(object):
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 3D design() encountered error.\n')
 
-        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
-        data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
+        params.update({'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
+        data.update({'plates': plates, 'constructs': constructs})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 

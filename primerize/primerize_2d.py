@@ -18,8 +18,8 @@ class Primerize_2D(object):
         self.prefix = prefix
         self.offset = offset
         self.which_muts = which_muts
-        self.which_lib = which_lib
-        self.COL_SIZE = COL_SIZE
+        self.which_lib = max(min(which_lib, 3), 1)
+        self.COL_SIZE = max(COL_SIZE, 0)
 
     def __repr__(self):
         return repr(self.__dict__)
@@ -83,6 +83,8 @@ class Primerize_2D(object):
         name = prefix
         sequence = RNA2DNA(sequence)
         N_BP = len(sequence)
+        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
+        data = {'plates': [], 'assembly': [], 'constructs': []}
 
         is_success = True
         assembly = {}
@@ -102,8 +104,6 @@ class Primerize_2D(object):
                 is_success = False
 
         if not is_success:
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
-            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
         if not which_muts:
@@ -115,12 +115,11 @@ class Primerize_2D(object):
         N_primers = len(primer_set)
         N_constructs = 1 + len(which_muts)
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
+        params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
 
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
-            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
@@ -142,8 +141,7 @@ class Primerize_2D(object):
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n')
 
-        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
-        data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
+        data.update({'plates': plates, 'assembly': assembly, 'constructs': constructs})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
 
