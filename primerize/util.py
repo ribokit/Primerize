@@ -170,6 +170,7 @@ class Mutation(object):
         return len(self._data)
 
     def __eq__(self, other):
+        if isinstance(other, str) and other == 'WT': return len(self) == 0
         if isinstance(other, Mutation): other = other.list()
         return self.has(other)
 
@@ -183,7 +184,7 @@ class Mutation(object):
             seq_org = mut[0]
             seq_mut = mut[-1]
             seq_pos = int(mut[1:-1])
-            
+
             flag = seq_pos in self._data and self._data[seq_pos] == (seq_org, seq_mut)
             if not flag: return flag
 
@@ -621,4 +622,32 @@ def diff_bps(structures, offset=0):
     return sorted(bps, key=lambda tup: tup[0])
 
 
+def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):
+    for m in range(len(constructs)):
+        plate_num = int(math.floor(m / 96.0))
+        plate_pos = m % 96 + 1
+        well_tag = num_to_coord(plate_pos)
+        mut = constructs._data[m]
 
+        for p in range(len(primer_set)):
+            wt_primer = primer_set[p]
+            if mut == 'WT':
+                well_name = 'Lib%d-%s' % (which_lib, 'WT')
+                plates[p][plate_num].set(well_tag, well_name, wt_primer)
+                continue
+
+            mut_primer = reverse_complement(wt_primer) if primers[2, p] == -1 else wt_primer
+            for k in mut._data.keys():
+                k = k + offset - 1
+                if (k >= primers[0, p] and k <= primers[1, p]):
+                    m_shift = int(k - primers[0, p])
+                    mut_primer = list(mut_primer)
+                    mut_primer[m_shift] = get_mutation(mut_primer[m_shift], which_lib)
+                    mut_primer = ''.join(mut_primer)
+
+            mut_primer = reverse_complement(mut_primer) if primers[2, p] == -1 else mut_primer
+            if mut_primer != wt_primer or is_fillWT:
+                well_name = 'Lib%d-%s' % (which_lib, mut.echo()) if mut_primer != wt_primer else 'Lib%d-%s' % (which_lib, 'WT')
+                plates[p][plate_num].set(well_tag, well_name, mut_primer)
+
+    return plates

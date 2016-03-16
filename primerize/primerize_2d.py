@@ -199,48 +199,13 @@ class Primerize_2D(object):
         print('Filling out sequences ...')
 
         try:
-            for p in range(N_primers):
-                # lib should be a number: 1, 2, or 3 for the different possible mutations.
+            for m_pos in range(-1, len(which_muts)):
+                # m is actual position along sequence
+                m = -1 if m_pos == -1 else offset + which_muts[m_pos] - 1
+                mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], get_mutation(sequence[m], which_lib))
+                constructs.push(mut_name)
 
-                for m_pos in range(-1, len(which_muts)):
-                    # which construct is this?
-                    n = m_pos + 1
-                    plate_num = int(math.floor(n / 96.0))
-                    plate_pos = n % 96 + 1
-                    well_tag = num_to_coord(plate_pos)
-
-                    # m is actual position along sequence
-                    if m_pos == -1:
-                        m = -1
-                    else:
-                        m = offset + which_muts[m_pos] - 1
-
-                    if (m >= primers[0, p] and m <= primers[1, p]) or m == -1:
-                        wt_primer = primer_set[p]
-                        mut_primer = wt_primer
-                        if m == -1:
-                            mut_name = 'WT'
-                        else:
-                            if primers[2, p] == -1:
-                                wt_primer = reverse_complement(wt_primer)
-                                mut_primer = reverse_complement(mut_primer)
-
-                            m_shift = int(m - primers[0, p])
-                            mut_primer = list(mut_primer)
-                            mut_primer[m_shift] = get_mutation(wt_primer[m_shift], which_lib)
-                            mut_primer = ''.join(mut_primer)
-
-                            # Name, e.g., "C75A".
-                            mut_name = '%s%d%s' % (wt_primer[m_shift], which_muts[m_pos], mut_primer[m_shift])
-
-                            if primers[2, p] == -1:
-                                wt_primer = reverse_complement(wt_primer)
-                                mut_primer = reverse_complement(mut_primer)
-
-                        well_name = 'Lib%d-%s' % (which_lib, mut_name)
-                        constructs.push(mut_name)
-                        plates[p][plate_num].set(well_tag, well_name, mut_primer)
-
+            plates = mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
             is_success = False
