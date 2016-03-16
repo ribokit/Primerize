@@ -68,10 +68,16 @@ class Plate_96Well(object):
         self._data = {}
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[91mdict\033[0m(\033[91mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
+        if len(self):
+            return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[91mdict\033[0m(\033[91mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
+        else:
+            return '\033[94m%s\033[0m (empty)' % self.__class__
 
     def __str__(self):
         return self.echo()
+
+    def __len__(self):
+        return len(self.coords)
 
 
     def has(self, coord):
@@ -154,6 +160,14 @@ class Mutation(object):
         self._data = {}
         if mut_str: self.push(mut_str)
 
+    def __repr__(self):
+        return '\033[94m%s\033[0m' % self.__class__
+
+    def __str__(self):
+        return self.echo()
+
+    def __len__(self):
+        return len(self._data)
 
     def __eq__(self, other):
         if isinstance(other, Mutation): other = other.list()
@@ -215,6 +229,18 @@ class Mutation(object):
 class Construct_List(object):
     def __init__(self):
         self._data = []
+
+    def __repr__(self):
+        if len(self):
+            return '\033[94m%s\033[0m {\033[91mlist\033[0m(%s * %d)}' % (self.__class__, repr(Mutation()), len(self))
+        else:
+            return '\033[94m%s\033[0m (empty)' % self.__class__
+
+    def __str__(self):
+        return self.echo()
+
+    def __len__(self):
+        return len(self._data)
 
 
     def has(self, mut_list):

@@ -17,7 +17,7 @@ class Design_2D(object):
         self._data['illustration'] = draw_region(self.sequence, self._params)
 
     def __repr__(self):
-        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'construct_names\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), len(self._data['construct_names']), repr(self._data['assembly']), repr(self._data['plates']))
+        return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
 
     def __str__(self):
         return self.echo()
@@ -174,7 +174,7 @@ class Primerize_2D(object):
 
         if not is_success:
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
-            data = {'plates': [], 'assembly': [], 'construct_names': []}
+            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
 
         if not which_muts:
@@ -190,7 +190,7 @@ class Primerize_2D(object):
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
-            data = {'plates': [], 'assembly': [], 'construct_names': []}
+            data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
