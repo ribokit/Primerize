@@ -175,7 +175,7 @@ class Mutation(object):
 
 
     def has(self, mut_str):
-        if not isinstance(mut_str, list): mut_str = [mut_str]
+        if isinstance(mut_str, str): mut_str = [mut_str]
         if not (mut_str or self._data): return True
         flag = False
 
@@ -183,14 +183,15 @@ class Mutation(object):
             seq_org = mut[0]
             seq_mut = mut[-1]
             seq_pos = int(mut[1:-1])
-
-            if seq_pos in self._data and self._data[seq_pos] == (seq_org, seq_mut): flag = True
+            
+            flag = seq_pos in self._data and self._data[seq_pos] == (seq_org, seq_mut)
+            if not flag: return flag
 
         return flag
 
 
     def push(self, mut_str):
-        if not isinstance(mut_str, list): mut_str = [mut_str]
+        if isinstance(mut_str, str): mut_str = [mut_str]
         for mut in mut_str:
             if mut == 'WT': continue
 
@@ -201,7 +202,7 @@ class Mutation(object):
 
 
     def pop(self, mut_str):
-        if not isinstance(mut_str, list): mut_str = [mut_str]
+        if isinstance(mut_str, str): mut_str = [mut_str]
         for mut in mut_str:
             if self.has(mut):
                 seq_pos = int(mut[1:-1])
@@ -214,13 +215,13 @@ class Mutation(object):
 
     def list(self):
         mut_list = []
-        for seq_pos in self._data:
+        for seq_pos in sorted(self._data):
             mut_list.append('%s%d%s' % (self._data[seq_pos][0], seq_pos, self._data[seq_pos][1]))
         return mut_list
 
 
     def echo(self):
-        output = ', '.join(self.list())
+        output = ';'.join(self.list())
         if not output: output = 'WT'
         return output
 
@@ -252,8 +253,9 @@ class Construct_List(object):
 
     def push(self, mut_list):
         if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
-        if self.has(mut_list): return
+        if self.has(mut_list): return False
         self._data.append(mut_list)
+        return True
 
 
     def pop(self, mut_list):
@@ -445,6 +447,8 @@ def get_mutation(nt, lib):
         return 'CCAA'[idx]
     elif lib == 3:
         return 'GGTT'[idx]
+    elif lib == 4:
+        return 'CGAT'[idx]
 
 
 def print_primer_plate(plate, ref_primer):
@@ -584,4 +588,37 @@ def draw_region(sequence, params):
         illustration_3 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
 
     return {'labels': labels, 'fragments': fragments, 'lines': (illustration_1, illustration_2, illustration_3)}
+
+
+def str2bps(structure, offset=0):
+    (lbs, lbs_pk, bps) = ([], [], [])
+
+    for i, char in enumerate(structure):
+        if char == '(':
+            lbs.append(i + 1 - offset)
+        elif char == ')':
+            bps.append((lbs[-1], i + 1 - offset))
+            lbs.pop(-1)
+        elif char == '[':
+            lbs_pk.append(i + 1 - offset)
+        elif char == ']':
+            bps.append((lbs_pk[-1], i + 1 - offset))
+            lbs_pk.pop(-1)
+
+    if lbs or lbs_pk:
+        raise ValueError('\033[41mERROR\033[0m: Unbalanced \033[92mstructure\033[0m "\033[95m%s\033[0m".\n' % structure)
+    return sorted(bps, key=lambda tup: tup[0])
+
+
+def diff_bps(structures, offset=0):
+    bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str2bps(x, offset)]
+    bps = []
+    for pair in set(bps_all):
+        if bps_all.count(pair) == 1:
+            bp = pair.split('-')
+            bps.append((int(bp[0]), int(bp[1])))
+
+    return sorted(bps, key=lambda tup: tup[0])
+
+
 

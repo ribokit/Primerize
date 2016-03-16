@@ -46,7 +46,7 @@ class Design_2D(object):
             elif key == 'image':
                 save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
             elif key == 'construct':
-                save_construct_key(self._data['constructs'], name, path, self._params['which_libs'])
+                save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
 
@@ -84,11 +84,11 @@ class Design_2D(object):
 
 
 class Primerize_2D(object):
-    def __init__(self, offset=0, which_muts=[], which_libs=1, COL_SIZE=142, prefix='lib'):
+    def __init__(self, offset=0, which_muts=[], which_lib=1, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
         self.which_muts = which_muts
-        self.which_libs = which_libs
+        self.which_lib = which_lib
         self.COL_SIZE = COL_SIZE
 
     def __repr__(self):
@@ -115,8 +115,8 @@ class Primerize_2D(object):
                 self.prefix = str(value)
             elif key == 'offset' and isinstance(value, (int, float)):
                 self.offset = int(value)
-            elif key == 'which_libs' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value) and all(x in (1, 2, 3) for x in value)):
-                self.which_libs = sorted(set(value))
+            elif key == 'which_lib' and isinstance(value, (float, int)) and value in (1, 2, 3):
+                self.which_lib = int(value)
             elif key == 'which_muts' and (isinstance(value, list) and all(isinstance(x, (float, int)) for x in value)):
                 self.which_muts = sorted(set(value))
             elif key == 'col_size' and isinstance(value, int) and value > 0:
@@ -124,19 +124,18 @@ class Primerize_2D(object):
             else:
                 raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (value, key, self.__class__))
         else:
-            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
+            raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (key, self.__class__))
 
 
     def reset(self):
         self.prefix = 'lib'
         self.offset = 0
         self.which_muts = []
-        self.which_libs = 1
+        self.which_lib = 1
         self.COL_SIZE = 142
 
 
-    def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None, is_force=False):
-
+    def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_lib=None, prefix=None, is_force=False):
         if isinstance(sequence, Design_1D):
             design_1d = sequence
             sequence = design_1d.sequence
@@ -145,11 +144,11 @@ class Primerize_2D(object):
 
         offset = self.offset if offset is None else offset
         which_muts = self.which_muts if which_muts is None else which_muts
-        which_libs = self.which_libs if which_libs is None else which_libs
+        which_lib = self.which_lib if which_lib is None else which_lib
         prefix = self.prefix if prefix is None else prefix
 
         if len(primer_set) % 2:
-            raise ValueError('\033[41mERROR\033[0m: Illegal length \033[95m%s\033[0m of value for params \033[92mprimer_set\033[0m for \033[94m%s.set()\033[0m.\n' % (len(primer_set), self.__class__))
+            raise ValueError('\033[41mERROR\033[0m: Illegal length \033[95m%s\033[0m of value for params \033[92mprimer_set\033[0m for \033[94m%s.design()\033[0m.\n' % (len(primer_set), self.__class__))
 
         name = prefix
         sequence = RNA2DNA(sequence)
@@ -173,14 +172,15 @@ class Primerize_2D(object):
                 is_success = False
 
         if not is_success:
-            params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
 
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
-        which_libs = which_libs[0] if isinstance(which_libs, list) else which_libs
-        constructs = Construct_List()
+        else:
+            which_muts = [x for x in which_muts if x >= 1 - offset and x < N_BP + 1 - offset]
+        which_lib = which_lib[0] if isinstance(which_lib, list) else which_lib
 
         N_primers = len(primer_set)
         N_constructs = 1 + len(which_muts)
@@ -189,11 +189,12 @@ class Primerize_2D(object):
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
             data = {'plates': [], 'assembly': [], 'constructs': []}
             return Design_2D(sequence, name, is_success, primer_set, params, data)
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
+        constructs = Construct_List()
         plates = [[Plate_96Well() for i in range(N_plates)] for j in range(N_primers)]
         print('Filling out sequences ...')
 
@@ -226,7 +227,7 @@ class Primerize_2D(object):
 
                             m_shift = int(m - primers[0, p])
                             mut_primer = list(mut_primer)
-                            mut_primer[m_shift] = get_mutation(wt_primer[m_shift], which_libs)
+                            mut_primer[m_shift] = get_mutation(wt_primer[m_shift], which_lib)
                             mut_primer = ''.join(mut_primer)
 
                             # Name, e.g., "C75A".
@@ -236,7 +237,7 @@ class Primerize_2D(object):
                                 wt_primer = reverse_complement(wt_primer)
                                 mut_primer = reverse_complement(mut_primer)
 
-                        well_name = 'Lib%d-%s' % (which_libs, mut_name)
+                        well_name = 'Lib%d-%s' % (which_lib, mut_name)
                         constructs.push(mut_name)
                         plates[p][plate_num].set(well_tag, well_name, mut_primer)
 
@@ -246,15 +247,15 @@ class Primerize_2D(object):
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n')
 
-        params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
+        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
         data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
         return Design_2D(sequence, name, is_success, primer_set, params, data)
 
 
 
-def design_primers_2D(sequence, primer_set=[], offset=None, which_muts=None, which_libs=None, prefix=None):
+def design_primers_2D(sequence, primer_set=[], offset=None, which_muts=None, which_lib=None, prefix=None):
     prm = Primerize_2D()
-    res = prm.design(sequence, primer_set, offset, which_muts, which_libs, prefix, True)
+    res = prm.design(sequence, primer_set, offset, which_muts, which_lib, prefix, True)
     return res
 
 
@@ -265,9 +266,9 @@ def main():
     group1 = parser.add_argument_group('advanced options')
     group1.add_argument('-s', metavar='PRIMER_SET', type=str, nargs='+', help='Set of Primers for Assembly (Default runs Primerize 1D)', dest='primer_set', action='append')
     group1.add_argument('-o', metavar='OFFSET', type=int, help='Sequence Numbering Offset', dest='offset', default=0)
-    group1.add_argument('-l', metavar='MUT_START', type=int, help='First Position of Mutagenesis (Inclusive)', dest='mut_start', default=None)
-    group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive)', dest='mut_end', default=None)
-    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), help='Mutation Library Choices {1, 2, 3}', dest='which_libs', default=1)
+    group1.add_argument('-l', metavar='MUT_START', type=int, help='First Position of Mutagenesis (Inclusive), numbering with OFFSET applied', dest='mut_start', default=None)
+    group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive), numbering with OFFSET applied', dest='mut_end', default=None)
+    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), help='Mutation Library Choices {1, 2, 3}', dest='which_lib', default=1)
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
     group2.add_argument('-e', '--excel', action='store_true', dest='is_excel', help='Write Order Table to Excel File(s)')
@@ -284,7 +285,7 @@ def main():
     (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
 
 
-    res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_libs, args.prefix)
+    res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_lib, args.prefix)
     if res.is_success:
         if not args.is_quiet:
             print(res)
