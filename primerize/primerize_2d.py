@@ -171,10 +171,7 @@ def main():
     args = parser.parse_args()
 
     t0 = time.time()
-    if args.primer_set == None:
-        args.primer_set = []
-    else:
-        args.primer_set = args.primer_set[0]
+    args.primer_set = [] if args.primer_set is None else args.primer_set[0]
     (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
 
 
