@@ -18,7 +18,7 @@ class Primerize_3D(object):
         self.prefix = prefix
         self.offset = offset
         self.N_mutations = max(min(N_mutations, 3), 1)
-        self.which_lib = max(min(which_lib, 5), 1)
+        self.which_lib = max(min(which_lib, 4), 1)
         self.is_single = bool(is_single)
         self.is_fillWT = bool(is_fillWT)
         self.COL_SIZE = max(COL_SIZE, 0)

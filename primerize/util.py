@@ -172,7 +172,11 @@ class Mutation(object):
     def __eq__(self, other):
         if isinstance(other, str) and other == 'WT': return len(self) == 0
         if isinstance(other, Mutation): other = other.list()
-        return self.has(other)
+        return self.has(other) and len(self) == len(other)
+
+    def __iter__(self):
+        for k in self._data.keys():
+            yield k
 
 
     def has(self, mut_str):
@@ -243,6 +247,10 @@ class Construct_List(object):
 
     def __len__(self):
         return len(self._data)
+
+    def __iter__(self):
+        for i in range(len(self._data)):
+            yield self._data[i]
 
 
     def has(self, mut_list):
@@ -450,6 +458,8 @@ def get_mutation(nt, lib):
         return 'GGTT'[idx]
     elif lib == 4:
         return 'CGAT'[idx]
+    else:
+        raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for params \033[92mwhich_lib\033[0m.\n' % lib)
 
 
 def print_primer_plate(plate, ref_primer):
@@ -623,11 +633,10 @@ def diff_bps(structures, offset=0):
 
 
 def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):
-    for m in range(len(constructs)):
-        plate_num = int(math.floor(m / 96.0))
-        plate_pos = m % 96 + 1
+    for i, mut in enumerate(constructs):
+        plate_num = int(math.floor(i / 96.0))
+        plate_pos = i % 96 + 1
         well_tag = num_to_coord(plate_pos)
-        mut = constructs._data[m]
 
         for p in range(len(primer_set)):
             wt_primer = primer_set[p]
@@ -637,7 +646,7 @@ def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1,
                 continue
 
             mut_primer = reverse_complement(wt_primer) if primers[2, p] == -1 else wt_primer
-            for k in mut._data.keys():
+            for k in mut:
                 k = k + offset - 1
                 if (k >= primers[0, p] and k <= primers[1, p]):
                     m_shift = int(k - primers[0, p])

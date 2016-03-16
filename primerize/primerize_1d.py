@@ -84,6 +84,7 @@ class Primerize_1D(object):
         name = prefix
         sequence = RNA2DNA(sequence)
         N_BP = len(sequence)
+        params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
 
         is_success = True
         primers = []
@@ -118,8 +119,9 @@ class Primerize_1D(object):
             is_success = False
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 1D design() encountered error.\n')
+            data = {'misprime_score': [], 'assembly': [], 'warnings': []}
+            return Design_Single({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': [], 'params': params, 'data': data})
 
-        params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
         data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings}
         return Design_Single({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
