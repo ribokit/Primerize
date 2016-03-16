@@ -5,69 +5,12 @@ import traceback
 
 if __package__ is None or not __package__:
     from util import *
-    from primerize_1d import Primerize_1D, Design_1D
+    from primerize_1d import Primerize_1D, Design_Single
+    from primerize_2d import Design_Plate
 else:
     from .util import *
-    from .primerize_1d import Primerize_1D, Design_1D
-
-
-class Design_3D(object):
-    def __init__(self, sequence, name, is_success, primer_set, structures, params, data):
-        (self.sequence, self.name, self.is_success, self.primer_set, self.structures, self._params, self._data) = (sequence, name, is_success, primer_set, structures, params, data)
-
-    def __repr__(self):
-        pass
-
-    def __str__(self):
-        return self.echo()
-
-
-    def get(self, key):
-        pass
-
-
-    def save(self, key='', path='./', name=None):
-        if self.is_success:
-            if name is None: name = self.name
-            key = key.lower()
-            if key == 'table':
-                save_plates_excel(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif key == 'image':
-                save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
-            elif key == 'construct':
-                save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
-            elif key == 'assembly':
-                self._data['assembly'].save(path, name)
-
-            elif not key:
-                for key in ['table', 'image', 'construct', 'assembly']:
-                    self.save(key, path, name)
-            else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.save()\033[0m.\n' % (key, self.__class__))
-        else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
-
-
-    def echo(self, key=''):
-        if self.is_success:
-            key = key.lower()
-            if key == 'plate':
-                output = ''
-                for i in range(len(self._data['plates'][0])):
-                    for j in range(len(self._data['plates'])):
-                        output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
-                        output += self._data['plates'][j][i].echo(self.primer_set[j])
-                return output[:-1]
-            elif key == 'assembly':
-                return self._data['assembly'].echo()
-
-            elif not key:
-                return self.echo('assembly') + '\n\n' + self.echo('plate')
-            else:
-                raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__))
-        else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
-
+    from .primerize_1d import Primerize_1D, Design_Single
+    from .primerize_2d import Design_Plate
 
 
 class Primerize_3D(object):
@@ -135,7 +78,7 @@ class Primerize_3D(object):
 
 
     def design(self, sequence, primer_set=[], offset=None, structures=[], N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_single=None, is_fillWT=False, is_force=False):
-        if isinstance(sequence, Design_1D):
+        if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence
             primer_set = design_1d.primer_set
@@ -176,9 +119,9 @@ class Primerize_3D(object):
                 is_success = False
 
         if not is_success:
-            params = {'offset': offset, 'N_mutations': N_mutations, 'which_lib': which_lib, 'N_BP': N_BP}
+            params = {'offset': offset, 'N_mutations': N_mutations, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
             data = {'plates': [], 'assembly': [], 'constructs': []}
-            return Design_3D(sequence, name, is_success, primer_set, structures, params, data)
+            return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
@@ -190,9 +133,9 @@ class Primerize_3D(object):
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
             data = {'plates': [], 'assembly': [], 'constructs': []}
-            return Design_3D(sequence, name, is_success, primer_set, structures, params, data)
+            return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = Construct_List()
@@ -203,9 +146,9 @@ class Primerize_3D(object):
                 bps.remove(pair)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
             data = {'plates': [], 'assembly': assembly, 'constructs': constructs}
-            return Design_3D(sequence, name, is_success, primer_set, structures, params, data)
+            return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 
         N_constructs = (len(bps) - N_mutations + 1) * (is_single * 2 + 1) + 1
@@ -240,8 +183,8 @@ class Primerize_3D(object):
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 3D design() encountered error.\n')
 
-        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
+        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_mutations': N_mutations, 'is_single': is_single, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
         data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
-        return Design_3D(sequence, name, is_success, primer_set, structures, params, data)
+        return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 

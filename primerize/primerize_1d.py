@@ -16,9 +16,11 @@ else:
     from .util import *
 
 
-class Design_1D(object):
-    def __init__(self, sequence, name, is_success, primer_set, params, data):
-        (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
+class Design_Single(object):
+    def __init__(self, init_dict):
+        for key in init_dict:
+            key_rename = '_' + key if key in ['params', 'data'] else key
+            setattr(self, key_rename, init_dict[key])
 
     def __repr__(self):
         return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'warnings\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['misprime_score']), repr(self._data['assembly']), repr(self._data['warnings']))
@@ -208,7 +210,7 @@ class Primerize_1D(object):
 
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
         data = {'misprime_score': misprime_score, 'assembly': assembly, 'warnings': warnings}
-        return Design_1D(sequence, name, is_success, primer_set, params, data)
+        return Design_Single({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
 
 

@@ -5,16 +5,19 @@ import traceback
 
 if __package__ is None or not __package__:
     from util import *
-    from primerize_1d import Primerize_1D, Design_1D
+    from primerize_1d import Primerize_1D, Design_Single
 else:
     from .util import *
-    from .primerize_1d import Primerize_1D, Design_1D
+    from .primerize_1d import Primerize_1D, Design_Single
 
 
-class Design_2D(object):
-    def __init__(self, sequence, name, is_success, primer_set, params, data):
-        (self.sequence, self.name, self.is_success, self.primer_set, self._params, self._data) = (sequence, name, is_success, primer_set, params, data)
-        self._data['illustration'] = draw_region(self.sequence, self._params)
+class Design_Plate(object):
+    def __init__(self, init_dict):
+        for key in init_dict:
+            key_rename = '_' + key if key in ['params', 'data'] else key
+            setattr(self, key_rename, init_dict[key])
+        if self.get('TYPE') == 'Mutate-and-Map':
+            self._data['illustration'] = draw_region(self.sequence, self._params)
 
     def __repr__(self):
         return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
@@ -71,7 +74,7 @@ class Design_2D(object):
                 return output[:-1]
             elif key == 'assembly':
                 return self._data['assembly'].echo()
-            elif key == 'region':
+            elif key == 'region' and self.get('TYPE') == 'Mutate-and-Map':
                 return '\n'.join(self._data['illustration']['lines'])
 
             elif not key:
@@ -136,7 +139,7 @@ class Primerize_2D(object):
 
 
     def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_lib=None, prefix=None, is_force=False):
-        if isinstance(sequence, Design_1D):
+        if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence
             primer_set = design_1d.primer_set
@@ -172,9 +175,9 @@ class Primerize_2D(object):
                 is_success = False
 
         if not is_success:
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
             data = {'plates': [], 'assembly': [], 'constructs': []}
-            return Design_2D(sequence, name, is_success, primer_set, params, data)
+            return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
@@ -189,9 +192,9 @@ class Primerize_2D(object):
         (primers, is_success) = get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
-            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
+            params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
             data = {'plates': [], 'assembly': [], 'constructs': []}
-            return Design_2D(sequence, name, is_success, primer_set, params, data)
+            return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = Construct_List()
@@ -212,9 +215,9 @@ class Primerize_2D(object):
             print(traceback.format_exc())
             print('\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n')
 
-        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
+        params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
         data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
-        return Design_2D(sequence, name, is_success, primer_set, params, data)
+        return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
 
 
