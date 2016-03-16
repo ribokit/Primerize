@@ -32,7 +32,7 @@ class Design_2D(object):
         elif key == 'PRIMER':
             return self._data['assembly'].primers
         elif key == 'CONSTRUCT':
-            return self._data['construct_names']
+            return self._data['constructs']
         else:
             raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
@@ -46,7 +46,7 @@ class Design_2D(object):
             elif key == 'image':
                 save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
             elif key == 'construct':
-                save_construct_key(self._data['construct_names'], name, path)
+                save_construct_key(self._data['constructs'], name, path, self._params['which_libs'])
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
 
@@ -84,7 +84,7 @@ class Design_2D(object):
 
 
 class Primerize_2D(object):
-    def __init__(self, offset=0, which_muts=[], which_libs=[1], COL_SIZE=142, prefix='lib'):
+    def __init__(self, offset=0, which_muts=[], which_libs=1, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
         self.which_muts = which_muts
@@ -131,7 +131,7 @@ class Primerize_2D(object):
         self.prefix = 'lib'
         self.offset = 0
         self.which_muts = []
-        self.which_libs = [1]
+        self.which_libs = 1
         self.COL_SIZE = 142
 
 
@@ -179,7 +179,8 @@ class Primerize_2D(object):
 
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
-        construct_names = list(' ' * (len(which_muts) + 1))
+        which_libs = which_libs[0] if isinstance(which_libs, list) else which_libs
+        constructs = Construct_List()
 
         N_primers = len(primer_set)
         N_constructs = 1 + len(which_muts)
@@ -198,47 +199,46 @@ class Primerize_2D(object):
 
         try:
             for p in range(N_primers):
-                for l_pos in range(len(which_libs)):
-                    # lib should be a number: 1, 2, or 3 for the different possible mutations.
-                    lib = which_libs[l_pos]
+                # lib should be a number: 1, 2, or 3 for the different possible mutations.
 
-                    for m_pos in range(-1, len(which_muts)):
-                        # which construct is this?
-                        n = m_pos + 1
-                        plate_num = int(math.floor(n / 96.0))
-                        plate_pos = n % 96 + 1
-                        well_tag = num_to_coord(plate_pos)
+                for m_pos in range(-1, len(which_muts)):
+                    # which construct is this?
+                    n = m_pos + 1
+                    plate_num = int(math.floor(n / 96.0))
+                    plate_pos = n % 96 + 1
+                    well_tag = num_to_coord(plate_pos)
 
-                        # m is actual position along sequence
-                        if m_pos == -1:
-                            m = -1
+                    # m is actual position along sequence
+                    if m_pos == -1:
+                        m = -1
+                    else:
+                        m = offset + which_muts[m_pos] - 1
+
+                    if (m >= primers[0, p] and m <= primers[1, p]) or m == -1:
+                        wt_primer = primer_set[p]
+                        mut_primer = wt_primer
+                        if m == -1:
+                            mut_name = 'WT'
                         else:
-                            m = offset + which_muts[m_pos] - 1
+                            if primers[2, p] == -1:
+                                wt_primer = reverse_complement(wt_primer)
+                                mut_primer = reverse_complement(mut_primer)
 
-                        if (m >= primers[0, p] and m <= primers[1, p]) or m == -1:
-                            wt_primer = primer_set[p]
-                            mut_primer = wt_primer
-                            if m == -1:
-                                well_name = 'Lib%d-WT' % lib
-                            else:
-                                if primers[2, p] == -1:
-                                    wt_primer = reverse_complement(wt_primer)
-                                    mut_primer = reverse_complement(mut_primer)
+                            m_shift = int(m - primers[0, p])
+                            mut_primer = list(mut_primer)
+                            mut_primer[m_shift] = get_mutation(wt_primer[m_shift], which_libs)
+                            mut_primer = ''.join(mut_primer)
 
-                                m_shift = int(m - primers[0, p])
-                                mut_primer = list(mut_primer)
-                                mut_primer[m_shift] = get_mutation(wt_primer[m_shift], lib)
-                                mut_primer = ''.join(mut_primer)
+                            # Name, e.g., "C75A".
+                            mut_name = '%s%d%s' % (wt_primer[m_shift], which_muts[m_pos], mut_primer[m_shift])
 
-                                # Name, e.g., "C75A".
-                                well_name = 'Lib%d-%s%d%s' % (lib, wt_primer[m_shift], which_muts[m_pos], mut_primer[m_shift])
+                            if primers[2, p] == -1:
+                                wt_primer = reverse_complement(wt_primer)
+                                mut_primer = reverse_complement(mut_primer)
 
-                                if primers[2, p] == -1:
-                                    wt_primer = reverse_complement(wt_primer)
-                                    mut_primer = reverse_complement(mut_primer)
-
-                            construct_names[n] = well_name
-                            plates[p][plate_num].set(well_tag, well_name, mut_primer)
+                        well_name = 'Lib%d-%s' % (which_libs, mut_name)
+                        constructs.push(mut_name)
+                        plates[p][plate_num].set(well_tag, well_name, mut_primer)
 
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
@@ -247,7 +247,7 @@ class Primerize_2D(object):
             print('\033[41mERROR\033[0m: Primerize 2D design() encountered error.\n')
 
         params = {'offset': offset, 'which_muts': which_muts, 'which_libs': which_libs, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs, 'N_BP': N_BP}
-        data = {'plates': plates, 'assembly': assembly, 'construct_names': construct_names}
+        data = {'plates': plates, 'assembly': assembly, 'constructs': constructs}
         return Design_2D(sequence, name, is_success, primer_set, params, data)
 
 
@@ -267,7 +267,7 @@ def main():
     group1.add_argument('-o', metavar='OFFSET', type=int, help='Sequence Numbering Offset', dest='offset', default=0)
     group1.add_argument('-l', metavar='MUT_START', type=int, help='First Position of Mutagenesis (Inclusive)', dest='mut_start', default=None)
     group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive)', dest='mut_end', default=None)
-    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), nargs='+', help='Mutation Library Choices {1, 2, 3}', dest='which_libs', action='append')
+    group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 2, 3), help='Mutation Library Choices {1, 2, 3}', dest='which_libs', default=1)
     group2 = parser.add_argument_group('commandline options')
     group2.add_argument('-q', '--quiet', action='store_true', dest='is_quiet', help='Suppress Results Printing to stdout')
     group2.add_argument('-e', '--excel', action='store_true', dest='is_excel', help='Write Order Table to Excel File(s)')

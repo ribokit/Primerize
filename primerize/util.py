@@ -149,6 +149,104 @@ class Plate_96Well(object):
 
 
 
+class Mutation(object):
+    def __init__(self, mut_str=[]):
+        self._data = {}
+        if mut_str: self.push(mut_str)
+
+
+    def __eq__(self, other):
+        if isinstance(other, Mutation): other = other.list()
+        return self.has(other)
+
+
+    def has(self, mut_str):
+        if not isinstance(mut_str, list): mut_str = [mut_str]
+        if not (mut_str or self._data): return True
+        flag = False
+
+        for mut in mut_str:
+            seq_org = mut[0]
+            seq_mut = mut[-1]
+            seq_pos = int(mut[1:-1])
+
+            if seq_pos in self._data and self._data[seq_pos] == (seq_org, seq_mut): flag = True
+
+        return flag
+
+
+    def push(self, mut_str):
+        if not isinstance(mut_str, list): mut_str = [mut_str]
+        for mut in mut_str:
+            if mut == 'WT': continue
+
+            seq_org = mut[0]
+            seq_mut = mut[-1]
+            seq_pos = int(mut[1:-1])
+            self._data[seq_pos] = (seq_org, seq_mut)
+
+
+    def pop(self, mut_str):
+        if not isinstance(mut_str, list): mut_str = [mut_str]
+        for mut in mut_str:
+            if self.has(mut):
+                seq_pos = int(mut[1:-1])
+                self._data.pop(seq_pos, None)
+            else:
+                return False
+
+        return True
+
+
+    def list(self):
+        mut_list = []
+        for seq_pos in self._data:
+            mut_list.append('%s%d%s' % (self._data[seq_pos][0], seq_pos, self._data[seq_pos][1]))
+        return mut_list
+
+
+    def echo(self):
+        output = ', '.join(self.list())
+        if not output: output = 'WT'
+        return output
+
+
+
+class Construct_List(object):
+    def __init__(self):
+        self._data = []
+
+
+    def has(self, mut_list):
+        if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
+        for construct in self._data:
+            if construct == mut_list: return True
+        return False
+
+
+    def push(self, mut_list):
+        if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
+        if self.has(mut_list): return
+        self._data.append(mut_list)
+
+
+    def pop(self, mut_list):
+        if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
+        for i, construct in enumerate(self._data):
+            if construct == mut_list:
+                self._data.pop(i)
+                return True
+        return False
+
+
+    def echo(self, prefix=''):
+        output = ''
+        for construct in self._data:
+            output += prefix + construct.echo() + '\n'
+        return output
+
+
+
 def DNA2RNA(sequence):
     return sequence.upper().replace('T', 'U')
 
@@ -362,10 +460,11 @@ def save_plate_layout(plates, N_plates, N_primers, prefix, path):
                 primer_sequences.save(file_name, title)
 
 
-def save_construct_key(keys, prefix, path):
-    f = open(os.path.join(path, '%s_keys.txt' % prefix), 'w')
+def save_construct_key(keys, name, path, prefix=''):
+    prefix = 'Lib%s-' % prefix if prefix else ''
+    f = open(os.path.join(path, '%s_keys.txt' % name), 'w')
     print('Creating keys file ...')
-    f.write('\n'.join(keys))
+    f.write(keys.echo(prefix))
     f.close()
 
 
