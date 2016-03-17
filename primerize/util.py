@@ -622,14 +622,17 @@ def str2bps(structure, offset=0):
 
 
 def diff_bps(structures, offset=0):
-    bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str2bps(x, offset)]
-    bps = []
-    for pair in set(bps_all):
-        if bps_all.count(pair) < len(structures):
-            bp = pair.split('-')
-            bps.append((int(bp[0]), int(bp[1])))
+    if len(structures) == 1:
+        return str2bps(structures[0], offset)
+    else:
+        bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str2bps(x, offset)]
+        bps = []
+        for pair in set(bps_all):
+            if bps_all.count(pair) < len(structures):
+                bp = pair.split('-')
+                bps.append((int(bp[0]), int(bp[1])))
 
-    return sorted(bps, key=lambda tup: tup[0])
+        return sorted(bps, key=lambda tup: tup[0])
 
 
 def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):
