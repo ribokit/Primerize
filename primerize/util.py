@@ -170,7 +170,7 @@ class Mutation(object):
         return len(self._data)
 
     def __eq__(self, other):
-        if isinstance(other, str) and other == 'WT': return len(self) == 0
+        if isinstance(other, (str, unicode)) and other == 'WT': return len(self) == 0
         if isinstance(other, Mutation): other = other.list()
         return self.has(other) and len(self) == len(other)
 
@@ -180,7 +180,7 @@ class Mutation(object):
 
 
     def has(self, mut_str):
-        if isinstance(mut_str, str): mut_str = [mut_str]
+        if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         if not (mut_str or self._data): return True
         flag = False
 
@@ -196,7 +196,7 @@ class Mutation(object):
 
 
     def push(self, mut_str):
-        if isinstance(mut_str, str): mut_str = [mut_str]
+        if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
             if mut == 'WT': continue
 
@@ -207,7 +207,7 @@ class Mutation(object):
 
 
     def pop(self, mut_str):
-        if isinstance(mut_str, str): mut_str = [mut_str]
+        if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
             if self.has(mut):
                 seq_pos = int(mut[1:-1])
