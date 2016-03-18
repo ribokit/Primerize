@@ -152,7 +152,7 @@ class Primerize_3D(object):
         N_constructs = (len(bps) - N_mutations + 1) * (is_single * 2 + 1) + 1
         constructs.push('WT')
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-        plates = [[Plate_96Well() for i in range(N_plates)] for j in range(N_primers)]
+        plates = [[Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
 
         for i in range(len(bps) - N_mutations + 1):
             (mut_list_l, mut_list_r) = ([], [])

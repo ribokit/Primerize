@@ -63,9 +63,10 @@ class Assembly(object):
 
 
 class Plate_96Well(object):
-    def __init__(self):
+    def __init__(self, tag=1):
         self.coords = set()
         self._data = {}
+        self.tag = 'Lib%d-' % tag
 
     def __repr__(self):
         if len(self):
@@ -115,7 +116,7 @@ class Plate_96Well(object):
         return print_primer_plate(self, ref_primer)
 
 
-    def save(self, file_name='./', title=''):
+    def save(self, ref_primer='', file_name='./', title=''):
         fig = pyplot.figure()
         pyplot.axes().set_aspect('equal')
         pyplot.axis([0, 13.875, 0, 9.375])
@@ -137,12 +138,17 @@ class Plate_96Well(object):
             for j in range(12):
                 num = i + j * 8 + 1
                 if num_to_coord(num) in self.coords:
-                    if 'WT' in self._data[num][0]:
+                    tag = self._data[num][0]
+                    if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag):
                         x_green.append(j * 1.125 + 0.75)
                         y_green.append(i * 1.125 + 0.75)
                     else:
-                        x_violet.append(j * 1.125 + 0.75)
-                        y_violet.append(i * 1.125 + 0.75)
+                        if ref_primer and ref_primer == self._data[num][1]:
+                            x_green.append(j * 1.125 + 0.75)
+                            y_green.append(i * 1.125 + 0.75)
+                        else:
+                            x_violet.append(j * 1.125 + 0.75)
+                            y_violet.append(i * 1.125 + 0.75)
                 else:
                     x_gray.append(j * 1.125 + 0.75)
                     y_gray.append(i * 1.125 + 0.75)
@@ -226,8 +232,14 @@ class Mutation(object):
 
 
     def echo(self):
-        output = ';'.join(self.list())
-        if not output: output = 'WT'
+        output = []
+        for mut in self.list():
+            if mut[-2:] == 'WT':
+                output.append('\033[100mWT\033[0m')
+            else:
+                output.append('\033[96m%s\033[0m\033[93m%s\033[0m\033[91m%s\033[0m' % (mut[0], mut[1:-1], mut[-1]))
+
+        output = ';'.join(output) if output else '\033[100mWT\033[0m'
         return output
 
 
@@ -463,14 +475,20 @@ def get_mutation(nt, lib):
 
 
 def print_primer_plate(plate, ref_primer):
+    if not plate: return '(empty)\n'
     string = ''
     for key in sorted(plate._data):
         string += '\033[94m%s\033[0m' % num_to_coord(key).ljust(5)
         mut = plate._data[key][0]
-        if mut[-2:] == 'WT':
-            string += ('%s\033[100m%s\033[0m' % (mut[:-2], mut[-2:])).ljust(28)
+        if isinstance(mut, Mutation):
+            offset = 20 if mut else 30
+            lbl = mut.echo()
+            string += plate.tag + lbl.ljust(max(offset + 27 * len(mut), len(lbl)))
         else:
-            string += ('%s\033[96m%s\033[0m\033[93m%s\033[0m\033[91m%s\033[0m' % (mut[:5], mut[5], mut[6:-1], mut[-1])).ljust(45)
+            if mut[-2:] == 'WT':
+                string += ('%s\033[100m%s\033[0m' % (mut[:-2], mut[-2:])).ljust(28)
+            else:
+                string += ('%s\033[96m%s\033[0m\033[93m%s\033[0m\033[91m%s\033[0m' % (mut[:5], mut[5], mut[6:-1], mut[-1])).ljust(50)
 
         if ref_primer:
             for i in range(len(ref_primer)):
@@ -482,45 +500,46 @@ def print_primer_plate(plate, ref_primer):
             string += plate._data[key][1]
         string += '\n'
 
-    if not string: string = '(empty)\n'
     return string
 
 
-def save_plate_layout(plates, N_plates, N_primers, prefix, path):
-    for k in range(N_plates):
-        for p in range(N_primers):
+def save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
+    for k in range(len(plates[0])):
+        for p in range(len(plates)):
             primer_sequences = plates[p][k]
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
-                if num_primers_on_plate == 1 and primer_sequences.has('A01') and 'WT' in primer_sequences.get('A01')[0]: continue
+                if num_primers_on_plate == 1 and primer_sequences.has('A01'):
+                    tag = primer_sequences.get('A01')[0]
+                    if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag):continue
 
-                file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (prefix, k + 1, p + 1))
+                file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (primer_sequences.tag[:-1], k + 1, p + 1))
                 print('Creating plate image: \033[94m%s\033[0m.' % file_name)
                 title = '%s_plate_%d_primer_%d' % (prefix, k + 1, p + 1)
-                primer_sequences.save(file_name, title)
+                primer_sequences.save(ref_primer[p], file_name, title)
 
 
-def save_construct_key(keys, name, path, prefix=''):
+def save_construct_key(keys, name, path='./', prefix=''):
     prefix = 'Lib%s-' % prefix if prefix else ''
-    f = open(os.path.join(path, '%s_keys.txt' % name), 'w')
     print('Creating keys file ...')
-    f.write(keys.echo(prefix))
-    f.close()
+    open(os.path.join(path, '%s_keys.txt' % name), 'w').write(keys.echo(prefix))
 
 
-def save_plates_excel(plates, N_plates, N_primers, prefix, path):
-    for k in range(N_plates):
+def save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
+    for k in range(len(plates[0])):
         file_name = os.path.join(path, '%s_plate_%d.xls' % (prefix, k + 1))
         print('Creating plate file: \033[94m%s\033[0m.' % file_name)
         workbook = xlwt.Workbook()
 
-        for p in range(N_primers):
+        for p in range(len(plates)):
             primer_sequences = plates[p][k]
             num_primers_on_plate = primer_sequences.get('count')
 
             if num_primers_on_plate:
-                if num_primers_on_plate == 1 and primer_sequences.has('A01') and 'WT' in primer_sequences.get('A01')[0]: continue
+                if num_primers_on_plate == 1 and primer_sequences.has('A01'):
+                    tag = primer_sequences.get('A01')[0]
+                    if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag): continue
 
                 sheet = workbook.add_sheet('primer_%d' % (p + 1))
                 sheet.col(1).width = 256 * 15
@@ -532,14 +551,18 @@ def save_plates_excel(plates, N_plates, N_primers, prefix, path):
                 sheet.write(0, 3, 'Notes', xlwt.easyxf('font: bold 1'))
 
                 for i, row in enumerate(sorted(primer_sequences._data)):
-                    if 'WT' in primer_sequences._data[row][0]:
-                        sheet.write(i + 1, 0, num_to_coord(row), xlwt.easyxf('font: color blue, italic 1'))
-                        sheet.write(i + 1, 1, primer_sequences._data[row][0], xlwt.easyxf('font: color blue'))
-                        sheet.write(i + 1, 2, primer_sequences._data[row][1], xlwt.easyxf('font: color blue'))
+                    tag = primer_sequences._data[row][0]
+                    primer = primer_sequences._data[row][1]
+                    if isinstance(tag, Mutation):
+                        format = 'font: color blue,' if (not tag or primer == ref_primer[p]) else 'font: color black,'
+                        tag = ';'.join(tag.list()) if tag else 'WT'
+                        tag = primer_sequences.tag + tag
                     else:
-                        sheet.write(i + 1, 0, num_to_coord(row), xlwt.easyxf('font: italic 1'))
-                        sheet.write(i + 1, 1, primer_sequences._data[row][0])
-                        sheet.write(i + 1, 2, primer_sequences._data[row][1])
+                        format = 'font: color blue,' if 'WT' in tag else 'font: color black,'
+
+                    sheet.write(i + 1, 0, num_to_coord(row), xlwt.easyxf(format + '  italic 1'))
+                    sheet.write(i + 1, 1, tag, xlwt.easyxf(format))
+                    sheet.write(i + 1, 2, primer, xlwt.easyxf(format))
 
         workbook.save(file_name)
 
@@ -645,7 +668,7 @@ def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1,
             wt_primer = primer_set[p]
             if mut == 'WT':
                 well_name = 'Lib%d-%s' % (which_lib, 'WT')
-                plates[p][plate_num].set(well_tag, well_name, wt_primer)
+                plates[p][plate_num].set(well_tag, mut, wt_primer)
                 continue
 
             mut_primer = reverse_complement(wt_primer) if primers[2, p] == -1 else wt_primer
@@ -660,7 +683,7 @@ def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1,
             mut_primer = reverse_complement(mut_primer) if primers[2, p] == -1 else mut_primer
             if mut_primer != wt_primer or is_fillWT:
                 well_name = 'Lib%d-%s' % (which_lib, mut.echo()) if mut_primer != wt_primer else 'Lib%d-%s' % (which_lib, 'WT')
-                plates[p][plate_num].set(well_tag, well_name, mut_primer)
+                plates[p][plate_num].set(well_tag, mut, mut_primer)
 
     return plates
 

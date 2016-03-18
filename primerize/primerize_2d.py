@@ -124,7 +124,7 @@ class Primerize_2D(object):
 
         assembly = Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = Construct_List()
-        plates = [[Plate_96Well() for i in range(N_plates)] for j in range(N_primers)]
+        plates = [[Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
         print('Filling out sequences ...')
 
         try:

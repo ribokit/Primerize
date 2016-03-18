@@ -136,9 +136,9 @@ class Design_Plate(object):
             if name is None: name = self.name
             key = key.lower()
             if key == 'table':
-                save_plates_excel(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
+                save_plates_excel(self._data['plates'], self.primer_set, name, path)
             elif key == 'image':
-                save_plate_layout(self._data['plates'], self._params['N_PLATE'], self._params['N_PRIMER'], name, path)
+                save_plate_layout(self._data['plates'], self.primer_set, name, path)
             elif key == 'construct':
                 save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
             elif key == 'assembly':
