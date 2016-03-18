@@ -77,7 +77,7 @@ class Primerize_3D(object):
         self.COL_SIZE = 142
 
 
-    def design(self, sequence, primer_set=[], offset=None, structures=[], N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_single=None, is_fillWT=False, is_force=False):
+    def design(self, sequence, primer_set=[], structures=[], offset=None, N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_single=None, is_fillWT=False, is_force=False):
         if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence
@@ -221,7 +221,7 @@ def main():
     args.structures = [] if args.structures is None else args.structures[0]
 
 
-    res = design_primers_3D(args.sequence, args.primer_set, args.offset, args.structures, args.N_mutations, which_muts, args.which_lib, args.is_single, args.is_fillWT, args.prefix)
+    res = design_primers_3D(args.sequence, args.primer_set, args.structures, args.offset, args.N_mutations, which_muts, args.which_lib, args.is_single, args.is_fillWT, args.prefix)
     if res.is_success:
         if not args.is_quiet:
             print(res)
