@@ -523,7 +523,9 @@ def save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
 def save_construct_key(keys, name, path='./', prefix=''):
     prefix = 'Lib%s-' % prefix if prefix else ''
     print('Creating keys file ...')
-    open(os.path.join(path, '%s_keys.txt' % name), 'w').write(keys.echo(prefix))
+    lines = keys.echo(prefix)
+    lines = lines.replace('\033[100m', '').replace('\033[96m', '').replace('\033[93m', '').replace('\033[91m', '').replace('\033[0m', '')
+    open(os.path.join(path, '%s_keys.txt' % name), 'w').write(lines)
 
 
 def save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
