@@ -89,7 +89,7 @@ There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` help
 
 #### MATLAB Code (Deprecated)
 
-Instructions on MATLAB usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/deprecated_MATLAB/README.md).
+Instructions on MATLAB usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/MATLAB/README.md).
 
 ## Documentation
 
