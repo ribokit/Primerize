@@ -20,13 +20,16 @@ For system-wide installation, you must have permissions and use with `sudo`.
 
 **Primerize** requires the following *Python* packages as dependencies, all of which can be installed through [`pip`](https://pip.pypa.io/).
 ```json
+llvmlite == 0.8.0
 matplotlib >= 1.5.0
-numba >= 0.23.1
+numba == 0.23.1
 numpy >= 1.10.1
 xlwt >= 1.0.0
 ```
 
-Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.22.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. The compatibilities between `numba`, `llvm`, and `llvm` needs to pay special attention to.
+Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.23.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. 
+
+The compatibility between `numba`, `llvmlite`, and `llvm` needs to pay special attention to. The above specified `numba` and `llvmlite` versions have been tested to work with `llvm 3.6.2` on *Linux* machines. 
 
 
 ## Usage
@@ -89,7 +92,7 @@ There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` help
 
 #### MATLAB Code (Deprecated)
 
-Instructions on MATLAB usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/MATLAB/README.md).
+Instructions on *MATLAB* usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/MATLAB/README.md). Please note that *MATLAB* code is no longer actively under development or fully maintained.
 
 ## Documentation
 
