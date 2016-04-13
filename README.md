@@ -114,5 +114,6 @@ Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](htt
 >*Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
 <br/>
-by [**t47**](http://t47.io/), *January 2016*.
+Developed by **Das lab**, _Leland Stanford Junior University_.
+README by [**t47**](http://t47.io/), *January 2016*.
 
