@@ -56,7 +56,7 @@ def check_misprime(sequence):
         misprime_score_next[0, i] = misprime_score
 
     match_max = numpy.zeros((1, 2 * N))
-    best_match = numpy.zeros((1, 2 * N))
+    best_match = numpy.zeros((1, 2 * N), dtype=numpy.int16)
     misprime_score_max = numpy.zeros((1, 2 * N))
 
     # compare both neighbors

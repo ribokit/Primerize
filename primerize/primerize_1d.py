@@ -143,10 +143,10 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
     scores_final = MAX_SCORE * numpy.ones((N_BP, N_BP, num_primer_sets_max))
 
     # used for backtracking:
-    choice_start_p = numpy.zeros((N_BP, N_BP, num_primer_sets_max))
-    choice_start_q = numpy.zeros((N_BP, N_BP, num_primer_sets_max))
-    choice_stop_i = numpy.zeros((N_BP, N_BP, num_primer_sets_max))
-    choice_stop_j = numpy.zeros((N_BP, N_BP, num_primer_sets_max))
+    choice_start_p = numpy.zeros((N_BP, N_BP, num_primer_sets_max), dtype=numpy.int16)
+    choice_start_q = numpy.zeros((N_BP, N_BP, num_primer_sets_max), dtype=numpy.int16)
+    choice_stop_i = numpy.zeros((N_BP, N_BP, num_primer_sets_max), dtype=numpy.int16)
+    choice_stop_j = numpy.zeros((N_BP, N_BP, num_primer_sets_max), dtype=numpy.int16)
 
     # basic setup -- first primer
     # First set is special.
