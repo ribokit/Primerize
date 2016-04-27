@@ -101,7 +101,7 @@ class Primerize_3D(object):
         sequence = RNA2DNA(sequence)
         N_BP = len(sequence)
         params = {'offset': offset, 'which_lib': which_lib, 'is_single': is_single, 'is_fillWT': is_fillWT, 'N_MUTATION': N_mutations, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
-        data = {'plates': [], 'assembly': [], 'constructs': []}
+        data = {'plates': [], 'assembly': [], 'constructs': [], 'bps': []}
 
         is_success = True
         assembly = {}
