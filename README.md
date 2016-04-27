@@ -115,5 +115,5 @@ Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](htt
 
 <br/>
 Developed by **Das lab**, _Leland Stanford Junior University_.
+<br/>
 README by [**t47**](http://t47.io/), *January 2016*.
-

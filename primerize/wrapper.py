@@ -108,6 +108,8 @@ class Design_Plate(object):
             setattr(self, key_rename, init_dict[key])
         if self.get('TYPE') == 'Mutate-and-Map':
             self._data['illustration'] = draw_region(self.sequence, self._params)
+        elif self.get('TYPE') == 'Mutation/Rescue':
+            self._data['illustration'] = draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
 
     def __repr__(self):
         structures = '\033[95mstructures\033[0m = %s, \n' % repr(self.structures) if self.get('TYPE') == 'Mutation/Rescue' else ''
@@ -165,12 +167,11 @@ class Design_Plate(object):
                 return output[:-1]
             elif key == 'assembly':
                 return self._data['assembly'].echo()
-            elif key == 'region' and self.get('TYPE') == 'Mutate-and-Map':
+            elif key == 'region':
                 return '\n'.join(self._data['illustration']['lines'])
 
             elif not key:
-                region = '\n\n' + self.echo('region') if self.get('TYPE') == 'Mutate-and-Map' else ''
-                return self.echo('assembly') + '\n\n' + self.echo('plate') + region
+                return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.echo()\033[0m.\n' % (key, self.__class__))
         else:

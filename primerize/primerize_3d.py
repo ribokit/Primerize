@@ -182,7 +182,7 @@ class Primerize_3D(object):
             print('\033[41mERROR\033[0m: Primerize 3D design() encountered error.\n')
 
         params.update({'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
-        data.update({'plates': plates, 'constructs': constructs})
+        data.update({'plates': plates, 'constructs': constructs, 'bps': bps})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 
@@ -194,7 +194,7 @@ def design_primers_3D(sequence, primer_set=[], offset=None, structures=[], N_mut
 
 
 def main():
-    parser = argparse.ArgumentParser(description='\033[92mPrimerize 3D Mutation/Recue Plate Design\033[0m', epilog='\033[94mby Siqi Tian, 2016\033[0m', add_help=False)
+    parser = argparse.ArgumentParser(description='\033[92mPrimerize 3D Mutation/Rescue Plate Design\033[0m', epilog='\033[94mby Siqi Tian, 2016\033[0m', add_help=False)
     parser.add_argument('sequence', type=str, help='DNA Template Sequence')
     parser.add_argument('-p', metavar='prefix', type=str, help='Display Name of Construct', dest='prefix', default='lib')
     group1 = parser.add_argument_group('advanced options')
