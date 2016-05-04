@@ -8,6 +8,7 @@ from primerize import __version__
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
@@ -39,20 +40,25 @@ man_show_urls = True
 
 modindex_common_prefix = []
 
-html_theme = 'sphinx_rtd_theme'
-html_use_smartypants = True
 html_domain_indices = True
+html_use_smartypants = True
 html_use_index = True
+html_use_modindex = False
 html_split_index = False
 html_show_sourcelink = False
 html_show_sphinx = True
 html_show_copyright = True
+html_copy_source = False
+html_compact_lists = True
+html_last_updated_fmt = '%b %d, %Y'
 html_search_language = 'en'
 
 html_short_title = None
 html_logo = None
 html_favicon = None
 html_extra_path = []
+
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -62,15 +68,6 @@ html_extra_path = []
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
-# The name for this set of Sphinx documents.
-# "<project> v<release> documentation" by default.
-#html_title = u'Primerize v1.2.4'
-
-# If not None, a 'Last updated on:' timestamp is inserted at every page
-# bottom, using the given strftime format.
-# The empty string is equivalent to '%b %d, %Y'.
-#html_last_updated_fmt = None
-
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
 
@@ -78,24 +75,15 @@ html_extra_path = []
 # template names.
 #html_additional_pages = {}
 
-# If true, an OpenSearch description file will be output, and all pages will
-# contain a <link> tag referring to it.  The value of this option must be the
-# base URL from which the finished HTML is served.
-#html_use_opensearch = ''
+html_context = {}
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Primerize_doc'
 
 
-# -- Options for manual page output ---------------------------------------
-man_pages = [
-    (master_doc, 'primerize', u'Primerize Documentation',
-     [author], 1)
-]
-texinfo_documents = [
-    (master_doc, 'Primerize', u'Primerize Documentation',
-     author, 'Primerize', 'One line description of project.',
-     'Miscellaneous'),
-]
-texinfo_show_urls = 'footnote'
-
+autodoc_member_order = 'groupwise'
+autosummary_generate = True
+napoleon_google_docstring = True
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True
+napoleon_use_rtype = False

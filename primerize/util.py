@@ -14,6 +14,28 @@ else:
 
 
 class Assembly(object):
+    """Collection of result data essential for drawing an assembly scheme.
+
+    Args:
+        sequence: ``str``: Sequence of assembly design.
+        primers: ``list(list(int)``: Numeric representation (end numbering and direction) of primers.
+        name: ``str``: Construct prefix/name.
+        COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
+
+    Returns:
+        ``primerize.util.Assembly``
+
+    Attributes:
+        sequence: ``str``: Sequence of assembly design.
+        primers: ``list(list(int))``: Numeric representation (end numbering and direction) of primers.
+        name: ``str``: Construct prefix/name.
+        bp_lines: ``list(str)``: Strings for base-pairing lines (``'|'``).
+        seq_lines: ``list(str)``: Strings for primer sequence lines.
+        print_lines: ``list(tuple(str, str))``: Strings for all lines assembled, i.e. ``list(tuple('marker', 'print_line'))``.
+        Tm_overlaps: ``list(float)``: List of melting temperature for all overlapping regions.
+
+    """
+
     def __init__(self, sequence, primers, name, COL_SIZE=142):
         self.sequence = sequence
         self.primers = primers
@@ -21,13 +43,25 @@ class Assembly(object):
         (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = _draw_assembly(self.sequence, self.primers, COL_SIZE)
 
     def __repr__(self):
+        """Representation of the ``Assembly`` class.
+        """
+
         return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[91mlist\033[0m(\033[91mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
 
     def __str__(self):
+        """Results of the ``Assembly`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
 
     def echo(self):
+        """Print result in rich-text.
+
+        Returns:
+            ``str``
+        """
+
         output = ''
         x = 0
         for i in range(len(self.print_lines)):
@@ -54,6 +88,13 @@ class Assembly(object):
 
 
     def save(self, path='./', name=None):
+        """Save result to text file.
+
+        Args:
+            path: ``str``: `(Optional)` Path for file saving. Use either relative or absolute path.
+            name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
+        """
+
         if name is None: name = self.name
         f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
         lines = self.echo().replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
@@ -63,29 +104,76 @@ class Assembly(object):
 
 
 class Plate_96Well(object):
+    """Abstraction of 96-well plates.
+
+    Args:
+        tag: ``int``: `(Optional)` Mutation library tag. Use **which_lib** number.
+
+    Returns:
+        ``primerize.util.Plate_96Well``
+
+    Attributes:
+        coords: ``set(str)``: Filled 96-Well Coordinates.
+        _data: Data of primers and names, in format of ``dict: { str: tuple(primerize.util.Mutation, str) }``, i.e. ``dict: {'coord': ('tag', 'primer') }``.
+    """
+
     def __init__(self, tag=1):
         self.coords = set()
         self._data = {}
         self.tag = 'Lib%d-' % tag
 
     def __repr__(self):
+        """Representation of the ``Plate_96Well`` class.
+        """
+
         if len(self):
             return '\033[94m%s\033[0m {\033[93m\'coords\'\033[0m: %s, \033[93m\'data\'\033[0m: \033[91mdict\033[0m(\033[91mtuple\033[0m * %d)}' % (self.__class__, ' '.join(sorted(self.coords)), len(self._data))
         else:
             return '\033[94m%s\033[0m (empty)' % self.__class__
 
     def __str__(self):
+        """Results of the ``Plate_96Well`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
     def __len__(self):
+        """Number of filled wells.
+
+        Returns:
+            ``int``
+        """
+
         return len(self.coords)
 
 
     def has(self, coord):
+        """Test if data of a given WellPosition is present.
+
+        Args:
+            coord: ``str``: WellPosition (e.g. ``'A01'``) for data.
+
+        Returns:
+            ``bool``
+        """
+
         return coord in self.coords
 
 
     def get(self, coord):
+        """Get data of a particular well or number of wells filled.
+
+        Args:
+            coord: ``str``: Keyword of parameter. Either use ``'count'`` for number of wells filled, or WellPosition for well data.
+
+        Returns:
+            value of specified **coord**.
+
+        Raises:
+            AttributeError: For illegal keyword or WellPosition (out of ``range(0, 96) + 1``).
+            KeyError: For nonexisted **coord**.
+        """
+
         if coord.lower() == 'count':
             return len(self.coords)
         else:
@@ -99,6 +187,17 @@ class Plate_96Well(object):
 
 
     def set(self, coord, tag, primer):
+        """Record data of a particular well.
+
+        Args:
+            coord: ``str``: WellPosition for data. Use same range as ``get()``. Existing data for the same well is overwritten.
+            tag: ``primerize.util.Mutation``: Mutant representd by ``primerize.util.Mutation``. ``str`` is only supported for backward compatibility.
+            primer: ``str``: Primer seuqence of well. Use sense-strand.
+
+        Raises:
+            AttributeError: For illegal WellPosition.
+        """
+
         coord = _format_coord(coord)
         if coord_to_num(coord) == -1:
             raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (coord, self.__class__))
@@ -108,15 +207,35 @@ class Plate_96Well(object):
 
 
     def reset(self):
+        """Clear current plate data.
+        """
+
         self.coords = set()
         self._data = {}
 
 
     def echo(self, ref_primer=''):
+        """Print result in rich-text.
+
+        Args:
+            ref_primer: ``list(str)``: `(Optional)` List of Wild-type primer_set for highlighting. If nonspecified, highlighting is disabled.
+
+        Returns: 
+            ``str``
+        """
+
         return _print_primer_plate(self, ref_primer)
 
 
     def save(self, ref_primer='', file_name='./', title=''):
+        """Save plate layout to image file (`SVG`).
+
+        Args:
+            ref_primer: ``list(str)``: `(Optional)` List of Wild-type primer_set for highlighting. If nonspecified, highlighting is disabled.
+            file_name: ``str``: `(Optional)` File name. Include path into file_name when specifying. Use either relative or absolute path.
+            title: ``str``: `(Optional)` Title to display on image. LaTex NOT supported.
+        """
+
         fig = pyplot.figure()
         pyplot.axes().set_aspect('equal')
         pyplot.axis([0, 13.875, 0, 9.375])
@@ -162,30 +281,69 @@ class Plate_96Well(object):
 
 
 class Mutation(object):
+    """Collection of mutations for a construct.
+
+    Args:
+        mut_list: ``list(str)``: `(Optional)` List of mutations. When nonspecified, an empty instance is created; when specified, it calls ``push()``.
+
+    Returns:
+        ``primerize.util.Mutation``
+
+    Attributes:
+        _data: Data of mutations, in format of ``dict: { int: tuple(str, str) }``, i.e. ``dict: {'seqpos': ('wt_char', 'mut_char') }``.
+    """
+
     def __init__(self, mut_str=[]):
         self._data = {}
         if mut_str: self.push(mut_str)
 
     def __repr__(self):
+        """Representation of the ``Mutation`` class.
+        """
+
         return '\033[94m%s\033[0m' % self.__class__
 
     def __str__(self):
+        """Results of the ``Mutation`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
     def __len__(self):
+        """Number of filled wells.
+
+        Returns:
+            ``int``
+        """
+
         return len(self._data)
 
     def __eq__(self, other):
+        """Comparison method for whether two ``Mutation`` objects contain the same set of mutations.
+        """
+
         if isinstance(other, (str, unicode)) and other == 'WT': return len(self) == 0
         if isinstance(other, Mutation): other = other.list()
         return self.has(other) and len(self) == len(other)
 
     def __iter__(self):
+        """Iterator through all mutations.
+        """
+
         for k in self._data.keys():
             yield k
 
 
     def has(self, mut_str):
+        """Test if a list of given mutation is present.
+
+        Args:
+            mut_list: ``list(str)``: Mutations in format of ``['wt_char', 'seq_pos', 'mut_char']``, (e.g. ``['G13C', 'A15T']``).
+
+        Returns:
+            ``bool``
+        """
+
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         if not (mut_str or self._data): return True
         flag = False
@@ -202,6 +360,12 @@ class Mutation(object):
 
 
     def push(self, mut_str):
+        """Add a list of mutations.
+
+        Args:
+            mut_list: ``list(str)``: Mutations. Valid keywords are the same as ``has()``. Each ``'seq_pos'`` can only be mutated once. Conflicting mutations are overwritten and the most recent one is saved.
+        """
+
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
             if mut == 'WT': continue
@@ -213,6 +377,15 @@ class Mutation(object):
 
 
     def pop(self, mut_str):
+        """Remove a list of mutations.
+
+        Args:
+            mut_list: ``list(str)``: Mutations. Valid keywords are the same as ``has()``. Mutations that are not present will result in a premature return with ``False``.
+
+        Returns:
+            ``bool``: Whether all mutations in **mut_list** are successfully removed.
+        """
+
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
             if self.has(mut):
@@ -225,6 +398,12 @@ class Mutation(object):
 
 
     def list(self):
+        """Return a list of all mutations.
+
+        Returns:
+            ``list(str)``
+        """
+
         mut_list = []
         for seq_pos in sorted(self._data):
             mut_list.append('%s%d%s' % (self._data[seq_pos][0], seq_pos, self._data[seq_pos][1]))
@@ -232,6 +411,12 @@ class Mutation(object):
 
 
     def echo(self):
+        """Print result in rich-text, delimited by ``';'``.
+
+        Returns: 
+            ``str``
+        """
+
         output = []
         for mut in self.list():
             if mut[-2:] == 'WT':
@@ -245,27 +430,60 @@ class Mutation(object):
 
 
 class Construct_List(object):
+    """Collection of mutant constructs.
+
+    Returns: 
+        ``primerize.util.Construct_List``
+
+    Attributes:
+        _data: Data of constructs, in format of ``list(primerize.util.Mutation)``.
+    """
+
     def __init__(self):
         self._data = []
 
     def __repr__(self):
+        """Representation of the ``Construct_List`` class.
+        """
+
         if len(self):
             return '\033[94m%s\033[0m {\033[91mlist\033[0m(%s * %d)}' % (self.__class__, repr(Mutation()), len(self))
         else:
             return '\033[94m%s\033[0m (empty)' % self.__class__
 
     def __str__(self):
+        """Results of the ``Construct_List`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
     def __len__(self):
+        """Number of filled wells.
+
+        Returns:
+            ``int``
+        """
+
         return len(self._data)
 
     def __iter__(self):
+        """Iterator through all constructs.
+        """
+
         for i in range(len(self._data)):
             yield self._data[i]
 
 
     def has(self, mut_list):
+        """Test if a list of given mutant construct is present.
+
+        Args:
+            mut_list: ``primerize.util.Mutation``: A mutant represented by ``primerize.util.Mutation``.
+
+        Returns:
+            ``bool``
+        """
+
         if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
         for construct in self._data:
             if construct == mut_list: return True
@@ -273,6 +491,15 @@ class Construct_List(object):
 
 
     def push(self, mut_list):
+        """Add a list of mutations.
+
+        Args:
+            mut_list: ``primerize.util.Mutation``: Mutations. A mutant represented by ``primerize.util.Mutation``. If the mutant is already present, it will return ``False``.
+
+        Returns:
+            ``bool``: Whether **mut_list** is successfully added.
+        """
+
         if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
         if self.has(mut_list): return False
         self._data.append(mut_list)
@@ -280,6 +507,15 @@ class Construct_List(object):
 
 
     def pop(self, mut_list):
+        """Remove a list of mutations.
+
+        Args:
+            mut_list: ``primerize.util.Mutation``: A mutant represented by ``primerize.util.Mutation``. Mutant that is not present will result in a premature return with ``False``.
+
+        Returns:
+            ``bool``: Whether **mut_list** is successfully removed.
+        """
+
         if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
         for i, construct in enumerate(self._data):
             if construct == mut_list:
@@ -289,6 +525,12 @@ class Construct_List(object):
 
 
     def echo(self, prefix=''):
+        """Print result in rich-text.
+
+        Returns: 
+            ``str``
+        """
+
         output = ''
         for construct in self._data:
             output += prefix + construct.echo() + '\n'
@@ -297,22 +539,58 @@ class Construct_List(object):
 
 
 def DNA2RNA(sequence):
+    """Convert a DNA sequence input to RNA.
+
+    Args:
+        sequence: ``str``: Input DNA sequence.
+
+    Returns:
+        ``str``: String of RNA
+    """
+
     return sequence.upper().replace('T', 'U')
 
 
 def RNA2DNA(sequence):
+    """Convert a RNA sequence input to DNA.
+
+    Args:
+        sequence: ``str``: Input RNA sequence.
+
+    Returns:
+        ``str``: String of DNA
+    """
+
     return sequence.upper().replace('U', 'T')
 
 
 def complement(sequence):
+    """Convert a DNA sequence input to its complement strand.
+
+    Args:
+        sequence: ``str``: Input DNA sequence.
+
+    Returns:
+        ``str``: String of complement DNA strand.
+    """
+
     sequence = list(sequence)
-    rc_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C'}
+    rc_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'U': 'A'}
     for i in range(len(sequence)):
         sequence[i] = rc_dict[sequence[i]]
     return ''.join(sequence)
 
 
 def reverse_complement(sequence):
+    """Convert a DNA sequence input to its reverse complement strand.
+
+    Args:
+        sequence: ``str``: Input DNA sequence.
+
+    Returns:
+        ``str``: String of reverse complement DNA strand.
+    """
+
     return complement(sequence[::-1])
 
 
@@ -413,6 +691,15 @@ def _format_coord(coord):
 
 
 def coord_to_num(coord):
+    """Convert a 96-Well Coordinate string to number.
+
+    Args:
+        coord: ``str``: Input WellPosition coordinate string, e.g. ``'A01'``.
+
+    Returns:
+        ``int``
+    """
+
     coord = coord.upper().strip()
     row = 'ABCDEFGH'.find(coord[0])
     if row == -1: return -1
@@ -422,6 +709,15 @@ def coord_to_num(coord):
 
 
 def num_to_coord(num):
+    """Convert a 96-Well Coordinate number to string.
+
+    Args:
+        num: ``int``: Input WellPosition coordinate number, e.g. ``0``.
+
+    Returns:
+        ``str`` or ``-1`` if illegal input.
+    """
+
     if num < 0 or num > 96: return -1
     row = 'ABCDEFGH'[(num - 1) % 8]
     col = (num - 1) / 8 + 1
@@ -429,6 +725,22 @@ def num_to_coord(num):
 
 
 def get_mut_range(mut_start, mut_end, offset, sequence):
+    """Validate and calculate mutation range based on input sequence and offset. If mutation range exceeds possible range, the maximum possible range is returned.
+
+    Args:
+        mut_start: ``int``: Lower limit of mutation range, should be based on **offset**.
+        mut_end: ``int``: Upper limit of mutation range, should be based on **offset**.
+        offset: ``int``: Index numbering offset.
+        sequence: ``str``: The sequence (length used).
+
+    Returns:
+        ``(which_muts, mut_start, mut_end)``
+        
+        - **which_muts** - ``list(int)``: The final range of mutations.
+        - **mut_start** - ``int``: The valid **mut_start**.
+        - **mut_end** - ``int``: The valid **mut_end**.
+    """
+
     if (not mut_start) or (mut_start is None): mut_start = 1 - offset
     mut_start = min(max(mut_start, 1 - offset), len(sequence) - offset)
     if (not mut_end) or (mut_end is None): mut_end = len(sequence) - offset
@@ -461,6 +773,19 @@ def _get_primer_index(primer_set, sequence):
 
 
 def get_mutation(nt, lib):
+    """Mutate a single nucleotide.
+
+    Args:
+        nt: ``str``: The nucleotide of interest.
+        lib: ``int``: The mutation library choice; choose from ``[1, 2, 3, 4]``. ``1`` represents "A->U, U->A, C->G, G->C", ``2`` represents "A->C, U->C, C->A, G->A", ``3`` represents "A->G, U->G, C->U, G->U", and ``4`` represents "A->C, U->G, C->A, G->U".
+
+    Returns:
+        ``str``
+
+    Raises:
+        ValueError: For illegal **lib** input.
+    """
+
     idx = 'ATCG'.find(nt)
     if lib == 1:
         return 'TAGC'[idx]
@@ -688,6 +1013,16 @@ def _draw_str_region(sequence, structures, bps, params):
 
 
 def str_to_bps(structure, offset=0):
+    """Convert a dot-bracket secondary structure into base-pair tuples.
+
+    Args:
+        structure: ``str``: Input secondary struture.
+        offset: ``int``: `(Optional)` Index numbering offset for output numbers.
+
+    Returns:
+        ``list(tuple(int, int))``
+    """
+
     (lbs, lbs_pk, bps) = ([], [], [])
 
     for i, char in enumerate(structure):
@@ -708,6 +1043,16 @@ def str_to_bps(structure, offset=0):
 
 
 def diff_bps(structures, offset=0):
+    """Find base-pairs that are not present in all secondary structure inputs. Each input secondary structure is compared to all the others.
+
+    Args:
+        structures: ``list(str)``: Input secondary structures.
+        offst: ``int``: `(Optional)` Index numbering offset for output numbers.
+
+    Returns:
+        ``list(tuple(int, int))``
+    """
+
     if len(structures) == 1:
         return str_to_bps(structures[0], offset)
     else:
