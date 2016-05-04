@@ -10,14 +10,13 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
     'sphinx.ext.napoleon',
-    'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.mathjax',
     'sphinx.ext.githubpages',
 ]
 templates_path = ['_templates']
 html_static_path = ['_static']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '*misprime.rst']
 source_suffix = '.rst'
 master_doc = 'index'
 
@@ -37,7 +36,6 @@ add_module_names = True
 show_authors = False
 todo_include_todos = True
 man_show_urls = True
-
 modindex_common_prefix = []
 
 html_domain_indices = True
@@ -53,7 +51,7 @@ html_compact_lists = True
 html_last_updated_fmt = '%b %d, %Y'
 html_search_language = 'en'
 
-html_short_title = None
+# html_short_title = None
 html_logo = None
 html_favicon = None
 html_extra_path = []
@@ -81,9 +79,11 @@ html_context = {}
 htmlhelp_basename = 'Primerize_doc'
 
 
-autodoc_member_order = 'groupwise'
-autosummary_generate = True
 napoleon_google_docstring = True
 napoleon_include_private_with_doc = False
 napoleon_include_special_with_doc = True
 napoleon_use_rtype = False
+autodoc_member_order = 'groupwise'
+autodoc_default_flags = ['members', 'show-inheritance']
+autosummary_generate = True
+

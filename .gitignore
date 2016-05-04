@@ -1,7 +1,6 @@
 build/
 dist/
 docs/_build
-docs/primerize*.rst
 primerize.egg-info/
 *.pyc
 

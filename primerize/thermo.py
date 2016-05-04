@@ -5,6 +5,26 @@ numpy.seterr('ignore')
 
 
 class Nearest_Neighbor(object):
+    """Wrapper object of Nearest Neighbor parameters; for internal use.
+
+    Returns:
+        ``primerize.thermo.Nearest_Neighbor``
+
+    Attributes:
+        T: ``float``
+        delH_NN: ``numpy.array(float(4, 4))``
+        delS_NN: ``numpy.array(float(4, 4))``
+        delG_NN: ``numpy.array(float(4, 4))``
+        delH_AT_closing_penalty: ``numpy.array(float(1, 4))``
+        delS_AT_closing_penalty: ``numpy.array(float(1, 4))``
+        delG_AT_closing_penalty: ``numpy.array(float(1, 4))``
+        delH_mismatch: ``numpy.array(float(4, 4, 4))``
+        delS_mismatch: ``numpy.array(float(4, 4, 4))``
+        delG_mismatch: ``numpy.array(float(4, 4, 4))``
+        delH_init: ``float``
+        del_init: ``float``
+    """
+
     def __init__(self):
         self.T = 273.15 + 37
 
@@ -212,6 +232,18 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
 
 
 def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
+    """Calculate melting temperature for a given sequence
+
+    Args:
+        sequence: ``str``: Annealing DNA sequence section.
+        DNA_conc: ``float``: `(Optional)` Concentration of DNA.
+        monovalent_conc: ``float``: `(Optional)` Monovalent cation concentration.
+        divalent_conc: ``float``: `(Optional)` Divalent cation concentration.
+
+    Returns:
+        ``float``: Melting temperature in Celcius
+    """
+
     numerical_sequence = _convert_sequence(sequence)
     NN_parameters = Nearest_Neighbor()
     delS_DNA_conc = 1.987 * math.log(DNA_conc / 2)
