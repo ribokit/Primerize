@@ -75,16 +75,16 @@ class Design_Single(object):
                 output = ''
                 for i in range(len(self._data['warnings'])):
                     warning = self._data['warnings'][i]
-                    p_1 = '\033[100m%d\033[0m%s' % (warning[0], primer_suffix(warning[0] - 1))
-                    p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, primer_suffix(x - 1)) for x in warning[3])
+                    p_1 = '\033[100m%d\033[0m%s' % (warning[0], _primer_suffix(warning[0] - 1))
+                    p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, _primer_suffix(x - 1)) for x in warning[3])
                     output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
                 return output[:-1]
 
             elif key == 'primer':
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
                 for i in range(len(self.primer_set)):
-                    name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, primer_suffix(i))
-                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
+                    name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, _primer_suffix(i))
+                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), _primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
                 return output[:-1]
 
             elif key == 'assembly':
@@ -107,9 +107,9 @@ class Design_Plate(object):
             key_rename = '_' + key if key in ['params', 'data'] else key
             setattr(self, key_rename, init_dict[key])
         if self.get('TYPE') == 'Mutate-and-Map':
-            self._data['illustration'] = draw_region(self.sequence, self._params)
+            self._data['illustration'] = _draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
-            self._data['illustration'] = draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
+            self._data['illustration'] = _draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
 
     def __repr__(self):
         structures = '\033[95mstructures\033[0m = %s, \n' % repr(self.structures) if self.get('TYPE') == 'Mutation/Rescue' else ''
@@ -138,11 +138,11 @@ class Design_Plate(object):
             if name is None: name = self.name
             key = key.lower()
             if key == 'table':
-                save_plates_excel(self._data['plates'], self.primer_set, name, path)
+                _save_plates_excel(self._data['plates'], self.primer_set, name, path)
             elif key == 'image':
-                save_plate_layout(self._data['plates'], self.primer_set, name, path)
+                _save_plate_layout(self._data['plates'], self.primer_set, name, path)
             elif key == 'construct':
-                save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
+                _save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
 

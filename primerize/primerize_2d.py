@@ -117,7 +117,7 @@ class Primerize_2D(object):
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
 
-        (primers, is_success) = get_primer_index(primer_set, sequence)
+        (primers, is_success) = _get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
@@ -134,7 +134,7 @@ class Primerize_2D(object):
                 mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], get_mutation(sequence[m], which_lib))
                 constructs.push(mut_name)
 
-            plates = mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
+            plates = _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
             is_success = False
@@ -143,13 +143,6 @@ class Primerize_2D(object):
 
         data.update({'plates': plates, 'assembly': assembly, 'constructs': constructs})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
-
-
-
-def design_primers_2D(sequence, primer_set=[], offset=None, which_muts=None, which_lib=None, prefix=None):
-    prm = Primerize_2D()
-    res = prm.design(sequence, primer_set, offset, which_muts, which_lib, prefix, True)
-    return res
 
 
 def main():
@@ -174,8 +167,8 @@ def main():
     args.primer_set = [] if args.primer_set is None else args.primer_set[0]
     (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
 
-
-    res = design_primers_2D(args.sequence, args.primer_set, args.offset, which_muts, args.which_lib, args.prefix)
+    prm = Primerize_2D()
+    res = prm.design(args.sequence, args.primer_set, args.offset, which_muts, args.which_lib, args.prefix, True)
     if res.is_success:
         if not args.is_quiet:
             print(res)

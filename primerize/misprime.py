@@ -6,7 +6,7 @@ else:
     from .util import reverse_complement
 
 
-def check_misprime(sequence):
+def _check_misprime(sequence):
     N = len(sequence)
     # length of string subsets
     m = 20

@@ -131,7 +131,7 @@ class Primerize_3D(object):
         N_primers = len(primer_set)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers})
 
-        (primers, is_success) = get_primer_index(primer_set, sequence)
+        (primers, is_success) = _get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
@@ -174,7 +174,7 @@ class Primerize_3D(object):
             constructs.push(mut_list_l + mut_list_r)
 
         try:
-            plates = mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
+            plates = _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
             print('\033[92mSUCCESS\033[0m: Primerize 3D design() finished.\n')
         except:
             is_success = False
@@ -184,13 +184,6 @@ class Primerize_3D(object):
         params.update({'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
         data.update({'plates': plates, 'constructs': constructs, 'bps': bps})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
-
-
-
-def design_primers_3D(sequence, primer_set=[], offset=None, structures=[], N_mutations=None, which_muts=None, which_lib=None, is_single=None, is_fillWT=None, prefix=None):
-    prm = Primerize_3D()
-    res = prm.design(sequence, primer_set, offset, structures, N_mutations, which_lib, which_muts, prefix, is_single, is_fillWT, True)
-    return res
 
 
 def main():
@@ -220,8 +213,8 @@ def main():
     (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
     args.structures = [] if args.structures is None else args.structures[0]
 
-
-    res = design_primers_3D(args.sequence, args.primer_set, args.structures, args.offset, args.N_mutations, which_muts, args.which_lib, args.is_single, args.is_fillWT, args.prefix)
+    prm = Primerize_3D()
+    res = prm.design(args.sequence, args.primer_set, args.offset, args.structures, args.N_mutations, args.which_lib, which_muts, args.prefix, args.is_single, args.is_fillWT, True)
     if res.is_success:
         if not args.is_quiet:
             print(res)

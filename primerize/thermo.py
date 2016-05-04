@@ -126,7 +126,7 @@ class Nearest_Neighbor(object):
         self.delS_init = -5.7
 
 
-def convert_sequence(sequence):
+def _convert_sequence(sequence):
     # Easier to keep track of integers in Matlab
     # A,C,G,T --> 1,2,3,4.
     sequence = sequence.upper()
@@ -138,7 +138,7 @@ def convert_sequence(sequence):
     return numerical_sequence
 
 
-def ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP):
+def _ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP):
     # From Owczarzy et al., Biochemistry, 2008.
     R = math.sqrt(divalent_conc) / monovalent_conc
     Tm_corrected = Tm
@@ -162,10 +162,10 @@ def ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP):
     return Tm_corrected
 
 
-def precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_conc=0.0015):
+def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_conc=0.0015):
     # This could be sped up significantly, since many of the sums of
     # delH, delG are shared between calculations.
-    numerical_sequence = convert_sequence(sequence)
+    numerical_sequence = _convert_sequence(sequence)
     NN_parameters = Nearest_Neighbor()
     delS_DNA_conc = 1.987 * math.log(DNA_conc / 2)
     delS_init = NN_parameters.delS_init + delS_DNA_conc
@@ -206,13 +206,13 @@ def precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_con
     print('Ionic strength corrections ...')
     for i in range(N_BP):
         for j in range(i, N_BP):
-            Tm[i, j] = ionic_strength_correction(Tm[i, j], monovalent_conc, divalent_conc, f_GC[i, j], len_BP[i, j])
+            Tm[i, j] = _ionic_strength_correction(Tm[i, j], monovalent_conc, divalent_conc, f_GC[i, j], len_BP[i, j])
 
     return Tm - 273.15
 
 
 def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
-    numerical_sequence = convert_sequence(sequence)
+    numerical_sequence = _convert_sequence(sequence)
     NN_parameters = Nearest_Neighbor()
     delS_DNA_conc = 1.987 * math.log(DNA_conc / 2)
     delS_sum = NN_parameters.delS_init + delS_DNA_conc
@@ -230,7 +230,7 @@ def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
 
     Tm = 1000 * delH_sum / delS_sum
     f_GC = (numpy.sum(numerical_sequence == 1) + numpy.sum(numerical_sequence == 2)) / float(N_BP)
-    Tm = ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP)
+    Tm = _ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP)
     return Tm - 273.15
 
 

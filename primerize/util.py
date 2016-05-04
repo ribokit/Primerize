@@ -18,7 +18,7 @@ class Assembly(object):
         self.sequence = sequence
         self.primers = primers
         self.name = name
-        (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = draw_assembly(self.sequence, self.primers, COL_SIZE)
+        (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = _draw_assembly(self.sequence, self.primers, COL_SIZE)
 
     def __repr__(self):
         return '\033[94m%s\033[0m {\n    \033[93m\'primers\'\033[0m: %s, \n    \033[93m\'seq_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'bp_lines\'\033[0m: \033[91mlist\033[0m(\033[91mstring\033[0m * %d), \n    \033[93m\'print_lines\'\033[0m: \033[91mlist\033[0m(\033[91mtuple\033[0m * %d), \n    \033[93m\'Tm_overlaps\'\033[0m: %s\n}' % (self.__class__, repr(self.primers), len(self.seq_lines), len(self.bp_lines), len(self.print_lines), repr(self.Tm_overlaps))
@@ -89,7 +89,7 @@ class Plate_96Well(object):
         if coord.lower() == 'count':
             return len(self.coords)
         else:
-            coord = format_coord(coord)
+            coord = _format_coord(coord)
             if coord_to_num(coord) == -1:
                 raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
             elif coord in self.coords:
@@ -99,7 +99,7 @@ class Plate_96Well(object):
 
 
     def set(self, coord, tag, primer):
-        coord = format_coord(coord)
+        coord = _format_coord(coord)
         if coord_to_num(coord) == -1:
             raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (coord, self.__class__))
         else:
@@ -113,7 +113,7 @@ class Plate_96Well(object):
 
 
     def echo(self, ref_primer=''):
-        return print_primer_plate(self, ref_primer)
+        return _print_primer_plate(self, ref_primer)
 
 
     def save(self, ref_primer='', file_name='./', title=''):
@@ -316,14 +316,14 @@ def reverse_complement(sequence):
     return complement(sequence[::-1])
 
 
-def primer_suffix(num):
+def _primer_suffix(num):
     if num % 2:
         return '\033[95m R\033[0m'
     else:
         return '\033[94m F\033[0m'
 
 
-def draw_assembly(sequence, primers, COL_SIZE):
+def _draw_assembly(sequence, primers, COL_SIZE):
     N_primers = primers.shape[1]
     seq_line_prev = list(' ' * max(len(sequence), COL_SIZE))
     bp_lines = []
@@ -408,7 +408,7 @@ def draw_assembly(sequence, primers, COL_SIZE):
     return (bp_lines, seq_lines, print_lines, Tms)
 
 
-def format_coord(coord):
+def _format_coord(coord):
     return coord[0] + coord[1:].zfill(2)
 
 
@@ -437,7 +437,7 @@ def get_mut_range(mut_start, mut_end, offset, sequence):
     return (which_muts, mut_start, mut_end)
 
 
-def get_primer_index(primer_set, sequence):
+def _get_primer_index(primer_set, sequence):
     N_primers = len(primer_set)
     coverage = numpy.zeros((1, len(sequence)))
     primers = numpy.zeros((3, N_primers))
@@ -474,7 +474,7 @@ def get_mutation(nt, lib):
         raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for params \033[92mwhich_lib\033[0m.\n' % lib)
 
 
-def print_primer_plate(plate, ref_primer):
+def _print_primer_plate(plate, ref_primer):
     if not plate: return '(empty)\n'
     string = ''
     for key in sorted(plate._data):
@@ -503,7 +503,7 @@ def print_primer_plate(plate, ref_primer):
     return string
 
 
-def save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
+def _save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
     for k in range(len(plates[0])):
         for p in range(len(plates)):
             primer_sequences = plates[p][k]
@@ -520,7 +520,7 @@ def save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
                 primer_sequences.save(ref_primer[p], file_name, title)
 
 
-def save_construct_key(keys, name, path='./', prefix=''):
+def _save_construct_key(keys, name, path='./', prefix=''):
     prefix = 'Lib%s-' % prefix if prefix else ''
     print('Creating keys file ...')
     lines = keys.echo(prefix)
@@ -528,7 +528,7 @@ def save_construct_key(keys, name, path='./', prefix=''):
     open(os.path.join(path, '%s_keys.txt' % name), 'w').write(lines)
 
 
-def save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
+def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
     for k in range(len(plates[0])):
         file_name = os.path.join(path, '%s_plate_%d.xls' % (prefix, k + 1))
         print('Creating plate file: \033[94m%s\033[0m.' % file_name)
@@ -569,7 +569,7 @@ def save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
         workbook.save(file_name)
 
 
-def draw_region(sequence, params):
+def _draw_region(sequence, params):
     offset = params['offset']
     start = params['which_muts'][0] + offset - 1
     end = params['which_muts'][-1] + offset - 1
@@ -626,7 +626,7 @@ def draw_region(sequence, params):
     return {'labels': labels, 'fragments': fragments, 'lines': (illustration_1, illustration_2, illustration_3)}
 
 
-def draw_str_region(sequence, structures, bps, params):
+def _draw_str_region(sequence, structures, bps, params):
     offset = params['offset']
     start = params['which_muts'][0] + offset - 1
     end = params['which_muts'][-1] + offset - 1
@@ -672,7 +672,7 @@ def draw_str_region(sequence, structures, bps, params):
         illustration_3 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
 
     for structure in structures:
-        this_bps = str2bps(structure)
+        this_bps = str_to_bps(structure)
         this_bps = [bp for bp in this_bps if bp in bps]
         bps = [bp for bp in bps if bp not in this_bps]
         this_bps = [nt for bp in this_bps for nt in bp]
@@ -687,7 +687,7 @@ def draw_str_region(sequence, structures, bps, params):
     return {'labels': labels, 'fragments': fragments, 'lines': (illustration_3, illustration_2, illustration_1, illustration_str)}
 
 
-def str2bps(structure, offset=0):
+def str_to_bps(structure, offset=0):
     (lbs, lbs_pk, bps) = ([], [], [])
 
     for i, char in enumerate(structure):
@@ -709,9 +709,9 @@ def str2bps(structure, offset=0):
 
 def diff_bps(structures, offset=0):
     if len(structures) == 1:
-        return str2bps(structures[0], offset)
+        return str_to_bps(structures[0], offset)
     else:
-        bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str2bps(x, offset)]
+        bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str_to_bps(x, offset)]
         bps = []
         for pair in set(bps_all):
             if bps_all.count(pair) < len(structures):
@@ -721,7 +721,7 @@ def diff_bps(structures, offset=0):
         return sorted(bps, key=lambda tup: tup[0])
 
 
-def mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):
+def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):
     for i, mut in enumerate(constructs):
         plate_num = int(math.floor(i / 96.0))
         plate_pos = i % 96 + 1

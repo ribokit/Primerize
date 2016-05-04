@@ -94,14 +94,14 @@ class Primerize_1D(object):
 
         try:
             print('Precalculataing Tm matrix ...')
-            Tm_precalculated = precalculate_Tm(sequence)
+            Tm_precalculated = _precalculate_Tm(sequence)
             print('Precalculataing misprime score ...')
-            (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = check_misprime(sequence)
+            (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = _check_misprime(sequence)
 
             print('Doing dynamics programming calculation ...')
-            (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers) = dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated)
+            (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers) = _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated)
             print('Doing backtracking ...')
-            (is_success, primers, primer_set, warnings) = back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, self.WARN_CUTOFF)
+            (is_success, primers, primer_set, warnings) = _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, self.WARN_CUTOFF)
 
             if is_success:
                 allow_forward_line = list(' ' * N_BP)
@@ -129,7 +129,7 @@ class Primerize_1D(object):
 
 
 @jit(nopython=True, nogil=True, cache=False)
-def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated):
+def _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated):
     # could be zero, meaning user does not know.
     num_primer_sets = int(NUM_PRIMERS / 2)
     num_primer_sets_max = int(math.ceil(N_BP / float(MIN_LENGTH)))
@@ -281,7 +281,7 @@ def dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, mispr
     return (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers)
 
 
-def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, WARN_CUTOFF):
+def _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, N_primers, MAX_SCORE, num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, WARN_CUTOFF):
     y = numpy.amin(scores_final[:, :, N_primers - 1], axis=0)
     idx = numpy.argmin(scores_final[:, :, N_primers - 1], axis=0)
     min_scroe = numpy.amin(y)
@@ -314,7 +314,7 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
                 # mispriming "report"
                 end_pos = primers[0, i]
                 if (num_match_reverse[0, end_pos] >= WARN_CUTOFF):
-                    problem_primer = find_primers_affected(primers, best_match_reverse[0, end_pos])
+                    problem_primer = _find_primers_affected(primers, best_match_reverse[0, end_pos])
                     misprime_warn.append((i + 1, num_match_reverse[0, end_pos] + 1, best_match_reverse[0, end_pos] + 1, problem_primer))
             else:
                 primer_set.append(str(primer_seq))
@@ -322,24 +322,18 @@ def back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q, 
                 # mispriming "report"
                 end_pos = primers[1, i]
                 if (num_match_forward[0, end_pos] >= WARN_CUTOFF):
-                    problem_primer = find_primers_affected(primers, best_match_forward[0, end_pos])
+                    problem_primer = _find_primers_affected(primers, best_match_forward[0, end_pos])
                     misprime_warn.append((i + 1, num_match_forward[0, end_pos] + 1, best_match_forward[0, end_pos] + 1, problem_primer))
 
     return (is_success, primers, primer_set, misprime_warn)
 
 
-def find_primers_affected(primers, pos):
+def _find_primers_affected(primers, pos):
     primer_list = []
     for i in range(primers.shape[1]):
         if (pos >= primers[0, i] and pos <= primers[1, i]):
             primer_list.append(i + 1)
     return primer_list
-
-
-def design_primers_1D(sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix=None):
-    prm = Primerize_1D()
-    res = prm.design(sequence, MIN_TM, NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, prefix)
-    return res
 
 
 def main():
@@ -358,7 +352,8 @@ def main():
     args = parser.parse_args()
 
     t0 = time.time()
-    res = design_primers_1D(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
+    prm = Primerize_1D()
+    res = prm.design(args.sequence, args.MIN_TM, args.NUM_PRIMERS, args.MIN_LENGTH, args.MAX_LENGTH, args.prefix)
     if res.is_success:
         if not args.is_quiet:
             print(res)
