@@ -4,6 +4,8 @@ import os
 
 sys.path.insert(0, os.path.abspath("../"))
 
+from primerize import __version__
+
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
@@ -20,12 +22,12 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Primerize'
-copyright = u'2008-%s The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.' % date.today().year
+copyright = u'2008-%s The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved' % date.today().year
 author = u'Siqi Tian, Rhiju Das'
 language = 'en'
 
-version = u'1.2.5'
-release = u'1.2.5'
+version = __version__
+release = version
 
 
 pygments_style = 'sphinx'
