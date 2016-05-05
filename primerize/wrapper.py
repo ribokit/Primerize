@@ -222,7 +222,7 @@ class Design_Plate(object):
         """Get result parameters.
 
         Args:
-            key str (Required) Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'structures'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'structures'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
 
         Returns:
             value of specified **key**.
@@ -252,7 +252,7 @@ class Design_Plate(object):
             path: ``str``: `(Optional)` Path for file saving. Use either relative or absolute path.
             name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
 
-        Raise:
+        Raises:
             AttributeError: For illegal **key**.
             UnboundLocalError: When ``is_success = False``.
         """

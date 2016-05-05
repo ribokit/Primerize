@@ -212,7 +212,7 @@ class Plate_96Well(object):
         """Print result in rich-text.
 
         Args:
-            ref_primer: ``list(str)``: `(Optional)` List of Wild-type primer_set for highlighting. If nonspecified, highlighting is disabled.
+            ref_primer: ``list(str)``: `(Optional)` List of Wild-type **primer_set** for highlighting. If nonspecified, highlighting is disabled.
 
         Returns: 
             ``str``
@@ -226,7 +226,7 @@ class Plate_96Well(object):
 
         Args:
             ref_primer: ``list(str)``: `(Optional)` List of Wild-type primer_set for highlighting. If nonspecified, highlighting is disabled.
-            file_name: ``str``: `(Optional)` File name. Include path into file_name when specifying. Use either relative or absolute path.
+            file_name: ``str``: `(Optional)` File name. Include path into **file_name** when specifying. Use either relative or absolute path.
             title: ``str``: `(Optional)` Title to display on image. LaTex NOT supported.
         """
 
@@ -765,7 +765,12 @@ def get_mutation(nt, lib):
 
     Args:
         nt: ``str``: The nucleotide of interest.
-        lib: ``int``: The mutation library choice; choose from ``[1, 2, 3, 4]``. ``1`` represents "A->U, U->A, C->G, G->C", ``2`` represents "A->C, U->C, C->A, G->A", ``3`` represents "A->G, U->G, C->U, G->U", and ``4`` represents "A->C, U->G, C->A, G->U".
+        lib: ``int``: The mutation library choice; choose from (``1``, ``2``, ``3``, ``4``)::
+
+            * 1 represents "A->U, U->A, C->G, G->C", 
+            * 2 represents "A->C, U->C, C->A, G->A", 
+            * 3 represents "A->G, U->G, C->U, G->U",
+            * 4 represents "A->C, U->G, C->A, G->U".
 
     Returns:
         ``str``

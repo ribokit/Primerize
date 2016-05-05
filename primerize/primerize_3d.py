@@ -21,7 +21,7 @@ class Primerize_3D(object):
         N_mutations: ``int``: `(Optional)` Number of consecutive mutations for "single mutants". Valid choices are (``1``, ``2``, ``3``) (e.g. ``2`` makes "single mutants" like ``['G13C', 'T14A']`` and "double mutants" like ``['G13C', 'T14A', 'A71T', 'C72G']``).
         which_lib: ``int``: `(Optional)` Mutation library choice. Valid choices are (``1``, ``4``)::
 
-            * 1 represents "A:U->U:A, G:C->C:G" library ("swap"); 
+            * 1 represents "A:U->U:A, G:C->C:G" library ("swap");
             * 4 represents "A:U->C:G, G:C->U:A" library ("cross");
 
             Note: G:U pairs are always replaced by C:G pairs.
