@@ -16,7 +16,7 @@ extensions = [
 ]
 templates_path = ['_templates']
 html_static_path = ['_static']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', '*misprime.rst']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 source_suffix = '.rst'
 master_doc = 'index'
 
@@ -39,7 +39,7 @@ man_show_urls = True
 modindex_common_prefix = []
 
 html_domain_indices = True
-html_use_smartypants = True
+html_use_smartypants = False
 html_use_index = True
 html_use_modindex = False
 html_split_index = False
@@ -66,13 +66,14 @@ html_theme = 'sphinx_rtd_theme'
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
 
-# Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
-
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 #html_additional_pages = {}
 
+html_sidebars = {
+    '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'],
+    'index': ['globaltoc.html', 'sourcelink.html', 'searchbox.html']
+}
 html_context = {}
 
 # Output file base name for HTML help builder.
