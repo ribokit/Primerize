@@ -1,5 +1,5 @@
-primerize.wrapper module
-========================
+``primerize.wrapper`` Module
+================================
 
 .. automodule:: primerize.wrapper
     :members:

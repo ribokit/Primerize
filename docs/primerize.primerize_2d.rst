@@ -1,5 +1,5 @@
-primerize.primerize_2d module
-=============================
+``primerize.primerize_2d`` Module
+====================================
 
 .. automodule:: primerize.primerize_2d
     :members:

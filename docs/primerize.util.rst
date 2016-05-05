@@ -1,5 +1,5 @@
-primerize.util module
-=====================
+``primerize.util`` Module
+==============================
 
 .. automodule:: primerize.util
     :members:

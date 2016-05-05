@@ -1,5 +1,5 @@
-primerize.thermo module
-=======================
+``primerize.thermo`` Module
+===============================
 
 .. automodule:: primerize.thermo
     :members:
