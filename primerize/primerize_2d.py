@@ -14,6 +14,24 @@ else:
 
 
 class Primerize_2D(object):
+    """Construct a worker for 2D Primer Design (Mutate-and-Map Plates).
+
+    Args:
+        offset: ``int``: `(Optional)` Sequence numbering offset, which is one minus the final number of the first nucleotide.
+        which_muts: ``list(int)``: `(Optional)` Array of mutation positions. Use numbering based on ``offset``. When nonspecified, the entire sequence is included for mutagenesis.
+        which_lib: ``int``: `(Optional)` Mutation library choice. Valid choices are (``1``, ``2``, ``3``)::
+
+            * 1 represents "A->U, U->A, C->G, G->C" library;
+            * 2 represents "A->C, U->C, C->A, G->A" library;
+            * 3 represents "A->G, U->G, C->U, G->U" library.
+
+        COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
+        prefix: ``str``: `(Optional)` Construct prefix/name.
+
+    Returns:
+        ``primerize.Primerize_2D``
+    """
+
     def __init__(self, offset=0, which_muts=[], which_lib=1, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
@@ -29,6 +47,18 @@ class Primerize_2D(object):
 
 
     def get(self, key):
+        """Get current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive. 
+
+        Returns:
+            value of specified **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+        """
+
         key = key.lower()
         if hasattr(self, key):
             return getattr(self, key)
@@ -39,6 +69,17 @@ class Primerize_2D(object):
 
 
     def set(self, key, value):
+        """Set current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are the same as ``get()``.
+            value: ``(auto)``: New value for specified keyword. Type of value must match **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+            ValueError: For illegal **value**.
+        """
+
         key = key.lower()
         if hasattr(self, key):
             if key == 'prefix':
@@ -58,6 +99,9 @@ class Primerize_2D(object):
 
 
     def reset(self):
+        """Reset current worker parameters to default.
+        """
+
         self.prefix = 'lib'
         self.offset = 0
         self.which_muts = []
@@ -66,6 +110,18 @@ class Primerize_2D(object):
 
 
     def design(self, sequence, primer_set=[], offset=None, which_muts=None, which_lib=None, prefix=None, is_force=False):
+        """Run design code to get library plates for input sequence according to specified library options. Current worker parameters are used for nonspecified optional arguments.
+
+        Args:
+            job_1d: ``primerize.Design_Single``: Result of ``primerize.Primerize_1D.design()``. Its ``sequence``, ``primer_set``, and ``prefix`` are used.
+            offset: ``int``: `(Optional)` Sequence numbering offset.
+            which_muts: ``list(int)``: `(Optional)` Array of mutation positions.
+            which_lib: ``int``: `(Optional)` Mutation library choice.
+
+        Returns:
+            ``primerize.Design_Plate``
+        """
+
         if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence

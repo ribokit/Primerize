@@ -14,6 +14,27 @@ else:
 
 
 class Primerize_3D(object):
+    """Construct a worker for 3D Primer Design (Mutation/Rescue Plates).
+
+    Args:
+        offset: ``int``: `(Optional)` Sequence numbering offset, which is one minus the final number of the first nucleotide.
+        N_mutations: ``int``: `(Optional)` Number of consecutive mutations for "single mutants". Valid choices are (``1``, ``2``, ``3``) (e.g. ``2`` makes "single mutants" like ``['G13C', 'T14A']`` and "double mutants" like ``['G13C', 'T14A', 'A71T', 'C72G']``).
+        which_lib: ``int``: `(Optional)` Mutation library choice. Valid choices are (``1``, ``4``)::
+
+            * 1 represents "A:U->U:A, G:C->C:G" library ("swap"); 
+            * 4 represents "A:U->C:G, G:C->U:A" library ("cross");
+
+            Note: G:U pairs are always replaced by C:G pairs.
+
+        is_single: ``bool``: `(Optional)` Flag for whether include single mutants on the plate.
+        is_fillWT: ``bool``: `(Optional)` Flag for whether include Wild-type primers at all WellPositions.
+        COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
+        prefix: ``str``: `(Optional)` Construct prefix/name.
+
+    Returns:
+        ``primerize.Primerize_3D``
+    """
+
     def __init__(self, offset=0, N_mutations=1, which_lib=1, is_single=True, is_fillWT=False, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
@@ -31,6 +52,18 @@ class Primerize_3D(object):
 
 
     def get(self, key):
+        """Get current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'N_mutations'``, ``'which_lib'``, ``'is_single'``, ``'is_fillWT'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive.
+
+        Returns:
+            value of specified **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+        """
+
         key = key.lower()
         if hasattr(self, key):
             return getattr(self, key)
@@ -45,6 +78,17 @@ class Primerize_3D(object):
 
 
     def set(self, key, value):
+        """Set current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are the same as ``get()``.
+            value: ``(auto)``: New value for specified keyword. Type of value must match **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+            ValueError: For illegal **value**.
+        """
+
         key = key.lower()
         if hasattr(self, key):
             if key == 'prefix':
@@ -68,6 +112,9 @@ class Primerize_3D(object):
 
 
     def reset(self):
+        """Reset current worker parameters to default.
+        """
+
         self.prefix = 'lib'
         self.offset = 0
         self.N_mutations = 1
@@ -78,6 +125,22 @@ class Primerize_3D(object):
 
 
     def design(self, sequence, primer_set=[], structures=[], offset=None, N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_single=None, is_fillWT=False, is_force=False):
+        """Run design code to get library plates for input sequence and structures according to specified library options. Current worker parameters are used for nonspecified optional arguments.
+
+        Args:
+            job_1d: ``primerize.Design_Single``: Result of ``primerize.Primerize_1D.design()``. Its ``sequence``, ``primer_set``, and ``prefix`` are used.
+            structures: ``list(str)``: Array of secondary structures. Use dot-bracket notation. Each ``structure`` should be the same length as ``sequence``.
+            offset: ``int``: `(Optional)` Sequence numbering offset.
+            N_mutations: ``int``: `(Optional)` Number of consecutive mutations for "single mutants".
+            which_lib: ``int``: `(Optional)` Mutation library choice.
+            which_muts: ``list(int)``: `(Optional)` Array of mutation positions. Use numbering based on ``offset``. When nonspecified, the entire sequence is included for mutagenesis.
+            is_single: ``bool``: `(Optional)` Flag for whether include single mutants on the plate.
+            is_fillWT: ``bool``: `(Optional)` Flag for whether include Wild-type primers at all WellPositions.
+
+        Returns:
+            ``primerize.Design_Plate``
+        """
+
         if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence

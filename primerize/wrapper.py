@@ -8,6 +8,27 @@ else:
 
 
 class Design_Single(object):
+    """Result of a ``primerize.Primerize_1D.design()`` run.
+
+    Args:
+        init_dict: A ``dict`` with the following keys:
+
+        sequence: ``str``: Sequence of assembly design.
+        name: ``str``: Construct prefix/name.
+        is_success: ``bool``: Flag for whether ``primerize.Primerize_1D.design()`` run successfully found a solution.
+        primer_set: ``list(str)``: List of primers for assembly.
+        params: ``dict``: Dictionary of parameters used for this result.
+        data: ``dict``: Dictionary of result data.
+
+    Attributes:
+        sequence: ``str``: Sequence of assembly design.
+        name: ``str``: Construct prefix/name.
+        is_success: ``bool``: Flag for whether a solution is found.
+        primer_set: ``list(str)``: Strings of solution primers.
+        _params: Input parameters, in format of ``dict: { 'MIN_TM': float, 'NUM_PRIMERS': int, 'MIN_LENGTH': int, 'MAX_LENGTH': int, 'N_BP': int, 'COL_SIZE': int, 'WARN_CUTOFF': int }``.
+        _data: Data of assembly solution, in format of ``dict: { 'misprime_score': [str, str], 'warnings': list(list(int)), 'assembly': primerize.util.Assembly }``.
+    """
+
     def __init__(self, init_dict):
         for key in init_dict:
             if key not in ['sequence', 'name', 'is_success', 'primer_set', 'params', 'data']:
@@ -16,13 +37,31 @@ class Design_Single(object):
             setattr(self, key_rename, init_dict[key])
 
     def __repr__(self):
+        """Representation of the ``Design_Single`` class.
+        """
+
         return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'misprime_score\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'warnings\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), repr(self._params), repr(self._data['misprime_score']), repr(self._data['assembly']), repr(self._data['warnings']))
 
     def __str__(self):
+        """Results of the ``Design_Single`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
 
     def get(self, key):
+        """Get result parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are ``'MIN_TM'``, ``'NUM_PRIMERS'``, ``'MIN_LENGTH'``, ``'MAX_LENGTH'``, ``'COL_SIZE'``, ``'WARN_CUTOFF'``, ``'WARNING'``, ``'PRIMER'``, ``'MISPRIME'``; case insensitive.
+
+        Returns:
+            value of specified **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+        """
+
         key = key.upper()
         if key in self._params:
             return self._params[key]
@@ -37,6 +76,13 @@ class Design_Single(object):
 
 
     def save(self, path='./', name=None):
+        """Save result to text file.
+
+        Args:
+            path: ``str``: `(Optional)` Path for file saving. Use either relative or absolute path.
+            name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
+        """
+
         if self.is_success:
             name = self.name if name is None else name
             f = open(os.path.join(path, '%s.txt' % name), 'w')
@@ -63,6 +109,19 @@ class Design_Single(object):
 
 
     def echo(self, key=''):
+        """Print part(s) of result in rich-text.
+
+        Args:
+            key: ``str``: `(Optional)` Keyword of printing. Valid keywords are ``'misprime'``, ``'warning'``, ``'primer'``, ``'assembly'``; case insensitive. When nonspecified, result of all keywords is returned.
+
+        Returns:
+            ``str``
+
+        Raises:
+            AttributeError: For illegal **key**.
+            UnboundLocalError: When ``is_success = False``.
+        """
+
         if self.is_success:
             key = key.lower()
             if key == 'misprime':
@@ -100,6 +159,40 @@ class Design_Single(object):
 
 
 class Design_Plate(object):
+    """Result of a ``primerize.Primerize_2D.design()`` or ``primerize.Primerize_3D.design()`` run.
+
+    Args:
+        init_dict: A ``dict`` with the following keys:
+        sequence: ``str``: Sequence of assembly design.
+        name: ``str``: Construct prefix/name.
+        is_success: ``bool``: Flag for whether ``primerize.Primerize_2D.design()`` or ``primerize.Primerize_3D.design()`` run successfully found a solution.
+        primer_set: ``list(str)``: List of primers for assembly.
+        structures: ``list(str)``: `(Optional)` List of secondary structures, only `Required` for ``primerize.Primerize_3D.design()`` results.
+        params: ``dict``: Dictionary of parameters used for this result.
+        data: ``dict``: Dictionary of result data.
+
+    Attributes:
+        sequence: ``str``: Sequence of assembly design.
+        name: ``str``: Construct prefix/name.
+        is_success: ``bool``: Flag for whether a solution is found.
+        primer_set: ``list(str)``: Strings of solution primers.
+        structures: ``list(str)``: Strings of input secondary structures.
+        _params: Input parameters, in format of ``dict: { 'offset': int, 'which_muts': list(int), 'which_lib': list(int), 'N_PRIMER': int, 'N_PLATE': int, 'N_CONSTRUCT': int, 'N_BP': int, 'type': str }``.
+
+            For ``primerize.Primerize_3D.design()`` results, it also has ``'N_MUTATION': int, 'is_single': bool, 'is_fillWT': bool``.
+
+        _data: Data of assembly solution, in format of ::
+
+                dict: {
+                    'constructs': primerize.util.Construct_List,
+                    'plates': list(list(primerize.util.Plate_96Well)),
+                    'assembly': primerize.util.Assembly,
+                    'illustration': { 'labels': list(str), 'fragments': list(str), 'lines': tuple(str) }
+                }
+
+            For ``primerize.Primerize_2D.design()`` results, it also has ``'bps': list(tuple(int, int))``.
+    """
+
     def __init__(self, init_dict):
         for key in init_dict:
             if key not in ['sequence', 'name', 'is_success', 'primer_set', 'structures', 'params', 'data']:
@@ -112,14 +205,32 @@ class Design_Plate(object):
             self._data['illustration'] = _draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
 
     def __repr__(self):
+        """Representation of the ``Design_Plate`` class.
+        """
+
         structures = '\033[95mstructures\033[0m = %s, \n' % repr(self.structures) if self.get('TYPE') == 'Mutation/Rescue' else ''
         return '\033[94m%s\033[0m {\n\033[95msequence\033[0m = \'%s\', \n\033[95mname\033[0m = \'%s\', \n\033[95mis_success\033[0m = \033[41m%s\033[0m, \n\033[95mprimer_set\033[0m = %s, \n%s\033[95mparams\033[0m = %s, \n\033[95mdata\033[0m = {\n    \033[92m\'constructs\'\033[0m: %s, \n    \033[92m\'assembly\'\033[0m: %s, \n    \033[92m\'plates\'\033[0m: %s\n}' % (self.__class__, self.sequence, self.name, self.is_success, repr(self.primer_set), structures, repr(self._params), repr(self._data['constructs']), repr(self._data['assembly']), repr(self._data['plates']))
 
     def __str__(self):
+        """Results of the ``Design_Plate`` class. Calls ``echo()``.
+        """
+
         return self.echo()
 
 
     def get(self, key):
+        """Get result parameters.
+
+        Args:
+            key str (Required) Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'structures'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
+
+        Returns:
+            value of specified **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+        """
+
         key = key.upper()
         if key in self._params:
             return self._params[key]
@@ -134,6 +245,18 @@ class Design_Plate(object):
 
 
     def save(self, key='', path='./', name=None):
+        """Save result to text file.
+
+        Args:
+            key: ``str``: `(Optional)` Keyword of saving. Valid keywords are ``'table'``, ``'image'``, ``'construct'``, ``'assembly'``; case insensitive. When nonspecified, files of all keywords are saved.
+            path: ``str``: `(Optional)` Path for file saving. Use either relative or absolute path.
+            name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
+
+        Raise:
+            AttributeError: For illegal **key**.
+            UnboundLocalError: When ``is_success = False``.
+        """
+
         if self.is_success:
             if name is None: name = self.name
             key = key.lower()
@@ -156,6 +279,19 @@ class Design_Plate(object):
 
 
     def echo(self, key=''):
+        """Print part(s) of result in rich-text.
+
+        Args:
+            key: ``str``: `(Optional)` Keyword of printing. Valid keywords are ``'plate'``, ``'assembly'``, ``'region'``; case insensitive. When nonspecified, result of all keywords is returned.
+
+        Return:
+            ``str``
+
+        Raises:
+            AttributeError: For illegal **key**.
+            UnboundLocalError: When ``is_success = False``.
+        """
+
         if self.is_success:
             key = key.lower()
             if key == 'plate':

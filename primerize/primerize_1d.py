@@ -18,6 +18,21 @@ else:
 
 
 class Primerize_1D(object):
+    """Construct a worker for 1D Primer Design (Simple Assembly).
+
+    Args:
+        MIN_TM: ``float``: `(Optional)` Minimum annealing temperature for overlapping regions. Unit in Celsius. Positive number only.
+        NUM_PRIMERS: ``int``: `(Optional)` Exact limit of number of primers in design. Non-negative even number only. `0` represents "No limit".
+        MIN_LENGTH: ``int``: `(Optional)` Minimum length allowed for each primer. Positive number only.
+        MAX_LENGTH: ``int``: `(Optional)` Maximum length allowed for each primer. Positive number only.
+        COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
+        WARN_CUTOFF: ``int``: `(Optional)` Threshold of pairing region length for misprime warning. Positive number only.
+        prefix: ``str``: `(Optional)` Construct prefix/name.
+
+    Returns:
+        ``primerize.Primerize_1D``
+    """
+
     def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3, prefix='primer'):
         self.prefix = prefix
         self.MIN_TM = max(MIN_TM, 0)
@@ -28,6 +43,9 @@ class Primerize_1D(object):
         self.WARN_CUTOFF = max(WARN_CUTOFF, 0)
 
     def __repr__(self):
+        """Representation of the ``Primerize_1D`` class.
+        """
+
         return repr(self.__dict__)
 
     def __str__(self):
@@ -35,6 +53,18 @@ class Primerize_1D(object):
 
 
     def get(self, key):
+        """Get current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are ``'MIN_TM'``, ``'NUM_PRIMERS'``, ``'MIN_LENGTH'``, ``'MAX_LENGTH'``, ``'prefix'``; case insensitive.
+
+        Returns:
+            value of specified **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+        """
+
         key = key.upper()
         if hasattr(self, key):
             return getattr(self, key)
@@ -45,6 +75,17 @@ class Primerize_1D(object):
 
 
     def set(self, key, value):
+        """Set current worker parameters.
+
+        Args:
+            key: ``str``: Keyword of parameter. Valid keywords are the same as ``get()``.
+            value: ``(auto)``: New value for specified keyword. Type of value must match **key**.
+
+        Raises:
+            AttributeError: For illegal **key**.
+            ValueError: For illegal **value**.
+        """
+
         key = key.upper()
         if hasattr(self, key) or key == 'PREFIX':
             if key == 'PREFIX':
@@ -65,6 +106,9 @@ class Primerize_1D(object):
 
 
     def reset(self):
+        """Reset current worker parameters to default.
+        """
+
         self.prefix = 'primer'
         self.MIN_TM = 60.0
         self.NUM_PRIMERS = 0
@@ -75,6 +119,20 @@ class Primerize_1D(object):
 
 
     def design(self, sequence, MIN_TM=None, NUM_PRIMERS=None, MIN_LENGTH=None, MAX_LENGTH=None, prefix=None):
+        """Run design code to get a PCR Assembly solution for input sequence under specified conditions. Current worker parameters are used for nonspecified optional arguments.
+
+        Args:
+            sequence: ``str``: Sequence for assembly design. Valid RNA/DNA sequence only, case insensitive.
+            MIN_TM: ``float``: `(Optional)` Minimum annealing temperature for overlapping regions.
+            NUM_PRIMERS: ``int``: `(Optional)` Exact limit of number of primers in design.
+            MIN_LENGTH: ``int``: `(Optional)` Minimum length allowed for each primer.
+            MAX_LENGTH: ``int``: `(Optional)` Maximum length allowed for each primer.
+            prefix: ``str``: `(Optional)` Construct prefix/name.
+
+        Returns:
+            ``primerize.Design_Single``
+        """
+
         MIN_TM = self.MIN_TM if MIN_TM is None else MIN_TM
         NUM_PRIMERS = self.NUM_PRIMERS if NUM_PRIMERS is None else NUM_PRIMERS
         MIN_LENGTH = self.MIN_LENGTH if MIN_LENGTH is None else MIN_LENGTH
@@ -87,9 +145,7 @@ class Primerize_1D(object):
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
 
         is_success = True
-        primers = []
-        warnings = []
-        assembly = {}
+        primers, warnings, assembly = [], [], {}
         misprime_score = ['', '']
 
         try:

@@ -22,9 +22,6 @@ class Assembly(object):
         name: ``str``: Construct prefix/name.
         COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
 
-    Returns:
-        ``primerize.util.Assembly``
-
     Attributes:
         sequence: ``str``: Sequence of assembly design.
         primers: ``list(list(int))``: Numeric representation (end numbering and direction) of primers.
@@ -108,9 +105,6 @@ class Plate_96Well(object):
 
     Args:
         tag: ``int``: `(Optional)` Mutation library tag. Use **which_lib** number.
-
-    Returns:
-        ``primerize.util.Plate_96Well``
 
     Attributes:
         coords: ``set(str)``: Filled 96-Well Coordinates.
@@ -286,9 +280,6 @@ class Mutation(object):
     Args:
         mut_list: ``list(str)``: `(Optional)` List of mutations. When nonspecified, an empty instance is created; when specified, it calls ``push()``.
 
-    Returns:
-        ``primerize.util.Mutation``
-
     Attributes:
         _data: Data of mutations, in format of ``dict: { int: tuple(str, str) }``, i.e. ``dict: {'seqpos': ('wt_char', 'mut_char') }``.
     """
@@ -338,7 +329,7 @@ class Mutation(object):
         """Test if a list of given mutation is present.
 
         Args:
-            mut_list: ``list(str)``: Mutations in format of ``['wt_char', 'seq_pos', 'mut_char']``, (e.g. ``['G13C', 'A15T']``).
+            mut_list: ``list(str)``: Mutations in format of ``'wt_char'``, ``'seq_pos'``, ``'mut_char'``, (e.g. ``['G13C', 'A15T']``).
 
         Returns:
             ``bool``
@@ -431,9 +422,6 @@ class Mutation(object):
 
 class Construct_List(object):
     """Collection of mutant constructs.
-
-    Returns: 
-        ``primerize.util.Construct_List``
 
     Attributes:
         _data: Data of constructs, in format of ``list(primerize.util.Mutation)``.
@@ -735,7 +723,7 @@ def get_mut_range(mut_start, mut_end, offset, sequence):
 
     Returns:
         ``(which_muts, mut_start, mut_end)``
-        
+
         - **which_muts** - ``list(int)``: The final range of mutations.
         - **mut_start** - ``int``: The valid **mut_start**.
         - **mut_end** - ``int``: The valid **mut_end**.

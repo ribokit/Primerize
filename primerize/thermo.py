@@ -7,9 +7,6 @@ numpy.seterr('ignore')
 class Nearest_Neighbor(object):
     """Wrapper object of Nearest Neighbor parameters; for internal use.
 
-    Returns:
-        ``primerize.thermo.Nearest_Neighbor``
-
     Attributes:
         T: ``float``
         delH_NN: ``numpy.array(float(4, 4))``
