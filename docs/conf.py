@@ -70,10 +70,7 @@ html_theme = 'sphinx_rtd_theme'
 # template names.
 #html_additional_pages = {}
 
-html_sidebars = {
-    '**': ['globaltoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'],
-    'index': ['globaltoc.html', 'sourcelink.html', 'searchbox.html']
-}
+html_sidebars = {}
 html_context = {}
 
 # Output file base name for HTML help builder.
