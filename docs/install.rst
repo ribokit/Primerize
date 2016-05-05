@@ -1,7 +1,7 @@
 Installation
 ------------------
 
-To install ``primerize``, simply:
+To install ``Primerize``, simply:
 
 .. code-block:: bash
    :linenos:
@@ -11,7 +11,7 @@ To install ``primerize``, simply:
 
 For system-wide installation, you must have permissions and use with ``sudo``.
 
-``primerize`` requires the following *Python* packages as dependencies, all of which can be installed through `pip <https://pip.pypa.io/>`_:
+``Primerize`` requires the following *Python* packages as dependencies, all of which can be installed through `pip <https://pip.pypa.io/>`_:
 
 .. code-block:: js
    :linenos:

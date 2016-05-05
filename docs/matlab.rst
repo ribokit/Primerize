@@ -6,7 +6,7 @@ Please note that *MATLAB* code is no longer actively under development or fully 
 Installation
 ^^^^^^^^^^^^^^^^^^
 
-To install **NA_Thermo**, simply:
+To install ``NA_Thermo``, simply:
 
 * Download the zip or tar file of the repository and unpack; or:
 

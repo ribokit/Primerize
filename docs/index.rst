@@ -1,15 +1,15 @@
-``primerize`` Documentation
+``Primerize`` Documentation
 ===========================================
 
-.. image:: https://primerize.stanford.edu/site_media/images/logo_primerize.png
+.. image:: _static/primerize_logo.png
     :align: center
     :alt: Primerize Logo
     :target: https://primerize.stanford.edu/
 
 
-``primerize`` (previously named ``NA_thermo``), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the `Das Lab <https://daslab.stanford.edu/>`_ at Stanford University for high-throughput RNA synthesis and design.
+``Primerize`` (previously named ``NA_thermo``), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the `Das Lab <https://daslab.stanford.edu/>`_ at Stanford University for high-throughput RNA synthesis and design.
 
-The algorithm designs *forward* (sense strand) and *reverse* (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, ``primerize`` is a special case of the general ‘*Gapped Oligo Design*’ algorithm, optimizing the mispriming score and sequence span instead of T\ :sub:`m`.
+The algorithm designs *forward* (sense strand) and *reverse* (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, ``Primerize`` is a special case of the general ‘*Gapped Oligo Design*’ algorithm, optimizing the mispriming score and sequence span instead of T\ :sub:`m`.
 
 An online user-friendly GUI is available as the `Primerize Server <https://primerize.stanford.edu/>`_.
 
