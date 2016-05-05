@@ -42,3 +42,8 @@ Reference
 | `On the Design of Oligos for Gene Synthesis. <http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554>`_
 | *Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
+----------
+
+Developed by **Das lab**, `Leland Stanford Junior University`.
+
+README by `t47 <http://t47.io/>`_, *January 2016*.

@@ -7,6 +7,6 @@ from .primerize_2d import Primerize_2D
 from .primerize_3d import Primerize_3D
 
 
-__version__ = '1.2.5'
+__version__ = '1.3.0'
 
 __all__ = ['primerize_1d', 'primerize_2d', 'primerize_3d', 'wrapper', 'misprime', 'thermo', 'util']
