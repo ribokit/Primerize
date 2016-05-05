@@ -1,23 +1,39 @@
-.. primerize documentation master file, created by
-   sphinx-quickstart on Wed May  4 16:05:13 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+``primerize`` Documentation
+===========================================
 
-Welcome to primerize's documentation!
-=====================================
+.. image:: https://primerize.stanford.edu/site_media/images/logo_primerize.png
+    :align: center
+    :alt: Primerize Logo
+    :target: https://primerize.stanford.edu/
 
-Contents:
+
+``primerize`` (previously named ``NA_thermo``), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the `Das Lab <https://daslab.stanford.edu/>`_ at Stanford University for high-throughput RNA synthesis and design.
+
+The algorithm designs *forward* (sense strand) and *reverse* (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, ``primerize`` is a special case of the general ‘*Gapped Oligo Design*’ algorithm, optimizing the mispriming score and sequence span instead of T\ :sub:`m`.
+
+An online user-friendly GUI is available as the `Primerize Server <https://primerize.stanford.edu/>`_.
+
+
+Contents
+----------------------------
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
-   primerize
+   install
+   example
+   content
+   matlab
+   license
 
+Reference
+----------------------------
 
-Indices and tables
-==================
+| Tian, S., *et al.* (**2015**)
+| `Primerize: Automated Primer Assembly for Transcribing Interesting RNAs. <http://nar.oxfordjournals.org/content/43/W1/W522.full>`_
+| *Nucleic Acid Research* **43 (W1)**: W522-W526.
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+| Thachuk, C., and Condon, A. (**2007**)
+| `On the Design of Oligos for Gene Synthesis. <http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554>`_
+| *Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
