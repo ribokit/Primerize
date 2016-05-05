@@ -60,11 +60,14 @@ html_extra_path = []
 html_sidebars = {}
 html_context = {}
 html_additional_pages = {}
-html_theme = 'sphinx_rtd_theme'
-
-#html_theme_options = {}
-#html_theme_path = []
-#html_style = []
+html_style = []
+html_theme = 'ribokit-Sphinx-theme'
+html_theme_path = ['_theme']
+html_theme_options = {
+    'description': 'PCR Assembly Primer Design',
+    'author': author.split(',')[0].strip(),
+    'github_repo': 'DasLab/Primerize',
+}
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Primerize_doc'

@@ -2,9 +2,10 @@
 ===========================================
 
 .. image:: _static/primerize_logo.png
-    :align: center
+    :align: right
     :alt: Primerize Logo
     :target: https://primerize.stanford.edu/
+    :scale: 75 %
 
 
 ``Primerize`` (previously named ``NA_thermo``), is an archive of *Python* and *MATLAB* scripts for primer design and nucleic acid thermodynamic scripts developed by the `Das Lab <https://daslab.stanford.edu/>`_ at Stanford University for high-throughput RNA synthesis and design.
@@ -15,13 +16,13 @@ An online user-friendly GUI is available as the `Primerize Server <https://prime
 
 ----------
 
+Table of Contents
+----------------------------
+
 .. toctree::
    :glob:
-   :numbered:
-   :caption: Table of Contents
    :maxdepth: 2
 
-   self
    install
    example
    content

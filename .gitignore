@@ -1,6 +1,7 @@
 build/
 dist/
 docs/_build
+docs/_theme
 primerize.egg-info/
 *.pyc
 
