@@ -4,11 +4,11 @@ import time
 import traceback
 
 if __package__ is None or not __package__:
-    from util import *
+    import util
     from primerize_1d import Primerize_1D
     from wrapper import Design_Single, Design_Plate
 else:
-    from .util import *
+    from . import util
     from .primerize_1d import Primerize_1D
     from .wrapper import Design_Single, Design_Plate
 
@@ -50,7 +50,7 @@ class Primerize_2D(object):
         """Get current worker parameters.
 
         Args:
-            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive. 
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive.
 
         Returns:
             value of specified **key**.
@@ -137,7 +137,7 @@ class Primerize_2D(object):
             raise ValueError('\033[41mERROR\033[0m: Illegal length \033[95m%s\033[0m of value for params \033[92mprimer_set\033[0m for \033[94m%s.design()\033[0m.\n' % (len(primer_set), self.__class__))
 
         name = prefix
-        sequence = RNA2DNA(sequence)
+        sequence = util.RNA2DNA(sequence)
         N_BP = len(sequence)
         params = {'offset': offset, 'which_muts': which_muts, 'which_lib': which_lib, 'N_BP': N_BP, 'type': 'Mutate-and-Map'}
         data = {'plates': [], 'assembly': [], 'constructs': []}
@@ -145,7 +145,7 @@ class Primerize_2D(object):
         is_success = True
         assembly = {}
         for i in range(len(primer_set)):
-            primer_set[i] = RNA2DNA(primer_set[i])
+            primer_set[i] = util.RNA2DNA(primer_set[i])
         if not primer_set:
             if is_force:
                 prm = Primerize_1D()
@@ -173,24 +173,24 @@ class Primerize_2D(object):
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
 
-        (primers, is_success) = _get_primer_index(primer_set, sequence)
+        (primers, is_success) = util._get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
-        assembly = Assembly(sequence, primers, name, self.COL_SIZE)
-        constructs = Construct_List()
-        plates = [[Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
+        assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
+        constructs = util.Construct_List()
+        plates = [[util.Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
         print('Filling out sequences ...')
 
         try:
             for m_pos in range(-1, len(which_muts)):
                 # m is actual position along sequence
                 m = -1 if m_pos == -1 else offset + which_muts[m_pos] - 1
-                mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], get_mutation(sequence[m], which_lib))
+                mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], util.get_mutation(sequence[m], which_lib))
                 constructs.push(mut_name)
 
-            plates = _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
+            plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
             is_success = False
@@ -221,7 +221,7 @@ def main():
 
     t0 = time.time()
     args.primer_set = [] if args.primer_set is None else args.primer_set[0]
-    (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+    (which_muts, _, _) = util.get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
 
     prm = Primerize_2D()
     res = prm.design(args.sequence, args.primer_set, args.offset, which_muts, args.which_lib, args.prefix, True)

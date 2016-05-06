@@ -6,14 +6,14 @@ import time
 import traceback
 
 if __package__ is None or not __package__:
-    from misprime import *
-    from thermo import *
-    from util import *
+    import misprime
+    import thermo
+    import util
     from wrapper import Design_Single
 else:
-    from .misprime import *
-    from .thermo import *
-    from .util import *
+    from . import misprime
+    from . import thermo
+    from . import util
     from .wrapper import Design_Single
 
 
@@ -140,7 +140,7 @@ class Primerize_1D(object):
         prefix = self.prefix if prefix is None else prefix
 
         name = prefix
-        sequence = RNA2DNA(sequence)
+        sequence = util.RNA2DNA(sequence)
         N_BP = len(sequence)
         params = {'MIN_TM': MIN_TM, 'NUM_PRIMERS': NUM_PRIMERS, 'MIN_LENGTH': MIN_LENGTH, 'MAX_LENGTH': MAX_LENGTH, 'N_BP': N_BP, 'COL_SIZE': self.COL_SIZE, 'WARN_CUTOFF': self.WARN_CUTOFF}
 
@@ -150,9 +150,9 @@ class Primerize_1D(object):
 
         try:
             print('Precalculataing Tm matrix ...')
-            Tm_precalculated = _precalculate_Tm(sequence)
+            Tm_precalculated = thermo._precalculate_Tm(sequence)
             print('Precalculataing misprime score ...')
-            (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = _check_misprime(sequence)
+            (num_match_forward, num_match_reverse, best_match_forward, best_match_reverse, misprime_score_forward, misprime_score_reverse) = misprime._check_misprime(sequence)
 
             print('Doing dynamics programming calculation ...')
             (scores_start, scores_stop, scores_final, choice_start_p, choice_start_q, choice_stop_i, choice_stop_j, MAX_SCORE, N_primers) = _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misprime_score_forward, misprime_score_reverse, Tm_precalculated)
@@ -167,7 +167,7 @@ class Primerize_1D(object):
                     allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
                 misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
-                assembly = Assembly(sequence, primers, name, self.COL_SIZE)
+                assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
                 print('\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n')
             else:
                 print('\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n')
@@ -365,7 +365,7 @@ def _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q,
         for i in range(2 * N_primers):
             primer_seq = sequence[primers[0, i]:primers[1, i] + 1]
             if primers[2, i] == -1:
-                primer_set.append(reverse_complement(primer_seq))
+                primer_set.append(util.reverse_complement(primer_seq))
 
                 # mispriming "report"
                 end_pos = primers[0, i]

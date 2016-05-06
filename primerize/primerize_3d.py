@@ -4,11 +4,11 @@ import time
 import traceback
 
 if __package__ is None or not __package__:
-    from util import *
+    import util
     from primerize_1d import Primerize_1D
     from wrapper import Design_Single, Design_Plate
 else:
-    from .util import *
+    from . import util
     from .primerize_1d import Primerize_1D
     from .wrapper import Design_Single, Design_Plate
 
@@ -161,7 +161,7 @@ class Primerize_3D(object):
             raise ValueError('\033[41mERROR\033[0m: Missing input \033[92mstructures\033[0m for \033[94m%s.design()\033[0m.\n' % self.__class__)
 
         name = prefix
-        sequence = RNA2DNA(sequence)
+        sequence = util.RNA2DNA(sequence)
         N_BP = len(sequence)
         params = {'offset': offset, 'which_lib': which_lib, 'is_single': is_single, 'is_fillWT': is_fillWT, 'N_MUTATION': N_mutations, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
         data = {'plates': [], 'assembly': [], 'constructs': [], 'bps': []}
@@ -169,7 +169,7 @@ class Primerize_3D(object):
         is_success = True
         assembly = {}
         for i in range(len(primer_set)):
-            primer_set[i] = RNA2DNA(primer_set[i])
+            primer_set[i] = util.RNA2DNA(primer_set[i])
         if not primer_set:
             if is_force:
                 prm = Primerize_1D()
@@ -194,16 +194,16 @@ class Primerize_3D(object):
         N_primers = len(primer_set)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers})
 
-        (primers, is_success) = _get_primer_index(primer_set, sequence)
+        (primers, is_success) = util._get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
-        assembly = Assembly(sequence, primers, name, self.COL_SIZE)
-        constructs = Construct_List()
+        assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
+        constructs = util.Construct_List()
         data.update({'assembly': assembly, 'constructs': constructs})
 
-        bps = diff_bps(structures)
+        bps = util.diff_bps(structures)
         for pair in list(bps):
             if not (pair[0] - offset in which_muts and pair[1] - offset in which_muts):
                 bps.remove(pair)
@@ -215,7 +215,7 @@ class Primerize_3D(object):
         N_constructs = (len(bps) - N_mutations + 1) * (is_single * 2 + 1) + 1
         constructs.push('WT')
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-        plates = [[Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
+        plates = [[util.Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
 
         for i in range(len(bps) - N_mutations + 1):
             (mut_list_l, mut_list_r) = ([], [])
@@ -228,8 +228,8 @@ class Primerize_3D(object):
                     mut_list_l.append('T%dG' % (bps[i + j][0] - offset))
                     mut_list_r.append('G%dC' % (bps[i + j][1] - offset))
                 else:
-                    mut_list_l.append('%s%d%s' % (sequence[bps[i + j][0] - 1], bps[i + j][0] - offset, get_mutation(sequence[bps[i + j][0] - 1], which_lib)))
-                    mut_list_r.append('%s%d%s' % (sequence[bps[i + j][1] - 1], bps[i + j][1] - offset, get_mutation(sequence[bps[i + j][1] - 1], which_lib)))
+                    mut_list_l.append('%s%d%s' % (sequence[bps[i + j][0] - 1], bps[i + j][0] - offset, util.get_mutation(sequence[bps[i + j][0] - 1], which_lib)))
+                    mut_list_r.append('%s%d%s' % (sequence[bps[i + j][1] - 1], bps[i + j][1] - offset, util.get_mutation(sequence[bps[i + j][1] - 1], which_lib)))
 
             if is_single:
                 constructs.push(mut_list_l)
@@ -237,7 +237,7 @@ class Primerize_3D(object):
             constructs.push(mut_list_l + mut_list_r)
 
         try:
-            plates = _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
+            plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
             print('\033[92mSUCCESS\033[0m: Primerize 3D design() finished.\n')
         except:
             is_success = False
@@ -273,11 +273,11 @@ def main():
 
     t0 = time.time()
     args.primer_set = [] if args.primer_set is None else args.primer_set[0]
-    (which_muts, _, _) = get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
+    (which_muts, _, _) = util.get_mut_range(args.mut_start, args.mut_end, args.offset, args.sequence)
     args.structures = [] if args.structures is None else args.structures[0]
 
     prm = Primerize_3D()
-    res = prm.design(args.sequence, args.primer_set, args.offset, args.structures, args.N_mutations, args.which_lib, which_muts, args.prefix, args.is_single, args.is_fillWT, True)
+    res = prm.design(args.sequence, args.primer_set, args.structures, args.offset, args.N_mutations, args.which_lib, which_muts, args.prefix, args.is_single, args.is_fillWT, True)
     if res.is_success:
         if not args.is_quiet:
             print(res)
