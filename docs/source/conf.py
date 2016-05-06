@@ -2,7 +2,7 @@ from datetime import date
 import sys
 import os
 
-sys.path.insert(0, os.path.abspath("../"))
+sys.path.insert(0, os.path.abspath("../../"))
 
 from primerize import __version__
 

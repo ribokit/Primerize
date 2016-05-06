@@ -1,7 +1,9 @@
 build/
 dist/
-docs/_build
-docs/_theme
+docs/sphinx_make.sh
+docs/build
+docs/source/_theme
+
 primerize.egg-info/
 *.pyc
 
