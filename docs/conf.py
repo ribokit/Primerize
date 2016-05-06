@@ -54,8 +54,8 @@ html_search_language = 'en'
 html_title = project + version + ' : PCR Assembly Primer Design'
 html_short_title = project + ' Documentation'
 html_logo = None
-html_favicon = html_static_path[0] + '/primerize_icon.png'
 html_extra_path = []
+html_favicon = html_static_path[0] + '/primerize_icon.png'
 
 html_sidebars = {}
 html_context = {}
@@ -67,6 +67,7 @@ html_theme_options = {
     'description': 'PCR Assembly Primer Design',
     'author': author.split(',')[0].strip(),
     'github_repo': 'DasLab/Primerize',
+    'ribokit_flag': True
 }
 
 # Output file base name for HTML help builder.
