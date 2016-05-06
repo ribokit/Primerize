@@ -1,0 +1,8 @@
+build/
+dist/
+docs/
+MATLAB/
+primerize/
+primerize.egg-info/
+setup.py
+requirements.txt
