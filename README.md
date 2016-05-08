@@ -12,7 +12,7 @@ An online user-friendly GUI is available as the [**Primerize Server**](https://p
 
 To install **Primerize**, simply:
 ```bash
-cd path/to/primerize/repo
+cd path/to/Primerize/
 python setup.py install
 ```
 
@@ -96,7 +96,7 @@ Instructions on *MATLAB* usage is available at old [README.md](https://github.co
 
 ## Documentation
 
-Documentation is available at https://primerize.stanford.edu/docs/.
+Documentation is available at https://daslab.github.io/Primerize/ or https://primerize.stanford.edu/docs/.
 
 ## License
 
