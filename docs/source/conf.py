@@ -59,7 +59,7 @@ html_favicon = html_static_path[0] + '/primerize_icon.png'
 
 html_sidebars = {}
 html_context = {}
-html_additional_pages = {}
+html_additional_pages = {'404': '404.html'}
 html_style = []
 html_theme = 'ribokit-Sphinx-theme'
 html_theme_path = ['_theme']
@@ -67,6 +67,7 @@ html_theme_options = {
     'description': 'PCR Assembly Primer Design',
     'author': author.split(',')[0].strip(),
     'github_repo': 'DasLab/Primerize',
+    'ga_tracker': 'UA-36037648-4'
 }
 
 # Output file base name for HTML help builder.
