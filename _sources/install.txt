@@ -6,7 +6,7 @@ To install ``Primerize``, simply:
 .. code-block:: bash
    :linenos:
 
-    cd path/to/primerize/repo
+    cd path/to/Primerize/
     python setup.py install
 
 For system-wide installation, you must have permissions and use with ``sudo``.
