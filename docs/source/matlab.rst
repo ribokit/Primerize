@@ -11,6 +11,7 @@ To install ``NA_Thermo``, simply:
 * Download the zip or tar file of the repository and unpack; or:
 
 .. code-block:: bash
+
     git clone https://github.com/DasLab/Primerize.git
 
 * In *MATLAB*, go to "**Set Path**". Then "**Add with Subfolders**" of the target ``path/to/Primerize/MATLAB/Scripts/``.
@@ -25,6 +26,7 @@ To design primers for your sequence, just follow these easy steps:
 1. Define your sequence. For example:
 
 .. code-block:: matlab
+
     sequence = 'TTCTAATACGACTCACTATAGGCCAAAACAACGGAATTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGGGGAAACTTTGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAGCCAAGTCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCAAAGAAACAACAACAACAAC';
     tag = 'P4P6';
 
@@ -33,6 +35,7 @@ This sequences includes a 20-nucleotide `T7 promoter` sequence at the beginning,
 2. Run with:
 
 .. code-block:: matlab
+
     primers = design_primers(sequence, tag);
 
 This will compute primers with minimal length, annealing temperatures above a cutoff (**60 C**, by default), through a recursive strategy. An additional score term helps avoid primers that share multiple 3' nucleotides with other parts of the sequence, as a heuristic to reduce mispriming. The algorithm has similarities (but was developed independently) of `Thachuk & Condon (2007), BIBE, Proc. of 7th IEEE International Conf., p. 123-130`.
