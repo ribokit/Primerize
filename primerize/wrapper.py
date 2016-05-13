@@ -272,7 +272,9 @@ class Design_Plate(object):
                 util._save_structures(self.structures, name, path)
 
             elif not key:
-                for key in ['table', 'image', 'constructs', 'assembly', 'structures']:
+                keys = ['table', 'image', 'constructs', 'assembly']
+                if self.get('TYPE') == 'Mutation/Rescue': keys.append('structures')
+                for key in keys:
                     self.save(key, path, name)
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.save()\033[0m.\n' % (key, self.__class__))
