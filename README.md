@@ -20,17 +20,21 @@ For system-wide installation, you must have permissions and use with `sudo`.
 
 **Primerize** requires the following *Python* packages as dependencies, all of which can be installed through [`pip`](https://pip.pypa.io/).
 ```json
-llvmlite == 0.8.0
 matplotlib >= 1.5.0
-numba == 0.23.1
 numpy >= 1.10.1
 xlwt >= 1.0.0
 ```
 
-Note that the [`numba`](http://numba.pydata.org/) is used for its [`@jit`](http://numba.pydata.org/numba-doc/0.23.1/user/jit.html) decorator on loop optimization. `numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. 
+#### Loop Optimization with `numba` _(Optional)_
 
-The compatibility between `numba`, `llvmlite`, and `llvm` needs to pay special attention to. The above specified `numba` and `llvmlite` versions have been tested to work with `llvm 3.6.2` on *Linux* machines. 
+To speed up **Primerize** code, we take advantage of [`@jit`](http://numba.pydata.org/numba-doc/0.23.1/user/jit.html) decorator of [`numba`](http://numba.pydata.org/) on loop optimization. **This is totally optional.** Enabling such feature may speed up the run for up to _10x_.
 
+`numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. The compatibility between `numba`, `llvmlite`, and `llvm` needs to pay special attention to. The below specified `numba` and `llvmlite` versions have been tested to work with `llvm 3.6.2` on *Linux* machines. (Newer version combinations may work, but we haven't test since.)
+
+```json
+llvmlite == 0.8.0
+numba == 0.23.1
+```
 
 ## Usage
 
@@ -90,7 +94,7 @@ prm_1d.reset()
 There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the **Documentation**.
 
 
-#### MATLAB Code (Deprecated)
+#### MATLAB Code _(Deprecated)_
 
 Instructions on *MATLAB* usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/MATLAB/README.md). Please note that *MATLAB* code is no longer actively under development or fully maintained.
 

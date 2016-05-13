@@ -1,6 +1,5 @@
 import argparse
 import math
-from numba import jit
 import numpy
 import time
 import traceback
@@ -15,6 +14,18 @@ else:
     from . import thermo
     from . import util
     from .wrapper import Design_Single
+
+try:
+    from numba import jit
+except ImportError:
+    print('\033[93mWARNING\033[0m: \033[92mnumba\033[0m is not installed. Enable for \033[95m10x\033[0m speed-up!')
+
+    def jit(nopython=True, nogil=True, cache=False):
+        def empty_wrapper(func):
+            def func_wrapper(*args, **kwargs):
+                return func(*args, **kwargs)
+            return func_wrapper
+        return empty_wrapper
 
 
 class Primerize_1D(object):
