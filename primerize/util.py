@@ -846,6 +846,12 @@ def _save_construct_key(keys, name, path='./', prefix=''):
     open(os.path.join(path, '%s_keys.txt' % name), 'w').write(lines)
 
 
+def _save_structures(structures, name, path='./'):
+    print('Creating structures file ...')
+    lines = '\n'.join(structures)
+    open(os.path.join(path, '%s_structures.txt' % name), 'w').write(lines)
+
+
 def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
     for k in range(len(plates[0])):
         file_name = os.path.join(path, '%s_plate_%d.xls' % (prefix, k + 1))

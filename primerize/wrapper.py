@@ -248,7 +248,7 @@ class Design_Plate(object):
         """Save result to text file.
 
         Args:
-            key: ``str``: `(Optional)` Keyword of saving. Valid keywords are ``'table'``, ``'image'``, ``'construct'``, ``'assembly'``; case insensitive. When nonspecified, files of all keywords are saved.
+            key: ``str``: `(Optional)` Keyword of saving. Valid keywords are ``'table'``, ``'image'``, ``'constructs'``, ``'assembly'``, (``'structures'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive. When nonspecified, files of all keywords are saved.
             path: ``str``: `(Optional)` Path for file saving. Use either relative or absolute path.
             name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
 
@@ -264,13 +264,15 @@ class Design_Plate(object):
                 util._save_plates_excel(self._data['plates'], self.primer_set, name, path)
             elif key == 'image':
                 util._save_plate_layout(self._data['plates'], self.primer_set, name, path)
-            elif key == 'construct':
+            elif key == 'constructs':
                 util._save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
+            elif key == 'structures' and self.get('TYPE') == 'Mutation/Rescue':
+                util._save_structures(self.structures, name, path)
 
             elif not key:
-                for key in ['table', 'image', 'construct', 'assembly']:
+                for key in ['table', 'image', 'constructs', 'assembly', 'structures']:
                     self.save(key, path, name)
             else:
                 raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.save()\033[0m.\n' % (key, self.__class__))
