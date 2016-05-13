@@ -1,7 +1,15 @@
 Installation
 ------------------
 
-To install ``Primerize``, simply:
+**Primerize** can be downloaded for non-commercial use at the `Primerize Server <https://primerize.stanford.edu/license/>`_. Commercial users, please `contact us <https://primerize.stanford.edu/about/#contact>`_.
+
+* Download the zip or tar file of the repository and unpack; or 
+
+.. code-block:: bash
+
+    git clone https://github.com/DasLab/Primerize.git
+
+* To install ``Primerize``, simply:
 
 .. code-block:: bash
 
