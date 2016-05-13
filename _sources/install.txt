@@ -18,10 +18,10 @@ For system-wide installation, you must have permissions and use with ``sudo``.
     numpy >= 1.10.1
     xlwt >= 1.0.0
 
-<br/>
+----------
 
 Loop Optimization with ``numba`` *(Optional)*
-===============================================
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To speed up **Primerize** code, we take advantage of ``@jit`` (`see here <http://numba.pydata.org/numba-doc/0.23.1/user/jit.html>`_) decorator of `numba <http://numba.pydata.org/>`_ on loop optimization. **This is totally optional.** Enabling such feature may speed up the run for up to *10x*.
 

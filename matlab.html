@@ -130,6 +130,9 @@
 <ul class="simple">
 <li>Download the zip or tar file of the repository and unpack; or:</li>
 </ul>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/DasLab/Primerize.git
+</pre></div>
+</div>
 <ul class="simple">
 <li>In <em>MATLAB</em>, go to &quot;<strong>Set Path</strong>&quot;. Then &quot;<strong>Add with Subfolders</strong>&quot; of the target <code class="docutils literal"><span class="pre">path/to/Primerize/MATLAB/Scripts/</span></code>.</li>
 </ul>
@@ -141,10 +144,17 @@
 <ol class="arabic simple">
 <li>Define your sequence. For example:</li>
 </ol>
+<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="n">sequence</span> <span class="p">=</span> <span class="s">&#39;TTCTAATACGACTCACTATAGGCCAAAACAACGGAATTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGGGGAAACTTTGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAGCCAAGTCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCAAAGAAACAACAACAACAAC&#39;</span><span class="p">;</span>
+<span class="n">tag</span> <span class="p">=</span> <span class="s">&#39;P4P6&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
 <p>This sequences includes a 20-nucleotide <cite>T7 promoter</cite> sequence at the beginning, and then a construct (starting with <code class="docutils literal"><span class="pre">GG...</span></code>) encoding the <cite>P4-P6 domain</cite> of the Tetrahymena ribozyme along with flanking sequences.</p>
 <ol class="arabic simple" start="2">
 <li>Run with:</li>
 </ol>
+<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="n">primers</span> <span class="p">=</span> <span class="n">design_primers</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">tag</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>This will compute primers with minimal length, annealing temperatures above a cutoff (<strong>60 C</strong>, by default), through a recursive strategy. An additional score term helps avoid primers that share multiple 3' nucleotides with other parts of the sequence, as a heuristic to reduce mispriming. The algorithm has similarities (but was developed independently) of <cite>Thachuk &amp; Condon (2007), BIBE, Proc. of 7th IEEE International Conf., p. 123-130</cite>.</p>
 <p>If you want to use our original script (in use from 2008-2011), use <code class="docutils literal"><span class="pre">design_primers_OLD()</span></code>. (This was slower and did not rigorously optimize length.)</p>
 <ol class="arabic simple" start="3">
