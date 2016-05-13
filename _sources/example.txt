@@ -4,6 +4,7 @@ Example Scripts
 For simple Primer Design tasks, follow this example:
 
 .. code-block:: python
+
     import primerize
 
     prm_1d = primerize.Primerize_1D()
@@ -26,6 +27,7 @@ For simple Primer Design tasks, follow this example:
 For advanced users, the returned ``Design_Single`` and ``Design_Plate`` result classes offer methods for ``get()``, ``save()`` and ``echo()``:
 
 .. code-block:: python
+
     MIN_TM = job_1d.get('MIN_TM')
     print job_1d.get('MISPRIME')
     print job_1d.echo('WARNING')
@@ -47,6 +49,7 @@ For advanced users, the returned ``Design_Single`` and ``Design_Plate`` result c
 Besides ``design()``, the ``Primerize_1D``, ``Primerize_2D``, and ``Primerize_3D`` worker classes offer methods for ``get()``, ``set()``, and ``reset()``:
 
 .. code-block:: python
+
     COL_SIZE = prm_1d.get('COL_SIZE')
     prm_1d.set('MIN_LENGTH', 30)
     prm_1d.reset()

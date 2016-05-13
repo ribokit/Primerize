@@ -120,8 +120,52 @@
   <div class="section" id="example-scripts">
 <h1>Example Scripts<a class="headerlink" href="#example-scripts" title="Permalink to this headline">¶</a></h1>
 <p>For simple Primer Design tasks, follow this example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">primerize</span>
+
+<span class="n">prm_1d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_1D</span><span class="p">()</span>
+<span class="n">job_1d</span> <span class="o">=</span> <span class="n">prm_1d</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="s1">&#39;TTCTAATACGACTCACTATAGGCCAAAGGCGUCGAGUAGACGCCAACAACGGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACCAAACCGUCAGCGAGUAGCUGACAAAAAGAAACAACAACAACAAC&#39;</span><span class="p">,</span> <span class="n">MIN_TM</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">NUM_PRIMERS</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">MIN_LENGTH</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">MAX_LENGTH</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s1">&#39;P4P6_2HP&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_1d</span>
+
+<span class="n">prm_2d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_2D</span><span class="p">()</span>
+<span class="n">job_2d</span> <span class="o">=</span> <span class="n">prm_2d</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">which_muts</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="mi">261</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_2d</span>
+    <span class="n">job_2d</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">prm_3d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_3D</span><span class="p">()</span>
+<span class="n">job_3d</span> <span class="o">=</span> <span class="n">prm_3d</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">structures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................&#39;</span><span class="p">],</span> <span class="n">N_mutations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_single</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_fillWT</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_3d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_3d</span>
+    <span class="n">job_3d</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>For advanced users, the returned <code class="docutils literal"><span class="pre">Design_Single</span></code> and <code class="docutils literal"><span class="pre">Design_Plate</span></code> result classes offer methods for <code class="docutils literal"><span class="pre">get()</span></code>, <code class="docutils literal"><span class="pre">save()</span></code> and <code class="docutils literal"><span class="pre">echo()</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">MIN_TM</span> <span class="o">=</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MIN_TM&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MISPRIME&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="n">job_1d</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s1">&#39;result/&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Primer&#39;</span><span class="p">)</span>
+
+<span class="n">LIB</span> <span class="o">=</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;which_lib&#39;</span><span class="p">)</span>
+<span class="n">N_PRIMER</span> <span class="o">=</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;N_PRIMER&#39;</span><span class="p">)</span>
+<span class="k">print</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRUCT&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;region&#39;</span><span class="p">)</span>
+    <span class="n">job_2d</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;assembly&#39;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;result/&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Lib&#39;</span><span class="p">)</span>
+
+<span class="n">N_PLATE</span> <span class="o">=</span> <span class="n">job_3d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;N_PLATE&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_3d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_3d</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;plate&#39;</span><span class="p">)</span>
+    <span class="k">print</span> <span class="nb">repr</span><span class="p">(</span><span class="n">job_3d</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>Besides <code class="docutils literal"><span class="pre">design()</span></code>, the <code class="docutils literal"><span class="pre">Primerize_1D</span></code>, <code class="docutils literal"><span class="pre">Primerize_2D</span></code>, and <code class="docutils literal"><span class="pre">Primerize_3D</span></code> worker classes offer methods for <code class="docutils literal"><span class="pre">get()</span></code>, <code class="docutils literal"><span class="pre">set()</span></code>, and <code class="docutils literal"><span class="pre">reset()</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">COL_SIZE</span> <span class="o">=</span> <span class="n">prm_1d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;COL_SIZE&#39;</span><span class="p">)</span>
+<span class="n">prm_1d</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;MIN_LENGTH&#39;</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">prm_1d</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+</pre></div>
+</div>
 <p>There are also <code class="docutils literal"><span class="pre">Assembly</span></code>, <code class="docutils literal"><span class="pre">Mutation</span></code>, <code class="docutils literal"><span class="pre">Construct_List</span></code>, and <code class="docutils literal"><span class="pre">Plate_96Well</span></code> helper classes. For more details, please refer to the <strong>Documentation</strong>.</p>
 </div>
 
