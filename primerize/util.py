@@ -884,7 +884,7 @@ def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
                     sheet.write(i + 1, 1, tag, xlwt.easyxf(format))
                     sheet.write(i + 1, 2, primer, xlwt.easyxf(format))
 
-        workbook.save(file_name)
+        if len(workbook._Workbook__worksheets): workbook.save(file_name)
 
 
 def _draw_region(sequence, params):
