@@ -34,7 +34,7 @@ Table of Contents
 Reference
 ----------------------------
 
-| Tian, S., *et al.* (**2015**)
+| Tian, S., Yesselman, J.D., Cordero, P., and Das, R. (**2015**)
 | `Primerize: Automated Primer Assembly for Transcribing Interesting RNAs. <http://nar.oxfordjournals.org/content/43/W1/W522.full>`_
 | *Nucleic Acid Research* **43 (W1)**: W522-W526.
 |
