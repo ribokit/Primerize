@@ -39,6 +39,15 @@ class Assembly(object):
         self.name = name
         (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = _draw_assembly(self.sequence, self.primers, COL_SIZE)
 
+        self.primer_set = []
+        for i in range(self.primers.shape[1]):
+            primer_seq = self.sequence[self.primers[0, i]:self.primers[1, i] + 1]
+            if self.primers[2, i] == -1:
+                self.primer_set.append(reverse_complement(primer_seq))
+            else:
+                self.primer_set.append(str(primer_seq))
+
+
     def __repr__(self):
         """Representation of the ``Assembly`` class.
         """
@@ -81,6 +90,7 @@ class Assembly(object):
                 output += '\033[96m%s\033[0m' % string + '\n'
             else:
                 output += string + '\n'
+
         return output[:-1]
 
 
@@ -94,7 +104,13 @@ class Assembly(object):
 
         if name is None: name = self.name
         f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
-        lines = self.echo().replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
+        lines = self.echo()
+        lines += '\n%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
+        for i in range(len(self.primer_set)):
+            name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, _primer_suffix(i))
+            lines += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), _primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
+
+        lines = lines.replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
         f.write(lines)
         f.close()
 

@@ -233,7 +233,7 @@ def main():
         if args.is_image:
             res.save('image')
         if args.is_text:
-            res.save('construct')
+            res.save('constructs')
             res.save('assembly')
 
     print('Time elapsed: %.1f s.' % (time.time() - t0))
