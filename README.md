@@ -36,6 +36,18 @@ llvmlite == 0.8.0
 numba == 0.23.1
 ```
 
+#### Test
+
+To test if **Primerize** is functioning properly in local installation, run the *unit test* scripts:
+
+```bash
+cd path/to/Primerize/tests/
+python -m unittest discover
+```
+
+All test cases should pass.
+
+
 ## Usage
 
 For simple Primer Design tasks, follow this example:
@@ -43,18 +55,18 @@ For simple Primer Design tasks, follow this example:
 ```python
 import primerize
 
-prm_1d = primerize.Primerize_1D()
+prm_1d = primerize.Primerize_1D
 job_1d = prm_1d.design('TTCTAATACGACTCACTATAGGCCAAAGGCGUCGAGUAGACGCCAACAACGGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACCAAACCGUCAGCGAGUAGCUGACAAAAAGAAACAACAACAACAAC', MIN_TM=60.0, NUM_PRIMERS=None, MIN_LENGTH=15, MAX_LENGTH=60, prefix='P4P6_2HP')
 if job_1d.is_success:
 	print job_1d
 
-prm_2d = primerize.Primerize_2D()
+prm_2d = primerize.Primerize_2D
 job_2d = prm_2d.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_lib=1)
 if job_2d.is_success:
 	print job_2d
 	job_2d.save()
 
-prm_3d = primerize.Primerize_3D()
+prm_3d = primerize.Primerize_3D
 job_3d = prm_3d.design(job_1d, offset=-51, structures=['...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................'], N_mutations=1, which_lib=1, is_single=True, is_fillWT=True)
 if job_3d.is_success:
     print job_3d
@@ -83,7 +95,7 @@ if job_3d.is_success:
     print repr(job_3d)
 ```
 
-Besides `design()`, the `Primerize_1D`, `Primerize_2D`, and `Primerize_3D` worker classes offer methods for `get()`, `set()`, and `reset()`:
+Besides `design()`, the `Primerize_1D`, `Primerize_2D`, and `Primerize_3D` factory instances offer methods for `get()`, `set()`, and `reset()`:
 
 ```python
 COL_SIZE = prm_1d.get('COL_SIZE')
@@ -91,7 +103,7 @@ prm_1d.set('MIN_LENGTH', 30)
 prm_1d.reset()
 ```
 
-There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the **Documentation**.
+There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the [**Documentation**](https://daslab.github.io/Primerize/primerize.util).
 
 
 #### MATLAB Code _(Deprecated)_

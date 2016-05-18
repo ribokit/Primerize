@@ -54,4 +54,4 @@ Besides ``design()``, the ``Primerize_1D``, ``Primerize_2D``, and ``Primerize_3D
     prm_1d.set('MIN_LENGTH', 30)
     prm_1d.reset()
 
-There are also ``Assembly``, ``Mutation``, ``Construct_List``, and ``Plate_96Well`` helper classes. For more details, please refer to the **Documentation**.
+There are also ``Assembly``, ``Mutation``, ``Construct_List``, and ``Plate_96Well`` helper classes. For more details, please refer to the `Documentation <../primerize.util>`_.

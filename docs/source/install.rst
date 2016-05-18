@@ -39,3 +39,18 @@ To speed up **Primerize** code, we take advantage of ``@jit`` (`see here <http:/
 
     llvmlite == 0.8.0
     numba == 0.23.1
+
+----------
+
+Test
+------------------
+
+To test if **Primerize** is functioning properly in local installation, run the *unit test* scripts:
+
+.. code-block:: bash
+
+    cd path/to/Primerize/tests/
+    python -m unittest discover
+
+All test cases should pass.
+
