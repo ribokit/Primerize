@@ -187,7 +187,7 @@ class Plate_96Well(object):
             return len(self.coords)
         else:
             coord = _format_coord(coord)
-            if coord_to_num(coord) == -1:
+            if coord_to_num(coord) is None:
                 raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
             elif coord in self.coords:
                 return self._data[coord_to_num(coord)]
@@ -208,7 +208,7 @@ class Plate_96Well(object):
         """
 
         coord = _format_coord(coord)
-        if coord_to_num(coord) == -1:
+        if coord_to_num(coord) is None:
             raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.set()\033[0m.\n' % (coord, self.__class__))
         else:
             self.coords.add(coord)
@@ -578,8 +578,25 @@ def complement(sequence):
     """
 
     rc_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'U': 'A'}
-    sequence = map(lambda x: rc_dict[x], list(sequence))
+    try:
+        sequence = map(lambda x: rc_dict[x], list(sequence))
+    except KeyError:
+        raise ValueError('\033[41mERROR\033[0m: Illegal sequence value \033[95m%s\033[0m for \033[94mcomplement()\033[0m.\n' % sequence)
+
     return ''.join(sequence)
+
+
+def reverse(sequence):
+    """Convert a DNA sequence input to its reverse order.
+
+    Args:
+        sequence: ``str``: Input DNA sequence.
+
+    returns:
+        ``str``: String of reverse DNA strand.
+    """
+
+    return sequence[::-1]
 
 
 def reverse_complement(sequence):
@@ -592,7 +609,7 @@ def reverse_complement(sequence):
         ``str``: String of reverse complement DNA strand.
     """
 
-    return complement(sequence[::-1])
+    return complement(reverse(sequence))
 
 
 def _primer_suffix(num):
@@ -696,12 +713,12 @@ def coord_to_num(coord):
         coord: ``str``: Input WellPosition coordinate string, e.g. ``'A01'``.
 
     Returns:
-        ``int``
+        ``int`` or ``None`` if illegal input.
     """
 
-    if not isinstance(coord, str): return -1
+    if not isinstance(coord, str): return None
     coord = re.findall('^([A-H]){1}(0[1-9]|1[0-2]){1}$', coord.upper().strip())
-    if not coord: return -1
+    if not coord: return None
     coord = ''.join(coord[0])
     row = 'ABCDEFGH'.find(coord[0])
     col = int(coord[1:])
@@ -712,13 +729,13 @@ def num_to_coord(num):
     """Convert a 96-Well Coordinate number (1-based) to string.
 
     Args:
-        num: ``int``: Input WellPosition coordinate number, e.g. ``1``.
+        num: ``int``: Input WellPosition coordinate number, e.g. ``96``.
 
     Returns:
-        ``str`` or ``-1`` if illegal input.
+        ``str`` or ``None`` if illegal input.
     """
 
-    if num < 1 or num > 96 or (not isinstance(num, int)): return -1
+    if num < 1 or num > 96 or (not isinstance(num, int)): return None
     row = 'ABCDEFGH'[(num - 1) % 8]
     col = (num - 1) / 8 + 1
     return '%s%0*d' % (row, 2, col)
