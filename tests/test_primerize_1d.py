@@ -29,6 +29,24 @@ class TestPrimerize1D(unittest.TestCase):
         job_1d = prm_1d.design(INPUT['SEQ_P4P6'], MIN_TM=70)
         self.assertFalse(job_1d.is_success)
 
+    def test_fail(self):
+        job_1d = prm_1d.design(INPUT['SEQ_FAIL_1'])
+        self.assertFalse(job_1d.is_success)
+        job_1d = prm_1d.design(INPUT['SEQ_FAIL_2'])
+        self.assertTrue(job_1d.is_success)
+        job_1d = prm_1d.design(INPUT['SEQ_FAIL_2'], NUM_PRIMERS=2)
+        self.assertFalse(job_1d.is_success)
+
+        job_1d = prm_1d.design(INPUT['SEQ_TEST_1'], MIN_TM=65.0)
+        self.assertTrue(job_1d.is_success)
+        self.assertListEqual(job_1d.primer_set, OUTPUT['1D']['test_1'])
+        job_1d = prm_1d.design(INPUT['SEQ_TEST_2'])
+        self.assertTrue(job_1d.is_success)
+        self.assertListEqual(job_1d.primer_set, OUTPUT['1D']['test_2'])
+        job_1d = prm_1d.design(INPUT['SEQ_TEST_3'])
+        self.assertTrue(job_1d.is_success)
+        self.assertListEqual(job_1d.primer_set, OUTPUT['1D']['test_3'])
+
 
 if __name__ == '__main__':
     unittest.main()
