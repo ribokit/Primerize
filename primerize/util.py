@@ -101,7 +101,7 @@ class Assembly(object):
             name: ``str``: `(Optional)` Prefix/name for file name. When nonspecified, current object's name is used.
         """
 
-        if name is None: name = self.name
+        name = self.name if name is None else name
         f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
         lines = self.echo()
         lines += '\n%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
@@ -155,7 +155,6 @@ class Plate_96Well(object):
 
         return len(self.coords)
 
-
     def __contains__(self, coord):
         """Test if data of a given WellPosition is present.
 
@@ -173,26 +172,23 @@ class Plate_96Well(object):
         """Get data of a particular well or number of wells filled.
 
         Args:
-            coord: ``str``: Keyword of parameter. Either use ``'count'`` for number of wells filled, or WellPosition for well data.
+            coord: ``str``: Keyword of parameter. Use WellPosition for well data.
 
         Returns:
             value of specified **coord**.
 
         Raises:
-            AttributeError: For illegal keyword or WellPosition (out of ``range(0, 96) + 1``).
+            AttributeError: For illegal WellPosition (out of ``range(0, 96) + 1``).
             KeyError: For nonexisted **coord**.
         """
 
-        if coord.lower() == 'count':
-            return len(self.coords)
+        coord = _format_coord(coord)
+        if coord_to_num(coord) is None:
+            raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
+        elif coord in self:
+            return self._data[coord_to_num(coord)]
         else:
-            coord = _format_coord(coord)
-            if coord_to_num(coord) is None:
-                raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
-            elif coord in self:
-                return self._data[coord_to_num(coord)]
-            else:
-                raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
+            raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
 
 
     def set(self, coord, tag, primer):
@@ -708,6 +704,9 @@ def _draw_assembly(sequence, primers, COL_SIZE):
 
 
 def _format_coord(coord):
+    coord = re.findall('^([A-H]{1}[0-9]{1,2})$', coord.upper().strip())
+    if not coord: return None
+    coord = coord[0]
     return coord[0] + coord[1:].zfill(2)
 
 
@@ -838,8 +837,8 @@ def _print_primer_plate(plate, ref_primer):
                 string += ('%s\033[96m%s\033[0m\033[93m%s\033[0m\033[91m%s\033[0m' % (mut[:5], mut[5], mut[6:-1], mut[-1])).ljust(50)
 
         if ref_primer:
-            for i in range(len(ref_primer)):
-                if ref_primer[i] != plate._data[key][1][i]:
+            for i, ref in enumerate(ref_primer):
+                if ref != plate._data[key][1][i]:
                     string += '\033[41m%s\033[0m' % plate._data[key][1][i]
                 else:
                     string += plate._data[key][1][i]
@@ -854,10 +853,10 @@ def _save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
     for k in range(len(plates[0])):
         for p in range(len(plates)):
             primer_sequences = plates[p][k]
-            num_primers_on_plate = primer_sequences.get('count')
+            num_primers_on_plate = len(primer_sequences)
 
             if num_primers_on_plate:
-                if num_primers_on_plate == 1 and primer_sequences.has('A01'):
+                if num_primers_on_plate == 1 and 'A01' in primer_sequences:
                     tag = primer_sequences.get('A01')[0]
                     if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag): continue
 
@@ -889,10 +888,10 @@ def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
 
         for p in range(len(plates)):
             primer_sequences = plates[p][k]
-            num_primers_on_plate = primer_sequences.get('count')
+            num_primers_on_plate = len(primer_sequences)
 
             if num_primers_on_plate:
-                if num_primers_on_plate == 1 and primer_sequences.has('A01'):
+                if num_primers_on_plate == 1 and 'A01' in primer_sequences:
                     tag = primer_sequences.get('A01')[0]
                     if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag): continue
 

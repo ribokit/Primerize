@@ -105,7 +105,7 @@ class Design_Single(object):
             f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
             f.close()
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_cucess\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_success\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
 
 
     def echo(self, key=''):
@@ -198,7 +198,7 @@ class Design_Plate(object):
                 raise ValueError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s\033[0m.\n' % (key, self.__class__))
             key_rename = '_' + key if key in ['params', 'data'] else key
             setattr(self, key_rename, init_dict[key])
-            
+
         if self.get('TYPE') == 'Mutate-and-Map':
             self._data['illustration'] = util._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
@@ -260,7 +260,7 @@ class Design_Plate(object):
         """
 
         if self.is_success:
-            if name is None: name = self.name
+            name = self.name if name is None else name
             key = key.lower()
             if key == 'table':
                 util._save_plates_excel(self._data['plates'], self.primer_set, name, path)
