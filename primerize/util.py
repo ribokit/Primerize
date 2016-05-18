@@ -690,7 +690,7 @@ def _format_coord(coord):
 
 
 def coord_to_num(coord):
-    """Convert a 96-Well Coordinate string to number.
+    """Convert a 96-Well Coordinate string to number (1-based).
 
     Args:
         coord: ``str``: Input WellPosition coordinate string, e.g. ``'A01'``.
@@ -699,25 +699,26 @@ def coord_to_num(coord):
         ``int``
     """
 
-    coord = coord.upper().strip()
+    if not isinstance(coord, str): return -1
+    coord = re.findall('^([A-H]){1}(0[1-9]|1[0-2]){1}$', coord.upper().strip())
+    if not coord: return -1
+    coord = ''.join(coord[0])
     row = 'ABCDEFGH'.find(coord[0])
-    if row == -1: return -1
     col = int(coord[1:])
-    if col < 0 or col > 12: return -1
     return (col - 1) * 8 + row + 1
 
 
 def num_to_coord(num):
-    """Convert a 96-Well Coordinate number to string.
+    """Convert a 96-Well Coordinate number (1-based) to string.
 
     Args:
-        num: ``int``: Input WellPosition coordinate number, e.g. ``0``.
+        num: ``int``: Input WellPosition coordinate number, e.g. ``1``.
 
     Returns:
         ``str`` or ``-1`` if illegal input.
     """
 
-    if num < 0 or num > 96: return -1
+    if num < 1 or num > 96 or (not isinstance(num, int)): return -1
     row = 'ABCDEFGH'[(num - 1) % 8]
     col = (num - 1) / 8 + 1
     return '%s%0*d' % (row, 2, col)
@@ -778,8 +779,8 @@ def get_mutation(nt, lib):
         nt: ``str``: The nucleotide of interest.
         lib: ``int``: The mutation library choice; choose from (``1``, ``2``, ``3``, ``4``)::
 
-            * 1 represents "A->U, U->A, C->G, G->C", 
-            * 2 represents "A->C, U->C, C->A, G->A", 
+            * 1 represents "A->U, U->A, C->G, G->C",
+            * 2 represents "A->C, U->C, C->A, G->A",
             * 3 represents "A->G, U->G, C->U, G->U",
             * 4 represents "A->C, U->G, C->A, G->U".
 

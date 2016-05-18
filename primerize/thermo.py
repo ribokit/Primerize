@@ -7,7 +7,7 @@ numpy.seterr('ignore')
 class Singleton(object):
     """Base class for singleton pattern
     """
-    
+
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -277,6 +277,4 @@ def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
     f_GC = (numpy.sum(numerical_sequence == 1) + numpy.sum(numerical_sequence == 2)) / float(N_BP)
     Tm = _ionic_strength_correction(Tm, monovalent_conc, divalent_conc, f_GC, N_BP)
     return Tm - 273.15
-
-
 
