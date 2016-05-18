@@ -1058,16 +1058,14 @@ def diff_bps(structures, offset=0):
         ``list(tuple(int, int))``
     """
 
+    if isinstance(structures, str): structures = [structures]
+
     if len(structures) == 1:
         return str_to_bps(structures[0], offset)
     else:
-        bps_all = ['%d-%d' % (y[0], y[1]) for x in structures for y in str_to_bps(x, offset)]
-        bps = []
-        for pair in set(bps_all):
-            if bps_all.count(pair) < len(structures):
-                bp = pair.split('-')
-                bps.append((int(bp[0]), int(bp[1])))
-
+        bps_all = ['%d@%d' % (y[0], y[1]) for x in structures for y in str_to_bps(x, offset)]
+        bps = filter(lambda x: (bps_all.count(x) < len(structures)), set(bps_all))
+        bps = map(lambda (x, y): (int(x), int(y)), map(lambda x: x.split('@'), bps))
         return sorted(bps, key=lambda x: x[0])
 
 
