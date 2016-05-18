@@ -222,7 +222,7 @@ class Design_Plate(object):
         """Get result parameters.
 
         Args:
-            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'structures'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'STRUCTURE'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
 
         Returns:
             value of specified **key**.
@@ -240,6 +240,8 @@ class Design_Plate(object):
             return self._data['assembly'].primers
         elif key == 'CONSTRUCT':
             return self._data['constructs']
+        elif key == 'STRUCTURE' and self.get('TYPE') == 'Mutation/Rescue':
+            return self.structures
         else:
             raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
