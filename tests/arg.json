@@ -1,0 +1,31 @@
+{
+    "MIN_TM": 60.0,
+    "MAX_LEN": 60,
+    "MIN_LEN": 15,
+    "NUM_PRM": 0,
+
+    "SEQ_P4P6": "TTCTAATACGACTCACTATAGGCCAAAGGCGUCGAGUAGACGCCAACAACGGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACCAAACCGUCAGCGAGUAGCUGACAAAAAGAAACAACAACAACAAC",
+    "SEQ_T7": "TTCTAATACGACTCACTATA",
+
+    "OFFSET_P4P6": -51,
+    "LIB_P4P6": "1",
+    "MIN_MUTS_P4P6": 102,
+    "MAX_MUTS_P4P6": 261,
+    "PRIMER_SET_P4P6": [
+        "TTCTAATACGACTCACTATAGGCCAAAGGCGTCGA",
+        "TTGACCCCTTTCCCGCAATTCCGTTGTTGGCGTCTACTCGACGCCTTTGGCCTATAGT",
+        "TTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGG",
+        "CCCTTTGCAAGGCCATCTCAAAGTTTCCCCTGAGACTTGGTACTGAACGGC",
+        "TGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAG",
+        "CCATATCAACAGAAGATCTGTTGACTTAGGACTTGGCTGCGTGGTTAGGACCATGT",
+        "TCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCGTCAGCGA",
+        "GTTGTTGTTGTTGTTTCTTTTTGTCAGCTACTCGCTGACGGTTTGGTTTTGAACTGCAT"
+    ],
+
+    "NUM_MUT": 1,
+
+    "STR_P4P6": "...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................",
+    "STR_P4P6_1": "...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..(((.....)))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................",
+    "STR_P4P6_2": "...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....))))))))).(((((....)))))..)))......)))))))....))))))..)).)))).....((((...(((((((((...)))))))))..))))..................((((((.....))))))......................"
+}
+
