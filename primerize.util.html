@@ -7,7 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     
-    <title>primerize.util Module &mdash; Primerize1.3.1 : PCR Assembly Primer Design | RiboKit</title>
+    <title>primerize.util Module &mdash; Primerize1.3.5 : PCR Assembly Primer Design | RiboKit</title>
     
 
     
@@ -23,7 +23,7 @@
 
     
     
-      <link rel="top" title="Primerize1.3.1 : PCR Assembly Primer Design" href="index.html"/>
+      <link rel="top" title="Primerize1.3.5 : PCR Assembly Primer Design" href="index.html"/>
           <link rel="up" title="Modules" href="content.html"/>
           <link rel="next" title="primerize.wrapper Module" href="primerize.wrapper.html"/>
           <link rel="prev" title="primerize.thermo Module" href="primerize.thermo.html"/> 
@@ -73,7 +73,7 @@
     
       
       
-        <div class="version"><span>1.3.1</span></div>
+        <div class="version"><span>1.3.5</span></div>
       
     
 
@@ -107,6 +107,7 @@
         
             <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html#test">Test</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="content.html">Modules</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="primerize.primerize_1d.html"><code class="docutils literal"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
@@ -247,6 +248,22 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="primerize.util.Construct_List.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>mut_list</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Construct_List.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a list of given mutant construct is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">primerize.util.Mutation</span></code>: A mutant represented by <code class="docutils literal"><span class="pre">primerize.util.Mutation</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="primerize.util.Construct_List.__iter__">
 <code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Construct_List.__iter__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iterator through all constructs.</p>
@@ -293,16 +310,14 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="primerize.util.Construct_List.has">
-<code class="descname">has</code><span class="sig-paren">(</span><em>mut_list</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Construct_List.has" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if a list of given mutant construct is present.</p>
+<dt id="primerize.util.Construct_List.list">
+<code class="descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Construct_List.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all constructs.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">primerize.util.Mutation</span></code>: A mutant represented by <code class="docutils literal"><span class="pre">primerize.util.Mutation</span></code>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">list(list(str))</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -362,6 +377,22 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="primerize.util.Mutation.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>mut_str</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Mutation.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a list of given mutation is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: Mutations in format of <code class="docutils literal"><span class="pre">'wt_char'</span></code>, <code class="docutils literal"><span class="pre">'seq_pos'</span></code>, <code class="docutils literal"><span class="pre">'mut_char'</span></code>, (e.g. <code class="docutils literal"><span class="pre">['G13C',</span> <span class="pre">'A15T']</span></code>).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="primerize.util.Mutation.__eq__">
 <code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Mutation.__eq__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Comparison method for whether two <code class="docutils literal"><span class="pre">Mutation</span></code> objects contain the same set of mutations.</p>
@@ -408,22 +439,6 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="primerize.util.Mutation.has">
-<code class="descname">has</code><span class="sig-paren">(</span><em>mut_str</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Mutation.has" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if a list of given mutation is present.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: Mutations in format of <code class="docutils literal"><span class="pre">'wt_char'</span></code>, <code class="docutils literal"><span class="pre">'seq_pos'</span></code>, <code class="docutils literal"><span class="pre">'mut_char'</span></code>, (e.g. <code class="docutils literal"><span class="pre">['G13C',</span> <span class="pre">'A15T']</span></code>).</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -501,6 +516,22 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="primerize.util.Plate_96Well.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Plate_96Well.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if data of a given WellPosition is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: WellPosition (e.g. <code class="docutils literal"><span class="pre">'A01'</span></code>) for data.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="primerize.util.Plate_96Well.__len__">
 <code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Plate_96Well.__len__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of filled wells.</p>
@@ -550,33 +581,17 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Either use <code class="docutils literal"><span class="pre">'count'</span></code> for number of wells filled, or WellPosition for well data.</p>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Use WellPosition for well data.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value of specified <strong>coord</strong>.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal keyword or WellPosition (out of <code class="docutils literal"><span class="pre">range(0,</span> <span class="pre">96)</span> <span class="pre">+</span> <span class="pre">1</span></code>).</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal WellPosition (out of <code class="docutils literal"><span class="pre">range(0,</span> <span class="pre">96)</span> <span class="pre">+</span> <span class="pre">1</span></code>).</li>
 <li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> -- For nonexisted <strong>coord</strong>.</li>
 </ul>
 </td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="primerize.util.Plate_96Well.has">
-<code class="descname">has</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Plate_96Well.has" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test if data of a given WellPosition is present.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: WellPosition (e.g. <code class="docutils literal"><span class="pre">'A01'</span></code>) for data.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -590,7 +605,7 @@
 
 <dl class="method">
 <dt id="primerize.util.Plate_96Well.save">
-<code class="descname">save</code><span class="sig-paren">(</span><em>ref_primer=''</em>, <em>file_name='./'</em>, <em>title=''</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Plate_96Well.save" title="Permalink to this definition">¶</a></dt>
+<code class="descname">save</code><span class="sig-paren">(</span><em>ref_primer=''</em>, <em>file_name='./plate.svg'</em>, <em>title=''</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.Plate_96Well.save" title="Permalink to this definition">¶</a></dt>
 <dd><p>Save plate layout to image file (<cite>SVG</cite>).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -682,14 +697,14 @@
 <dl class="function">
 <dt id="primerize.util.coord_to_num">
 <code class="descclassname">primerize.util.</code><code class="descname">coord_to_num</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.coord_to_num" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a 96-Well Coordinate string to number.</p>
+<dd><p>Convert a 96-Well Coordinate string to number (1-based).</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Input WellPosition coordinate string, e.g. <code class="docutils literal"><span class="pre">'A01'</span></code>.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">int</span></code></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">int</span></code> or <code class="docutils literal"><span class="pre">None</span></code> if illegal input.</td>
 </tr>
 </tbody>
 </table>
@@ -779,14 +794,30 @@
 <dl class="function">
 <dt id="primerize.util.num_to_coord">
 <code class="descclassname">primerize.util.</code><code class="descname">num_to_coord</code><span class="sig-paren">(</span><em>num</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.num_to_coord" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert a 96-Well Coordinate number to string.</p>
+<dd><p>Convert a 96-Well Coordinate number (1-based) to string.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: Input WellPosition coordinate number, e.g. <code class="docutils literal"><span class="pre">0</span></code>.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>num</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: Input WellPosition coordinate number, e.g. <code class="docutils literal"><span class="pre">96</span></code>.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code> or <code class="docutils literal"><span class="pre">-1</span></code> if illegal input.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code> or <code class="docutils literal"><span class="pre">None</span></code> if illegal input.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="primerize.util.reverse">
+<code class="descclassname">primerize.util.</code><code class="descname">reverse</code><span class="sig-paren">(</span><em>sequence</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a DNA sequence input to its reverse order.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>sequence</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Input DNA sequence.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code> -- String of reverse DNA strand.</td>
 </tr>
 </tbody>
 </table>
@@ -851,7 +882,7 @@
 
     <p class="wrapper">
       
-      <small>Last updated on</small> May 13, 2016.
+      <small>Last updated on</small> May 18, 2016.
       
     </p>
 
@@ -873,7 +904,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'1.3.1',
+              VERSION:'1.3.5',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
               HAS_SOURCE:  true
