@@ -70,8 +70,7 @@ class Assembly(object):
 
         output = ''
         x = 0
-        for i in range(len(self.print_lines)):
-            (flag, string) = self.print_lines[i]
+        for i, (flag, string) in enumerate(self.print_lines):
             if (flag == '$' and 'xx' in string):
                 Tm = '%2.1f' % self.Tm_overlaps[x]
                 output += string.replace('x' * len(Tm), '\033[41m%s\033[0m' % Tm) + '\n'
@@ -106,9 +105,9 @@ class Assembly(object):
         f = open(os.path.join(path, '%s_assembly.txt' % name), 'w')
         lines = self.echo()
         lines += '\n%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
-        for i in range(len(self.primer_set)):
+        for i, primer in enumerate(self.primer_set):
             name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, _primer_suffix(i))
-            lines += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), _primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
+            lines += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(primer)).ljust(10), _primer_suffix(i).replace(' R', primer).replace(' F', primer))
 
         lines = lines.replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
         f.write(lines)
@@ -578,10 +577,8 @@ def complement(sequence):
         ``str``: String of complement DNA strand.
     """
 
-    sequence = list(sequence)
     rc_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'U': 'A'}
-    for i in range(len(sequence)):
-        sequence[i] = rc_dict[sequence[i]]
+    sequence = map(lambda x: rc_dict[x], list(sequence))
     return ''.join(sequence)
 
 
@@ -618,8 +615,7 @@ def _draw_assembly(sequence, primers, COL_SIZE):
         (seg_start, seg_end, seg_dir) = primer
 
         if (seg_dir == 1):
-            for j in range(seg_start, seg_end + 1):
-                seq_line[j] = sequence[j]
+            seq_line[seg_start: seg_end + 1] = sequence[seg_start: seg_end + 1]
 
             if (seg_end + 1 < len(sequence)):
                 seq_line[seg_end + 1] = '-'
@@ -631,8 +627,7 @@ def _draw_assembly(sequence, primers, COL_SIZE):
                 offset = seg_end + 4
                 seq_line[offset:(offset + len(num_txt))] = num_txt
         else:
-            for j in range(seg_start, seg_end + 1):
-                seq_line[j] = reverse_complement(sequence[j])
+            seq_line[seg_start: seg_end + 1] = map(reverse_complement, sequence[seg_start: seg_end + 1])
 
             if (seg_start - 1 >= 0):
                 seq_line[seg_start - 1] = '-'
@@ -795,17 +790,12 @@ def get_mutation(nt, lib):
         ValueError: For illegal **lib** input.
     """
 
-    idx = 'ATCG'.find(nt)
-    if lib == 1:
-        return 'TAGC'[idx]
-    elif lib == 2:
-        return 'CCAA'[idx]
-    elif lib == 3:
-        return 'GGTT'[idx]
-    elif lib == 4:
-        return 'CGAT'[idx]
-    else:
+    libs = {1: 'TAGC', 2: 'CCAA', 3: 'GGTT', 4: 'CGAT'}
+    if lib not in libs:
         raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for params \033[92mwhich_lib\033[0m.\n' % lib)
+    else:
+        idx = 'ATCG'.find(nt)
+        return libs[lib][idx]
 
 
 def _print_primer_plate(plate, ref_primer):
@@ -846,7 +836,7 @@ def _save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
             if num_primers_on_plate:
                 if num_primers_on_plate == 1 and primer_sequences.has('A01'):
                     tag = primer_sequences.get('A01')[0]
-                    if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag):continue
+                    if (isinstance(tag, Mutation) and not tag) or (isinstance(tag, str) and 'WT' in tag): continue
 
                 file_name = os.path.join(path, '%s_plate_%d_primer_%d.svg' % (primer_sequences.tag[:-1], k + 1, p + 1))
                 print('Creating plate image: \033[94m%s\033[0m.' % file_name)
@@ -1013,11 +1003,11 @@ def _draw_str_region(sequence, structures, bps, params):
 
     for structure in structures:
         this_bps = str_to_bps(structure)
-        this_bps = [bp for bp in this_bps if bp in bps]
-        bps = [bp for bp in bps if bp not in this_bps]
+        this_bps = filter(lambda x: (x in bps), this_bps)
+        bps = filter(lambda x: (x not in this_bps), bps)
         this_bps = [nt for bp in this_bps for nt in bp]
 
-        for i, nt in enumerate(list(structure)):
+        for i, nt in enumerate(structure):
             if i + 1 in this_bps:
                 illustration_str += '\033[41m%s\033[0m' % nt
             else:
@@ -1054,7 +1044,7 @@ def str_to_bps(structure, offset=0):
 
     if lbs or lbs_pk:
         raise ValueError('\033[41mERROR\033[0m: Unbalanced \033[92mstructure\033[0m "\033[95m%s\033[0m".\n' % structure)
-    return sorted(bps, key=lambda tup: tup[0])
+    return list(sorted(bps, key=lambda x: x[0]))
 
 
 def diff_bps(structures, offset=0):
@@ -1078,7 +1068,7 @@ def diff_bps(structures, offset=0):
                 bp = pair.split('-')
                 bps.append((int(bp[0]), int(bp[1])))
 
-        return sorted(bps, key=lambda tup: tup[0])
+        return sorted(bps, key=lambda x: x[0])
 
 
 def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):

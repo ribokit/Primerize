@@ -147,11 +147,11 @@ def _convert_sequence(sequence):
     # Easier to keep track of integers in Matlab
     # A,C,G,T --> 1,2,3,4.
     sequence = sequence.upper()
-    numerical_sequence = numpy.zeros((1, len(sequence)), dtype=numpy.int_)
+    numerical_sequence = numpy.zeros((1, len(sequence)), dtype=numpy.int16)
     seq2num_dict = {'A': 0, 'C': 1, 'G': 2, 'U': 3, 'T': 3}
 
-    for i in range(len(sequence)):
-        numerical_sequence[0, i] = seq2num_dict[sequence[i]]
+    for i, seq in enumerate(sequence):
+        numerical_sequence[0, i] = seq2num_dict[seq]
     return numerical_sequence
 
 

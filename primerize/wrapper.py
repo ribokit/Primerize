@@ -132,8 +132,7 @@ class Design_Single(object):
 
             elif key == 'warning':
                 output = ''
-                for i in range(len(self._data['warnings'])):
-                    warning = self._data['warnings'][i]
+                for warning in self._data['warnings']:
                     p_1 = '\033[100m%d\033[0m%s' % (warning[0], util._primer_suffix(warning[0] - 1))
                     p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, util._primer_suffix(x - 1)) for x in warning[3])
                     output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
@@ -141,9 +140,9 @@ class Design_Single(object):
 
             elif key == 'primer':
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
-                for i in range(len(self.primer_set)):
+                for i, primer in enumerate(self.primer_set):
                     name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, util._primer_suffix(i))
-                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(self.primer_set[i])).ljust(10), util._primer_suffix(i).replace(' R', self.primer_set[i]).replace(' F', self.primer_set[i]))
+                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(primer)).ljust(10), util._primer_suffix(i).replace(' R', primer).replace(' F', primer))
                 return output[:-1]
 
             elif key == 'assembly':
@@ -199,6 +198,7 @@ class Design_Plate(object):
                 raise ValueError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s\033[0m.\n' % (key, self.__class__))
             key_rename = '_' + key if key in ['params', 'data'] else key
             setattr(self, key_rename, init_dict[key])
+            
         if self.get('TYPE') == 'Mutate-and-Map':
             self._data['illustration'] = util._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':

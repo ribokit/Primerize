@@ -144,8 +144,7 @@ class Primerize_2D(object):
 
         is_success = True
         assembly = {}
-        for i in range(len(primer_set)):
-            primer_set[i] = util.RNA2DNA(primer_set[i])
+        primer_set = map(util.RNA2DNA, primer_set)
         if not primer_set:
             if is_force:
                 prm = Primerize_1D()
@@ -165,7 +164,7 @@ class Primerize_2D(object):
         if not which_muts:
             which_muts = list(range(1 - offset, N_BP + 1 - offset))
         else:
-            which_muts = [x for x in which_muts if x >= 1 - offset and x < N_BP + 1 - offset]
+            which_muts = filter(lambda x: (x >= 1 - offset and x < N_BP + 1 - offset), which_muts)
         which_lib = which_lib[0] if isinstance(which_lib, list) else which_lib
 
         N_primers = len(primer_set)
