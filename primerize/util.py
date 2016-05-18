@@ -156,7 +156,7 @@ class Plate_96Well(object):
         return len(self.coords)
 
 
-    def has(self, coord):
+    def __contains__(self, coord):
         """Test if data of a given WellPosition is present.
 
         Args:
@@ -189,7 +189,7 @@ class Plate_96Well(object):
             coord = _format_coord(coord)
             if coord_to_num(coord) is None:
                 raise AttributeError('\033[41mERROR\033[0m: Illegal coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
-            elif coord in self.coords:
+            elif coord in self:
                 return self._data[coord_to_num(coord)]
             else:
                 raise KeyError('\033[41mERROR\033[0m: Non-Existent coordinate value \033[95m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (coord, self.__class__))
@@ -229,14 +229,14 @@ class Plate_96Well(object):
         Args:
             ref_primer: ``list(str)``: `(Optional)` List of Wild-type **primer_set** for highlighting. If nonspecified, highlighting is disabled.
 
-        Returns: 
+        Returns:
             ``str``
         """
 
         return _print_primer_plate(self, ref_primer)
 
 
-    def save(self, ref_primer='', file_name='./', title=''):
+    def save(self, ref_primer='', file_name='./plate.svg', title=''):
         """Save plate layout to image file (`SVG`).
 
         Args:
@@ -330,7 +330,7 @@ class Mutation(object):
 
         if isinstance(other, (str, unicode)) and other == 'WT': return len(self) == 0
         if isinstance(other, Mutation): other = other.list()
-        return self.has(other) and len(self) == len(other)
+        return other in self and len(self) == len(other)
 
     def __iter__(self):
         """Iterator through all mutations.
@@ -339,8 +339,7 @@ class Mutation(object):
         for k in self._data.keys():
             yield k
 
-
-    def has(self, mut_str):
+    def __contains__(self, mut_str):
         """Test if a list of given mutation is present.
 
         Args:
@@ -394,12 +393,11 @@ class Mutation(object):
 
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
-            if self.has(mut):
+            if mut in self:
                 seq_pos = int(mut[1:-1])
                 self._data.pop(seq_pos, None)
             else:
                 return False
-
         return True
 
 
@@ -410,16 +408,13 @@ class Mutation(object):
             ``list(str)``
         """
 
-        mut_list = []
-        for seq_pos in sorted(self._data):
-            mut_list.append('%s%d%s' % (self._data[seq_pos][0], seq_pos, self._data[seq_pos][1]))
-        return mut_list
+        return map(lambda x: '%s%s%s' % (self._data[x][0], x, self._data[x][1]), sorted(self._data.keys()))
 
 
     def echo(self):
         """Print result in rich-text, delimited by ``';'``.
 
-        Returns: 
+        Returns:
             ``str``
         """
 
@@ -477,7 +472,7 @@ class Construct_List(object):
             yield self._data[i]
 
 
-    def has(self, mut_list):
+    def __contains__(self, mut_list):
         """Test if a list of given mutant construct is present.
 
         Args:
@@ -504,7 +499,7 @@ class Construct_List(object):
         """
 
         if not isinstance(mut_list, Mutation): mut_list = Mutation(mut_list)
-        if self.has(mut_list): return False
+        if mut_list in self: return False
         self._data.append(mut_list)
         return True
 
@@ -527,10 +522,20 @@ class Construct_List(object):
         return False
 
 
+    def list(self):
+        """Return a list of all constructs.
+
+        Returns:
+            ``list(list(str))``
+        """
+
+        return map(lambda x: x.list(), self._data)
+
+
     def echo(self, prefix=''):
         """Print result in rich-text.
 
-        Returns: 
+        Returns:
             ``str``
         """
 
