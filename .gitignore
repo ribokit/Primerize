@@ -4,5 +4,6 @@ docs/
 MATLAB/
 primerize/
 primerize.egg-info/
+tests/
 setup.py
 requirements.txt
