@@ -43,7 +43,7 @@ To speed up **Primerize** code, we take advantage of ``@jit`` (`see here <http:/
 ----------
 
 Test
-------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To test if **Primerize** is functioning properly in local installation, run the *unit test* scripts:
 
