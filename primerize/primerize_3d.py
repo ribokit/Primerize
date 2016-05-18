@@ -7,13 +7,15 @@ if __package__ is None or not __package__:
     import util
     from primerize_1d import Primerize_1D
     from wrapper import Design_Single, Design_Plate
+    from thermo import Singleton
 else:
     from . import util
     from .primerize_1d import Primerize_1D
     from .wrapper import Design_Single, Design_Plate
+    from .thermo import Singleton
 
 
-class Primerize_3D(object):
+class Primerize_3D(Singleton):
     """Construct a worker for 3D Primer Design (Mutation/Rescue Plates).
 
     Args:

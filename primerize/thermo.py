@@ -4,7 +4,16 @@ import numpy
 numpy.seterr('ignore')
 
 
-class Nearest_Neighbor(object):
+class Singleton(object):
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not isinstance(cls._instance, cls):
+            cls._instance = object.__new__(cls, *args, **kwargs)
+        return cls._instance
+
+
+class Nearest_Neighbor_Wrapper(Singleton):
     """Wrapper object of Nearest Neighbor parameters; for internal use.
 
     Attributes:
@@ -142,6 +151,9 @@ class Nearest_Neighbor(object):
         self.delH_init = 0.2
         self.delS_init = -5.7
 
+Nearest_Neighbor = Nearest_Neighbor_Wrapper()
+
+
 
 def _convert_sequence(sequence):
     # Easier to keep track of integers in Matlab
@@ -183,12 +195,11 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
     # This could be sped up significantly, since many of the sums of
     # delH, delG are shared between calculations.
     numerical_sequence = _convert_sequence(sequence)
-    NN_parameters = Nearest_Neighbor()
     delS_DNA_conc = 1.987 * math.log(DNA_conc / 2)
-    delS_init = NN_parameters.delS_init + delS_DNA_conc
+    delS_init = Nearest_Neighbor.delS_init + delS_DNA_conc
     N_BP = len(sequence)
 
-    delH_matrix = NN_parameters.delH_init * numpy.ones((N_BP, N_BP))
+    delH_matrix = Nearest_Neighbor.delH_init * numpy.ones((N_BP, N_BP))
     delS_matrix = delS_init * numpy.ones((N_BP, N_BP))
     f_GC = numpy.zeros((N_BP, N_BP))
     len_BP = numpy.ones((N_BP, N_BP))
@@ -200,8 +211,8 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
     print('Filling delH, delS matrix ...')
     for i in range(N_BP):
         for j in range(i + 1, N_BP):
-            delH_matrix[i, j] = delH_matrix[i, j - 1] + NN_parameters.delH_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
-            delS_matrix[i, j] = delS_matrix[i, j - 1] + NN_parameters.delS_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
+            delH_matrix[i, j] = delH_matrix[i, j - 1] + Nearest_Neighbor.delH_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
+            delS_matrix[i, j] = delS_matrix[i, j - 1] + Nearest_Neighbor.delS_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
             len_BP[i, j] = len_BP[i, j - 1] + 1
 
             f_GC[i, j] = f_GC[i, j - 1]
@@ -211,11 +222,11 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
     print('Terminal penalties ...')
     for i in range(N_BP):
         for j in range(i + 1, N_BP):
-            delH_matrix[i, j] += NN_parameters.delH_AT_closing_penalty[numerical_sequence[0, i]]
-            delH_matrix[i, j] += NN_parameters.delH_AT_closing_penalty[numerical_sequence[0, j]]
+            delH_matrix[i, j] += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, i]]
+            delH_matrix[i, j] += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, j]]
 
-            delS_matrix[i, j] += NN_parameters.delS_AT_closing_penalty[numerical_sequence[0, i]]
-            delS_matrix[i, j] += NN_parameters.delS_AT_closing_penalty[numerical_sequence[0, j]]
+            delS_matrix[i, j] += Nearest_Neighbor.delS_AT_closing_penalty[numerical_sequence[0, i]]
+            delS_matrix[i, j] += Nearest_Neighbor.delS_AT_closing_penalty[numerical_sequence[0, j]]
 
     Tm = 1000 * numpy.divide(delH_matrix, delS_matrix)
     f_GC = numpy.divide(f_GC, len_BP)
@@ -242,20 +253,19 @@ def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
     """
 
     numerical_sequence = _convert_sequence(sequence)
-    NN_parameters = Nearest_Neighbor()
     delS_DNA_conc = 1.987 * math.log(DNA_conc / 2)
-    delS_sum = NN_parameters.delS_init + delS_DNA_conc
-    delH_sum = NN_parameters.delH_init
+    delS_sum = Nearest_Neighbor.delS_init + delS_DNA_conc
+    delH_sum = Nearest_Neighbor.delH_init
     N_BP = len(sequence)
 
     for i in range(N_BP - 1):
-        delH_sum += NN_parameters.delH_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
-        delS_sum += NN_parameters.delS_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
+        delH_sum += Nearest_Neighbor.delH_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
+        delS_sum += Nearest_Neighbor.delS_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
 
-    delH_sum += NN_parameters.delH_AT_closing_penalty[numerical_sequence[0, 0]]
-    delH_sum += NN_parameters.delH_AT_closing_penalty[numerical_sequence[0, -1]]
-    delS_sum += NN_parameters.delS_AT_closing_penalty[numerical_sequence[0, 0]]
-    delS_sum += NN_parameters.delS_AT_closing_penalty[numerical_sequence[0, -1]]
+    delH_sum += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, 0]]
+    delH_sum += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, -1]]
+    delS_sum += Nearest_Neighbor.delS_AT_closing_penalty[numerical_sequence[0, 0]]
+    delS_sum += Nearest_Neighbor.delS_AT_closing_penalty[numerical_sequence[0, -1]]
 
     Tm = 1000 * delH_sum / delS_sum
     f_GC = (numpy.sum(numerical_sequence == 1) + numpy.sum(numerical_sequence == 2)) / float(N_BP)

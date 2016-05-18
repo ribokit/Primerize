@@ -28,7 +28,7 @@ except ImportError:
         return empty_wrapper
 
 
-class Primerize_1D(object):
+class Primerize_1D(thermo.Singleton):
     """Construct a worker for 1D Primer Design (Simple Assembly).
 
     Args:
