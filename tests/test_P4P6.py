@@ -1,5 +1,6 @@
 import primerize
 
+import glob
 import os
 import simplejson
 import unittest
@@ -24,13 +25,12 @@ class TestPrimerize1D(unittest.TestCase):
         self.assertListEqual(map(lambda x: list(x), job_1d._data['warnings']), OUTPUT['1D']['warning'])
         self.assertDictEqual(job_1d._params, OUTPUT['1D']['param'])
 
-        job_1d.save()
-        os.remove('primer.txt')
-
     def test_default_explicit(self):
         job_1d = prm_1d.design(INPUT['SEQ_P4P6'], MIN_TM=INPUT['MIN_TM'], NUM_PRIMERS=INPUT['NUM_PRM'], MIN_LENGTH=INPUT['MIN_LEN'], MAX_LENGTH=INPUT['MAX_LEN'], prefix='primer')
         self.assertTrue(job_1d.is_success)
         self.assertListEqual(job_1d.primer_set, OUTPUT['1D']['primer'])
+        job_1d.save()
+        os.remove('primer.txt')
 
     def test_Tm_65(self):
         job_1d = prm_1d.design(INPUT['SEQ_P4P6'], MIN_TM=65)
@@ -54,6 +54,24 @@ class TestPrimerize2D(unittest.TestCase):
                     self.assertEqual(len(job_2d._data['plates'][i][j]), OUTPUT['2D']['default']['plate'][str(j + 1)][str(i + 1)])
                 else:
                     self.assertFalse(len(job_2d._data['plates'][i][j]))
+
+    def test_explicit(self):
+        (which_muts, _, _) = primerize.util.get_mut_range(INPUT['MIN_MUTS_P4P6'], INPUT['MAX_MUTS_P4P6'], INPUT['OFFSET_P4P6'], INPUT['SEQ_P4P6'])
+        job_2d = prm_2d.design(INPUT['SEQ_P4P6'], primer_set=INPUT['PRIMER_SET_P4P6'], offset=INPUT['OFFSET_P4P6'], which_muts=which_muts, which_lib=[int(INPUT['LIB_P4P6'])], prefix="primer", is_force=True)
+        self.assertTrue(job_2d.is_success)
+        for i in range(job_2d.get('N_PRIMER')):
+            for j in range(job_2d.get('N_PLATE')):
+                if str(i + 1) in OUTPUT['2D']['explicit']['plate'][str(j + 1)]:
+                    self.assertEqual(len(job_2d._data['plates'][i][j]), OUTPUT['2D']['explicit']['plate'][str(j + 1)][str(i + 1)])
+                else:
+                    self.assertFalse(len(job_2d._data['plates'][i][j]))
+
+        job_2d.save()
+        files = glob.glob("primer_*.xls")
+        files.extend(glob.glob("primer_*.txt"))
+        files.extend(glob.glob("Lib1_*.svg"))
+        for f in files:
+            os.remove(f)
 
 
 
