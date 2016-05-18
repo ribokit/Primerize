@@ -32,6 +32,9 @@ class Primerize_2D(Singleton):
 
     Returns:
         ``primerize.Primerize_2D``
+
+    Notes:
+        This ``class`` follows the singleton pattern so that only one instance is created.
     """
 
     def __init__(self, offset=0, which_muts=[], which_lib=1, COL_SIZE=142, prefix='lib'):

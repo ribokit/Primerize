@@ -35,6 +35,9 @@ class Primerize_3D(Singleton):
 
     Returns:
         ``primerize.Primerize_3D``
+
+    Notes:
+        This ``class`` follows the singleton pattern so that only one instance is created.
     """
 
     def __init__(self, offset=0, N_mutations=1, which_lib=1, is_single=True, is_fillWT=False, COL_SIZE=142, prefix='lib'):

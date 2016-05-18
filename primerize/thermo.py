@@ -5,6 +5,9 @@ numpy.seterr('ignore')
 
 
 class Singleton(object):
+    """Base class for singleton pattern
+    """
+    
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -13,7 +16,7 @@ class Singleton(object):
         return cls._instance
 
 
-class Nearest_Neighbor_Wrapper(Singleton):
+class Nearest_Neighbor_Parameter(Singleton):
     """Wrapper object of Nearest Neighbor parameters; for internal use.
 
     Attributes:
@@ -29,6 +32,9 @@ class Nearest_Neighbor_Wrapper(Singleton):
         delG_mismatch: ``numpy.array(float(4, 4, 4))``
         delH_init: ``float``
         del_init: ``float``
+
+    Notes:
+        This ``class`` follows the singleton pattern so that only one instance is created.
     """
 
     def __init__(self):
@@ -151,7 +157,7 @@ class Nearest_Neighbor_Wrapper(Singleton):
         self.delH_init = 0.2
         self.delS_init = -5.7
 
-Nearest_Neighbor = Nearest_Neighbor_Wrapper()
+Nearest_Neighbor = Nearest_Neighbor_Parameter()
 
 
 
