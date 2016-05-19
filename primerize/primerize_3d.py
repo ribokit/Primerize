@@ -217,12 +217,12 @@ class Primerize_3D(Singleton):
         N_constructs = (len(bps) - N_mutations + 1) * (is_single * 2 + 1) + 1
         constructs.push('WT')
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-        plates = [[util.Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
+        plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
 
-        for i in range(len(bps) - N_mutations + 1):
+        for i in xrange(len(bps) - N_mutations + 1):
             (mut_list_l, mut_list_r) = ([], [])
 
-            for j in range(N_mutations):
+            for j in xrange(N_mutations):
                 if sequence[bps[i + j][0] - 1] == 'G' and sequence[bps[i + j][1] - 1] == 'T':
                     mut_list_l.append('G%dC' % (bps[i + j][0] - offset))
                     mut_list_r.append('T%dG' % (bps[i + j][1] - offset))

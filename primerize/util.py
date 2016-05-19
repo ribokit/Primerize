@@ -40,7 +40,7 @@ class Assembly(object):
         (self.bp_lines, self.seq_lines, self.print_lines, self.Tm_overlaps) = _draw_assembly(self.sequence, self.primers, COL_SIZE)
 
         self.primer_set = []
-        for i in range(self.primers.shape[1]):
+        for i in xrange(self.primers.shape[1]):
             primer_seq = self.sequence[self.primers[0, i]:self.primers[1, i] + 1]
             if self.primers[2, i] == -1:
                 self.primer_set.append(reverse_complement(primer_seq))
@@ -244,8 +244,8 @@ class Plate_96Well(object):
         fig = pyplot.figure()
         pyplot.axes().set_aspect('equal')
         pyplot.axis([0, 13.875, 0, 9.375])
-        pyplot.xticks([x * 1.125 + 0.75 for x in range(12)], [str(x + 1) for x in range(12)], fontsize=14)
-        pyplot.yticks([y * 1.125 + 0.75 for y in range(8)], list('ABCDEFGH'), fontsize=14)
+        pyplot.xticks([x * 1.125 + 0.75 for x in xrange(12)], [str(x + 1) for x in xrange(12)], fontsize=14)
+        pyplot.yticks([y * 1.125 + 0.75 for y in xrange(8)], list('ABCDEFGH'), fontsize=14)
         pyplot.suptitle(title, fontsize=16, fontweight='bold')
         ax = pyplot.gca()
         for edge in ('bottom', 'top', 'left', 'right'):
@@ -258,8 +258,8 @@ class Plate_96Well(object):
             tic.tick1On = tic.tick2On = False
 
         (x_green, x_violet, x_gray, y_green, y_violet, y_gray) = ([], [], [], [], [], [])
-        for i in range(8):
-            for j in range(12):
+        for i in xrange(8):
+            for j in xrange(12):
                 num = i + j * 8 + 1
                 if num_to_coord(num) in self.coords:
                     tag = self._data[num][0]
@@ -464,7 +464,7 @@ class Construct_List(object):
         """Iterator through all constructs.
         """
 
-        for i in range(len(self._data)):
+        for i in xrange(len(self._data)):
             yield self._data[i]
 
 
@@ -627,7 +627,7 @@ def _draw_assembly(sequence, primers, COL_SIZE):
     seq_lines = []
     Tms = []
 
-    for i in range(N_primers):
+    for i in xrange(N_primers):
         primer = primers[:, i]
         seq_line = list(' ' * max(len(sequence), COL_SIZE))
         (seg_start, seg_end, seg_dir) = primer
@@ -660,7 +660,7 @@ def _draw_assembly(sequence, primers, COL_SIZE):
         bp_line = list(' ' * max(len(sequence), COL_SIZE))
         overlap_seq = ''
         last_bp_pos = 1
-        for j in range(len(sequence)):
+        for j in xrange(len(sequence)):
             if (seq_line_prev[j] in 'ACGT' and seq_line[j] in 'ACGT'):
                 bp_line[j] = '|'
                 last_bp_pos = j
@@ -678,13 +678,13 @@ def _draw_assembly(sequence, primers, COL_SIZE):
         seq_line_prev = seq_line
 
     print_lines = []
-    for i in range(int(math.floor((len(sequence) - 1) / COL_SIZE)) + 1):
+    for i in xrange(int(math.floor((len(sequence) - 1) / COL_SIZE)) + 1):
         start_pos = COL_SIZE * i
         end_pos = min(COL_SIZE * (i + 1), len(sequence))
         out_line = sequence[start_pos:end_pos]
         print_lines.append(('~', out_line))
 
-        for j in range(len(seq_lines)):
+        for j in xrange(len(seq_lines)):
             if (len(bp_lines[j][end_pos:].replace(' ', '')) and ('|' not in bp_lines[j][end_pos:].replace(' ', '')) and (not len(bp_lines[j][:start_pos].replace(' ', '')))):
                 bp_line = bp_lines[j][start_pos:].rstrip()
             elif ('|' not in bp_lines[j][start_pos:end_pos]):
@@ -775,7 +775,7 @@ def _get_primer_index(primer_set, sequence):
     coverage = numpy.zeros((1, len(sequence)))
     primers = numpy.zeros((3, N_primers))
 
-    for n in range(N_primers):
+    for n in xrange(N_primers):
         primer = RNA2DNA(primer_set[n])
         if n % 2:
             i = sequence.find(reverse_complement(primer))
@@ -850,8 +850,8 @@ def _print_primer_plate(plate, ref_primer):
 
 
 def _save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
-    for k in range(len(plates[0])):
-        for p in range(len(plates)):
+    for k in xrange(len(plates[0])):
+        for p in xrange(len(plates)):
             primer_sequences = plates[p][k]
             num_primers_on_plate = len(primer_sequences)
 
@@ -881,12 +881,12 @@ def _save_structures(structures, name, path='./'):
 
 
 def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
-    for k in range(len(plates[0])):
+    for k in xrange(len(plates[0])):
         file_name = os.path.join(path, '%s_plate_%d.xls' % (prefix, k + 1))
         print('Creating plate file: \033[94m%s\033[0m.' % file_name)
         workbook = xlwt.Workbook()
 
-        for p in range(len(plates)):
+        for p in xrange(len(plates)):
             primer_sequences = plates[p][k]
             num_primers_on_plate = len(primer_sequences)
 
@@ -1097,7 +1097,7 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
         plate_pos = i % 96 + 1
         well_tag = num_to_coord(plate_pos)
 
-        for p in range(len(primer_set)):
+        for p in xrange(len(primer_set)):
             wt_primer = primer_set[p]
             if mut == 'WT':
                 well_name = 'Lib%d-%s' % (which_lib, 'WT')

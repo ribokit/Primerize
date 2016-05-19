@@ -176,7 +176,7 @@ class Primerize_1D(thermo.Singleton):
             if is_success:
                 allow_forward_line = list(' ' * N_BP)
                 allow_reverse_line = list(' ' * N_BP)
-                for i in range(N_BP):
+                for i in xrange(N_BP):
                     allow_forward_line[i] = str(int(min(num_match_forward[0, i] + 1, 9)))
                     allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
@@ -226,12 +226,12 @@ def _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misp
     #                   <-----...
     #                   q
     #
-    for p in range(MIN_LENGTH, MAX_LENGTH + 1):
+    for p in xrange(MIN_LENGTH, MAX_LENGTH + 1):
         # STOP[reverse](1)
         q_min = max(1, p - MAX_LENGTH + 1)
         q_max = p
 
-        for q in range(q_min, q_max + 1):
+        for q in xrange(q_min, q_max + 1):
             if (Tm_precalculated[q - 1, p - 1] > MIN_TM):
                 scores_stop[p - 1, q - 1, 0] = (q - 1) + 2 * (p - q + 1)
                 scores_stop[p - 1, q - 1, 0] += misprime_score_weight * (misprime_score_forward[0, p - 1] + misprime_score_reverse[0, q - 1])
@@ -247,12 +247,12 @@ def _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misp
         #            <---------------------
         #            q                    N_BP
         #
-        for p in range(1, N_BP + 1):
+        for p in xrange(1, N_BP + 1):
             q_min = max(1, p - MAX_LENGTH + 1)
             q_max = p
 
             # STOP[reverse]
-            for q in range(q_min, q_max + 1):
+            for q in xrange(q_min, q_max + 1):
                 # previous primer ends had overlap with good Tm and were scored
                 if (scores_stop[p - 1, q - 1, n - 1] < MAX_SCORE):
                     i = N_BP + 1
@@ -282,25 +282,25 @@ def _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misp
         #    <------------------------
         #    q                       j
         #
-        for p in range(1, N_BP + 1):
+        for p in xrange(1, N_BP + 1):
             # STOP[forward](1)
             q_min = max(1, p - MAX_LENGTH + 1)
             q_max = p
 
             # STOP[reverse](1)
-            for q in range(q_min, q_max + 1):
+            for q in xrange(q_min, q_max + 1):
                 # previous primer ends had overlap with good Tm and were scored
                 if (scores_stop[p - 1, q - 1, n - 2] < MAX_SCORE):
                     # START[reverse](1)
                     min_j = max(p + 1, q + MIN_LENGTH - 1)
                     max_j = min(N_BP, q + MAX_LENGTH - 1)
 
-                    for j in range(min_j, max_j + 1):
+                    for j in xrange(min_j, max_j + 1):
                         # start[reverse](2)
                         min_i = max(p + 1, j - MAX_LENGTH + 1)
                         max_i = j
 
-                        for i in range(min_i, max_i + 1):
+                        for i in xrange(min_i, max_i + 1):
                             # at some PCR starge thiw will be an endpoint!
                             if (Tm_precalculated[i - 1, j - 1] > MIN_TM):
                                 potential_score = scores_stop[p - 1, q - 1, n - 2] + (i - p - 1) + 2 * (j - i + 1)
@@ -318,24 +318,24 @@ def _dynamic_programming(NUM_PRIMERS, MIN_LENGTH, MAX_LENGTH, MIN_TM, N_BP, misp
         #
 
         # START[reverse](1)
-        for j in range(1, N_BP + 1):
+        for j in xrange(1, N_BP + 1):
             # START[reverse](2)
             min_i = max(1, j - MAX_LENGTH + 1)
             max_i = j
 
-            for i in range(min_i, max_i + 1):
+            for i in xrange(min_i, max_i + 1):
                 # could also just make this 1:N_BP, but that would wast a little time.
                 if (scores_start[i - 1, j - 1, n - 2] < MAX_SCORE):
                     # STOP[reverse](1)
                     min_p = max(j + 1, i + MIN_LENGTH - 1)
                     max_p = min(N_BP, i + MAX_LENGTH - 1)
 
-                    for p in range(min_p, max_p + 1):
+                    for p in xrange(min_p, max_p + 1):
                         # STOP[reverse](2)
                         min_q = max(j + 1, p - MAX_LENGTH + 1)
                         max_q = p
 
-                        for q in range(min_q, max_q + 1):
+                        for q in xrange(min_q, max_q + 1):
                             if (Tm_precalculated[q - 1, p - 1] > MIN_TM):
                                 potential_score = scores_start[i - 1, j - 1, n - 2] + (q - j - 1) + 2 * (p - q + 1)
                                 potential_score += misprime_score_weight * (misprime_score_forward[0, p - 1] + misprime_score_reverse[0, q - 1])
@@ -366,7 +366,7 @@ def _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q,
         is_success = False
     else:
         primers[:, 2 * N_primers - 1] = [q, N_BP - 1, -1]
-        for m in range(N_primers - 1, 0, -1):
+        for m in xrange(N_primers - 1, 0, -1):
             i = choice_stop_i[p, q, m]
             j = choice_stop_j[p, q, m]
             primers[:, 2 * m] = [i, p, 1]
@@ -376,7 +376,7 @@ def _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q,
         primers[:, 0] = [0, p, 1]
         primers = primers.astype(int)
 
-        for i in range(2 * N_primers):
+        for i in xrange(2 * N_primers):
             primer_seq = sequence[primers[0, i]:primers[1, i] + 1]
             if primers[2, i] == -1:
                 primer_set.append(util.reverse_complement(primer_seq))
@@ -400,7 +400,7 @@ def _back_tracking(N_BP, sequence, scores_final, choice_start_p, choice_start_q,
 
 def _find_primers_affected(primers, pos):
     primer_list = []
-    for i in range(primers.shape[1]):
+    for i in xrange(primers.shape[1]):
         if (pos >= primers[0, i] and pos <= primers[1, i]):
             primer_list.append(i + 1)
     return primer_list

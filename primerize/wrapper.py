@@ -99,7 +99,7 @@ class Design_Single(object):
             lines = str(self).replace('\033[0m', '').replace('\033[100m', '').replace('\033[92m', '').replace('\033[93m', '').replace('\033[94m', '').replace('\033[95m', '').replace('\033[96m', '').replace('\033[41m', '')
             f.write(lines)
             f.write('#\n\n------/* IDT USER: for primer ordering, copy and paste to Bulk Input */------\n------/* START */------\n')
-            for i in range(len(self.primer_set)):
+            for i in xrange(len(self.primer_set)):
                 suffix = 'FR'[i % 2]
                 f.write('%s-%d%s\t%s\t\t25nm\tSTD\n' % (self.name, i + 1, suffix, self.primer_set[i]))
             f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
@@ -126,7 +126,7 @@ class Design_Single(object):
             key = key.lower()
             if key == 'misprime':
                 output = ''
-                for i in range(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
+                for i in xrange(int(math.floor(self._params['N_BP'] / self._params['COL_SIZE'])) + 1):
                     output += '%s\n\033[92m%s\033[0m\n%s\n\n' % (self._data['misprime_score'][0][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self.sequence[i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']], self._data['misprime_score'][1][i * self._params['COL_SIZE']:(i + 1) * self._params['COL_SIZE']])
                 return output[:-1]
 
@@ -302,8 +302,8 @@ class Design_Plate(object):
             key = key.lower()
             if key == 'plate':
                 output = ''
-                for i in range(len(self._data['plates'][0])):
-                    for j in range(len(self._data['plates'])):
+                for i in xrange(len(self._data['plates'][0])):
+                    for j in xrange(len(self._data['plates'])):
                         output += 'Plate \033[95m%d\033[0m; Primer \033[92m%d\033[0m\n' % (i + 1, j + 1)
                         output += self._data['plates'][j][i].echo(self.primer_set[j])
                 return output[:-1]

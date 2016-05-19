@@ -210,13 +210,13 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
     f_GC = numpy.zeros((N_BP, N_BP))
     len_BP = numpy.ones((N_BP, N_BP))
 
-    for i in range(N_BP):
+    for i in xrange(N_BP):
         if (numerical_sequence[0, i] in (1, 2)):
             f_GC[i, i] = 1
 
     print('Filling delH, delS matrix ...')
-    for i in range(N_BP):
-        for j in range(i + 1, N_BP):
+    for i in xrange(N_BP):
+        for j in xrange(i + 1, N_BP):
             delH_matrix[i, j] = delH_matrix[i, j - 1] + Nearest_Neighbor.delH_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
             delS_matrix[i, j] = delS_matrix[i, j - 1] + Nearest_Neighbor.delS_NN[numerical_sequence[0, j - 1], numerical_sequence[0, j]]
             len_BP[i, j] = len_BP[i, j - 1] + 1
@@ -226,8 +226,8 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
                 f_GC[i, j] += 1
 
     print('Terminal penalties ...')
-    for i in range(N_BP):
-        for j in range(i + 1, N_BP):
+    for i in xrange(N_BP):
+        for j in xrange(i + 1, N_BP):
             delH_matrix[i, j] += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, i]]
             delH_matrix[i, j] += Nearest_Neighbor.delH_AT_closing_penalty[numerical_sequence[0, j]]
 
@@ -238,8 +238,8 @@ def _precalculate_Tm(sequence, DNA_conc=0.2e-6, monovalent_conc=0.1, divalent_co
     f_GC = numpy.divide(f_GC, len_BP)
 
     print('Ionic strength corrections ...')
-    for i in range(N_BP):
-        for j in range(i, N_BP):
+    for i in xrange(N_BP):
+        for j in xrange(i, N_BP):
             Tm[i, j] = _ionic_strength_correction(Tm[i, j], monovalent_conc, divalent_conc, f_GC[i, j], len_BP[i, j])
 
     return Tm - 273.15
@@ -264,7 +264,7 @@ def calc_Tm(sequence, DNA_conc=1e-5, monovalent_conc=1.0, divalent_conc=0.0):
     delH_sum = Nearest_Neighbor.delH_init
     N_BP = len(sequence)
 
-    for i in range(N_BP - 1):
+    for i in xrange(N_BP - 1):
         delH_sum += Nearest_Neighbor.delH_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
         delS_sum += Nearest_Neighbor.delS_NN[numerical_sequence[0, i], numerical_sequence[0, i + 1]]
 

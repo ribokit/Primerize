@@ -184,11 +184,11 @@ class Primerize_2D(Singleton):
 
         assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = util.Construct_List()
-        plates = [[util.Plate_96Well(which_lib) for i in range(N_plates)] for j in range(N_primers)]
+        plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
         print('Filling out sequences ...')
 
         try:
-            for m_pos in range(-1, len(which_muts)):
+            for m_pos in xrange(-1, len(which_muts)):
                 # m is actual position along sequence
                 m = -1 if m_pos == -1 else offset + which_muts[m_pos] - 1
                 mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], util.get_mutation(sequence[m], which_lib))
