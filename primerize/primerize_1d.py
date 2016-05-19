@@ -43,8 +43,8 @@ class Primerize_1D(thermo.Singleton):
     Returns:
         ``primerize.Primerize_1D``
 
-    Notes:
-        This ``class`` follows the singleton pattern so that only one instance is created.
+    Note:
+        This ``class`` follows the singleton pattern so that only one instance is created. An instance is already initialized as ``primerize.Primerize_1D``.
     """
 
     def __init__(self, MIN_TM=60.0, NUM_PRIMERS=0, MIN_LENGTH=15, MAX_LENGTH=60, COL_SIZE=142, WARN_CUTOFF=3, prefix='primer'):

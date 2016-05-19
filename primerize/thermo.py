@@ -33,8 +33,8 @@ class Nearest_Neighbor_Parameter(Singleton):
         delH_init: ``float``
         del_init: ``float``
 
-    Notes:
-        This ``class`` follows the singleton pattern so that only one instance is created.
+    Note:
+        This ``class`` follows the singleton pattern so that only one instance is created. An instance is already initialized as ``primerize.Nearest_Neighbor``.
     """
 
     def __init__(self):
