@@ -1087,7 +1087,7 @@ def diff_bps(structures, offset=0):
     else:
         bps_all = ['%d@%d' % (y[0], y[1]) for x in structures for y in str_to_bps(x, offset)]
         bps = filter(lambda x: (bps_all.count(x) < len(structures)), set(bps_all))
-        bps = map(lambda (x, y): (int(x), int(y)), map(lambda x: x.split('@'), bps))
+        bps = [(int(x[0]), int(x[1])) for x in map(lambda x: x.split('@'), bps)]
         return sorted(bps, key=lambda x: x[0])
 
 
