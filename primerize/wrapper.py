@@ -1,10 +1,7 @@
 import math
 import os
 
-if __package__ is None or not __package__:
-    import util
-else:
-    from . import util
+from . import util
 
 
 class Design_Single(object):

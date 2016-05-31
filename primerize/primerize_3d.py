@@ -3,16 +3,10 @@ import math
 import time
 import traceback
 
-if __package__ is None or not __package__:
-    import util
-    from primerize_1d import Primerize_1D
-    from wrapper import Design_Single, Design_Plate
-    from thermo import Singleton
-else:
-    from . import util
-    from .primerize_1d import Primerize_1D
-    from .wrapper import Design_Single, Design_Plate
-    from .thermo import Singleton
+from . import util
+from .primerize_1d import Primerize_1D
+from .wrapper import Design_Single, Design_Plate
+from .thermo import Singleton
 
 
 class Primerize_3D(Singleton):
@@ -208,7 +202,8 @@ class Primerize_3D(Singleton):
         data.update({'assembly': assembly, 'constructs': constructs})
 
         bps = util.diff_bps(structures)
-        bps = filter(lambda x, y: (x - offset in which_muts and y - offset in which_muts), bps)
+        # bps = [(x, y) for (x, y) in bps if (x - offset in which_muts and y - offset in which_muts)]
+        bps = filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), bps)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': False, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})

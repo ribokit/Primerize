@@ -17,7 +17,7 @@ class TestDesignSingle(unittest.TestCase):
         self.job_1d.echo()
 
     def test_repr(self):
-        print repr(self.job_1d)
+        print(repr(self.job_1d))
 
     def test_get(self):
         self.assertEqual(map(lambda x: list(x), self.job_1d.get('WARNING')), OUTPUT['1D']['warning'])
@@ -44,7 +44,7 @@ class TestDesignPlate2(unittest.TestCase):
         self.job_2d.echo()
 
     def test_repr(self):
-        print repr(self.job_2d)
+        print(repr(self.job_2d))
 
     def test_get(self):
         self.assertEqual(self.job_2d.get('N_BP'), OUTPUT['2D']['default']['param']['N_BP'])
@@ -69,7 +69,7 @@ class TestDesignPlate3(unittest.TestCase):
         self.job_3d.echo()
 
     def test_repr(self):
-        print repr(self.job_3d)
+        print(repr(self.job_3d))
 
     def test_get(self):
         self.assertListEqual(self.job_3d.get('STRUCTURE'), [INPUT['STR_P4P6_1'], INPUT['STR_P4P6_2']])

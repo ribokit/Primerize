@@ -4,16 +4,11 @@ import numpy
 import time
 import traceback
 
-if __package__ is None or not __package__:
-    import misprime
-    import thermo
-    import util
-    from wrapper import Design_Single
-else:
-    from . import misprime
-    from . import thermo
-    from . import util
-    from .wrapper import Design_Single
+from . import misprime
+from . import thermo
+from . import util
+from .wrapper import Design_Single
+
 
 try:
     from numba import jit

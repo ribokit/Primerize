@@ -82,7 +82,7 @@ class TestUtilClass(unittest.TestCase):
         self.assertEqual(len(other), 0)
         self.assertFalse(inst.pop(['G12U']))
 
-        print inst.echo()
+        print(inst.echo())
         self.assertTrue(inst.pop(['G12C', 'A11U']))
         self.assertEqual(inst, other)
 
@@ -103,7 +103,7 @@ class TestUtilClass(unittest.TestCase):
         self.assertTrue(inst.pop('G12C'))
         self.assertEqual(len(inst), 2)
         self.assertTrue(inst.pop(primerize.Mutation(['C1A', 'G12C'])))
-        print inst.echo()
+        print(inst.echo())
 
     def test_96well_plate(self):
         inst = primerize.Plate_96Well()
@@ -119,8 +119,8 @@ class TestUtilClass(unittest.TestCase):
         self.assertRaises(KeyError, inst.get, 'A12')
         self.assertTupleEqual(inst.get('A01'), ('Lib1-A1G', 'GCCTTG'))
 
-        print repr(inst)
-        print inst.echo()
+        print(repr(inst))
+        print(inst.echo())
         inst.save()
         os.remove('plate.svg')
         inst.reset()

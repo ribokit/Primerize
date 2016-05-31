@@ -3,16 +3,10 @@ import math
 import time
 import traceback
 
-if __package__ is None or not __package__:
-    import util
-    from primerize_1d import Primerize_1D
-    from thermo import Singleton
-    from wrapper import Design_Single, Design_Plate
-else:
-    from . import util
-    from .primerize_1d import Primerize_1D
-    from .thermo import Singleton
-    from .wrapper import Design_Single, Design_Plate
+from . import util
+from .primerize_1d import Primerize_1D
+from .thermo import Singleton
+from .wrapper import Design_Single, Design_Plate
 
 
 class Primerize_2D(Singleton):
