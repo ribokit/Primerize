@@ -800,7 +800,8 @@ def get_mutation(nt, lib):
             * 1 represents "A->U, U->A, C->G, G->C",
             * 2 represents "A->C, U->C, C->A, G->A",
             * 3 represents "A->G, U->G, C->U, G->U",
-            * 4 represents "A->C, U->G, C->A, G->U".
+            * 4 represents "A->C, U->G, C->A, G->U",
+            * 5 represents "A->C, U->G, C->G, G->C".
 
     Returns:
         ``str``
@@ -809,7 +810,7 @@ def get_mutation(nt, lib):
         ValueError: For illegal **lib** input.
     """
 
-    libs = {1: 'TAGC', 2: 'CCAA', 3: 'GGTT', 4: 'CGAT'}
+    libs = {1: 'TAGC', 2: 'CCAA', 3: 'GGTT', 4: 'CGAT', 5: 'CGGC'}
     if lib not in libs:
         raise ValueError('\033[41mERROR\033[0m: Illegal value \033[95m%s\033[0m for params \033[92mwhich_lib\033[0m.\n' % lib)
     else:

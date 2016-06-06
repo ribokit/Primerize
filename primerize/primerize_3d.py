@@ -19,6 +19,7 @@ class Primerize_3D(Singleton):
 
             * 1 represents "A:U->U:A, G:C->C:G" library ("swap");
             * 4 represents "A:U->C:G, G:C->U:A" library ("cross");
+            * 5 represents "A:U->C:G, G:C->C:G" library ("stable");
 
             Note: G:U pairs are always replaced by C:G pairs.
 
@@ -96,7 +97,7 @@ class Primerize_3D(Singleton):
                 self.offset = int(value)
             elif key == 'n_mutations' and isinstance(value, (float, int)) and value in (1, 2, 3):
                 self.N_mutations = int(value)
-            elif key == 'which_lib' and isinstance(value, (float, int)) and value in (1, 4):
+            elif key == 'which_lib' and isinstance(value, (float, int)) and value in (1, 4, 5):
                 self.which_lib = int(value)
             elif key == 'is_single':
                 self.is_single = bool(value)
