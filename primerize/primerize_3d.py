@@ -233,6 +233,7 @@ class Primerize_3D(Singleton):
                 constructs.push(mut_list_l)
                 constructs.push(mut_list_r)
             constructs.push(mut_list_l + mut_list_r)
+        N_constructs = len(constructs)
 
         try:
             plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
