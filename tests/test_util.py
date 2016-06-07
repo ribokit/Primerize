@@ -10,10 +10,11 @@ class TestUtilFunc(unittest.TestCase):
         self.assertListEqual(which_muts, range(102, 261 + 1))
 
     def test_bps(self):
-        self.assertListEqual(primerize.util.diff_bps('.....(((((.....))))).....'), [(6, 20), (7, 19), (8, 18), (9, 17), (10, 16)])
-        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((......).))).....'], 10), [(-1, 6), (-1, 7), (0, 6)])
-        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((......).))).....'], -10), [(19, 27), (19, 26), (20, 26)])
-        self.assertListEqual(primerize.util.diff_bps('.....[[(((...]]..))).....'), [(6, 15), (7, 14), (8, 20), (9, 19), (10, 18)])
+        self.assertListEqual(primerize.util.diff_bps('.....(((((.....))))).....'), [[(6, 20), (7, 19), (8, 18), (9, 17), (10, 16)]])
+        self.assertListEqual(primerize.util.diff_bps('.....((.((.....)).)).....'), [[(9, 17), (10, 16)], [(6, 20), (7, 19)]])
+        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((......).))).....'], 10), [[(-1, 7), (0, 6)], [(-1, 6)]])
+        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((......).))).....'], -10), [[(19, 27), (20, 26)], [(19, 26)]])
+        self.assertListEqual(primerize.util.diff_bps('.....[[(((...]]..))).....'), [[(6, 15), (7, 14)], [(8, 20), (9, 19), (10, 18)]])
         self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....(((((.....))))).....']), [])
 
     def test_get_mut(self):

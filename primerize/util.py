@@ -1021,8 +1021,9 @@ def _draw_str_region(sequence, structures, bps, params):
         illustration_2 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
         illustration_3 += '\033[91m|%s\033[0m' % (' ' * len(fragments[2]))
 
+    bps = [bp for helix in bps for bp in helix]
     for structure in structures:
-        this_bps = str_to_bps(structure)
+        this_bps = [bp for helix in str_to_bps(structure) for bp in helix]
         this_bps = filter(lambda x: (x in bps), this_bps)
         bps = filter(lambda x: (x not in this_bps), bps)
         this_bps = [nt for bp in this_bps for nt in bp]
