@@ -1045,10 +1045,10 @@ def str_to_bps(structure, offset=0):
         offset: ``int``: `(Optional)` Index numbering offset for output numbers.
 
     Returns:
-        ``list(tuple(int, int))``
+        ``list(list(tuple(int, int)))``: List of helices, and each helix is a list of tuple of base-pairs with their ``seqpos``.
     """
 
-    (lbs, lbs_pk, bps) = ([], [], [])
+    (lbs, lbs_pk, bps, bps_pk, helices) = ([], [], [], [], [])
 
     for i, char in enumerate(structure):
         if char == '(':
@@ -1059,12 +1059,19 @@ def str_to_bps(structure, offset=0):
         elif char == '[':
             lbs_pk.append(i + 1 - offset)
         elif char == ']':
-            bps.append((lbs_pk[-1], i + 1 - offset))
+            bps_pk.append((lbs_pk[-1], i + 1 - offset))
             lbs_pk.pop(-1)
+        else:
+            if len(bps):
+                helices.append(sorted(bps, key=lambda x: x[0]))
+                bps = []
+            elif len(bps_pk):
+                helices.append(sorted(bps_pk, key=lambda x: x[0]))
+                bps_pk = []
 
     if lbs or lbs_pk:
         raise ValueError('\033[41mERROR\033[0m: Unbalanced \033[92mstructure\033[0m "\033[95m%s\033[0m".\n' % structure)
-    return list(sorted(bps, key=lambda x: x[0]))
+    return helices
 
 
 def diff_bps(structures, offset=0):
@@ -1075,7 +1082,7 @@ def diff_bps(structures, offset=0):
         offst: ``int``: `(Optional)` Index numbering offset for output numbers.
 
     Returns:
-        ``list(tuple(int, int))``
+        ``list(list(tuple(int, int)))``: List of helices, and each helix is a list of tuple of base-pairs with their ``seqpos``.
     """
 
     if isinstance(structures, str): structures = [structures]
@@ -1083,10 +1090,13 @@ def diff_bps(structures, offset=0):
     if len(structures) == 1:
         return str_to_bps(structures[0], offset)
     else:
-        bps_all = ['%d@%d' % (y[0], y[1]) for x in structures for y in str_to_bps(x, offset)]
+        helix_all = [helix for structure in structures for helix in str_to_bps(structure, offset)]
+        bps_all = ['%d@%d' % (bp[0], bp[1]) for helix in helix_all for bp in helix]
         bps = filter(lambda x: (bps_all.count(x) < len(structures)), set(bps_all))
         bps = [(int(x[0]), int(x[1])) for x in map(lambda x: x.split('@'), bps)]
-        return sorted(bps, key=lambda x: x[0])
+
+        helix_all = [filter(lambda x: x in bps, helix) for helix in helix_all]
+        return filter(len, helix_all)
 
 
 def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1, is_fillWT=False):

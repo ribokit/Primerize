@@ -203,36 +203,37 @@ class Primerize_3D(Singleton):
         data.update({'assembly': assembly, 'constructs': constructs})
 
         bps = util.diff_bps(structures)
-        # bps = [(x, y) for (x, y) in bps if (x - offset in which_muts and y - offset in which_muts)]
-        bps = filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), bps)
+        bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
+        bps = filter(lambda x: len(x), bps)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': False, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
-
-        N_constructs = (len(bps) - N_mutations + 1) * (is_single * 2 + 1) + 1
+        N_constructs = (sum(map(len, bps)) - N_mutations + 1) * (is_single * 2 + 1) + 1
         constructs.push('WT')
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
         plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
 
-        for i in xrange(len(bps) - N_mutations + 1):
-            (mut_list_l, mut_list_r) = ([], [])
+        for helix in bps:
+            for i in xrange(len(helix) - N_mutations + 1):
+                (mut_list_l, mut_list_r) = ([], [])
 
-            for j in xrange(N_mutations):
-                if sequence[bps[i + j][0] - 1] == 'G' and sequence[bps[i + j][1] - 1] == 'T':
-                    mut_list_l.append('G%dC' % (bps[i + j][0] - offset))
-                    mut_list_r.append('T%dG' % (bps[i + j][1] - offset))
-                elif sequence[bps[i + j][0] - 1] == 'T' and sequence[bps[i + j][1] - 1] == 'G':
-                    mut_list_l.append('T%dG' % (bps[i + j][0] - offset))
-                    mut_list_r.append('G%dC' % (bps[i + j][1] - offset))
-                else:
-                    mut_list_l.append('%s%d%s' % (sequence[bps[i + j][0] - 1], bps[i + j][0] - offset, util.get_mutation(sequence[bps[i + j][0] - 1], which_lib)))
-                    mut_list_r.append('%s%d%s' % (sequence[bps[i + j][1] - 1], bps[i + j][1] - offset, util.get_mutation(sequence[bps[i + j][1] - 1], which_lib)))
+                for j in xrange(N_mutations):
+                    (nt_1, nt_2) = (sequence[helix[i + j][0] - 1], sequence[helix[i + j][1] - 1])
+                    if nt_1 == 'G' and nt_2 == 'T':
+                        mut_list_l.append('G%dC' % (helix[i + j][0] - offset))
+                        mut_list_r.append('T%dG' % (helix[i + j][1] - offset))
+                    elif nt_1 == 'T' and nt_2 == 'G':
+                        mut_list_l.append('T%dG' % (helix[i + j][0] - offset))
+                        mut_list_r.append('G%dC' % (helix[i + j][1] - offset))
+                    else:
+                        mut_list_l.append('%s%d%s' % (nt_1, helix[i + j][0] - offset, util.get_mutation(nt_1, which_lib)))
+                        mut_list_r.append('%s%d%s' % (nt_2, helix[i + j][1] - offset, util.get_mutation(nt_2, which_lib)))
 
-            if is_single:
-                constructs.push(mut_list_l)
-                constructs.push(mut_list_r)
-            constructs.push(mut_list_l + mut_list_r)
+                if is_single:
+                    constructs.push(mut_list_l)
+                    constructs.push(mut_list_r)
+                constructs.push(mut_list_l + mut_list_r)
         N_constructs = len(constructs)
 
         try:
