@@ -51,7 +51,7 @@ html_compact_lists = True
 html_last_updated_fmt = '%b %d, %Y'
 html_search_language = 'en'
 
-html_title = project + version + ' : PCR Assembly Primer Design'
+html_title = project + ' ' + version + ' : PCR Assembly Primer Design'
 html_short_title = project + ' Documentation'
 html_logo = None
 html_extra_path = []
