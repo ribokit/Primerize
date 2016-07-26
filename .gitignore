@@ -2,6 +2,8 @@ build/
 dist/
 docs/build
 docs/source/_theme
+tests/*.svg
+tests/*.xls
 
 primerize.egg-info/
 *.pyc

@@ -239,12 +239,13 @@ class Plate_96Well(object):
         """
 
         fig = pyplot.figure()
-        pyplot.axes().set_aspect('equal')
+        ax = pyplot.subplot(111)
+        ax.set_aspect('equal')
         pyplot.axis([0, 13.875, 0, 9.375])
         pyplot.xticks([x * 1.125 + 0.75 for x in xrange(12)], [str(x + 1) for x in xrange(12)], fontsize=14)
         pyplot.yticks([y * 1.125 + 0.75 for y in xrange(8)], list('ABCDEFGH'), fontsize=14)
-        pyplot.suptitle(title, fontsize=16, fontweight='bold')
-        ax = pyplot.gca()
+        fig.suptitle(title, fontsize=16, fontweight='bold')
+
         for edge in ('bottom', 'top', 'left', 'right'):
             ax.spines[edge].set_color('w')
         ax.invert_yaxis()
@@ -273,12 +274,15 @@ class Plate_96Well(object):
                 else:
                     x_gray.append(j * 1.125 + 0.75)
                     y_gray.append(i * 1.125 + 0.75)
-        pyplot.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
-        pyplot.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
-        pyplot.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
+        ax.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
+        ax.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
+        ax.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
 
         matplotlib.rcParams['svg.fonttype'] = 'none'
+        matplotlib.rcParams['xtick.labelsize'] = 14
+        matplotlib.rcParams['ytick.labelsize'] = 14
         pyplot.savefig(file_name, orientation='landscape', format='svg')
+        pyplot.close(fig)
 
 
 
