@@ -1,4 +1,12 @@
 function mutate_primers( primers, muts );
+% mutate_primers( primers, muts );
+%
+% Inputs
+%
+%  primers = cell of strings that hold primers (forward, reverse, forward, reverse, etc.)
+%  muts    = alignment of sequences: name first, space, then sequence
+% 
+% (C) R. Das 2009-2016
 
 if ~iscell( muts )
   [muts, sequence_names] = read_sequences( muts );
