@@ -142,7 +142,6 @@ class Primerize_2D(Singleton):
         data = {'plates': [], 'assembly': [], 'constructs': []}
 
         is_success = True
-        assembly = {}
         primer_set = map(util.RNA2DNA, primer_set)
         if not primer_set:
             if is_force:

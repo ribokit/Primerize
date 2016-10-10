@@ -334,7 +334,7 @@ class Mutation(object):
         """
 
         for k in self._data.keys():
-            yield k
+            yield k, self._data[k]
 
     def __contains__(self, mut_str):
         """Test if a list of given mutation is present.
@@ -351,8 +351,8 @@ class Mutation(object):
         flag = False
 
         for mut in mut_str:
-            seq_org = mut[0]
-            seq_mut = mut[-1]
+            seq_org = RNA2DNA(mut[0])
+            seq_mut = RNA2DNA(mut[-1])
             seq_pos = int(mut[1:-1])
 
             flag = seq_pos in self._data and self._data[seq_pos] == (seq_org, seq_mut)
@@ -372,8 +372,8 @@ class Mutation(object):
         for mut in mut_str:
             if mut == 'WT': continue
 
-            seq_org = mut[0]
-            seq_mut = mut[-1]
+            seq_org = RNA2DNA(mut[0])
+            seq_mut = RNA2DNA(mut[-1])
             seq_pos = int(mut[1:-1])
             self._data[seq_pos] = (seq_org, seq_mut)
 
@@ -1109,6 +1109,7 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
         plate_num = int(math.floor(i / 96.0))
         plate_pos = i % 96 + 1
         well_tag = num_to_coord(plate_pos)
+        is_valid = mut.list()
 
         for p in xrange(len(primer_set)):
             wt_primer = primer_set[p]
@@ -1118,18 +1119,26 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
                 continue
 
             mut_primer = reverse_complement(wt_primer) if primers[2, p] == -1 else wt_primer
-            for k in mut:
+            for k, seq in mut:
                 k = k + offset - 1
                 if (k >= primers[0, p] and k <= primers[1, p]):
                     m_shift = int(k - primers[0, p])
                     mut_primer = list(mut_primer)
-                    mut_primer[m_shift] = get_mutation(mut_primer[m_shift], which_lib)
+                    if seq[0] != mut_primer[m_shift]:
+                        raise ValueError('\033[41mERROR\033[0m: Mismatch of \033[94mMutation\033[0m %s with input sequence "\033[95m%s\033[0m" at positon \033[92m%d\033[0m.\n' % (mut, mut_primer[m_shift], k))
+                    mut_primer[m_shift] = seq[1]
                     mut_primer = ''.join(mut_primer)
+
+                    seq = '%s%d%s' % (seq[0], k - offset + 1, seq[1])
+                    if seq in is_valid: is_valid.remove(seq)
 
             mut_primer = reverse_complement(mut_primer) if primers[2, p] == -1 else mut_primer
             if mut_primer != wt_primer or is_fillWT:
-                well_name = 'Lib%d-%s' % (which_lib, mut.echo()) if mut_primer != wt_primer else 'Lib%d-%s' % (which_lib, 'WT')
+                well_name = 'Lib%d-%s' % (which_lib, mut) if mut_primer != wt_primer else 'Lib%d-%s' % (which_lib, 'WT')
                 plates[p][plate_num].set(well_tag, mut, mut_primer)
+
+        for m in is_valid:
+            print('\033[93mWARNING\033[0m: Unmatched \033[94mMutation\033[0m position \033[92m%s\033[0m in construct %s.\n' % (m, mut))
 
     return plates
 
