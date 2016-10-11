@@ -29,12 +29,21 @@ xlwt >= 1.0.0
 
 To speed up **Primerize** code, we take advantage of [`@jit`](http://numba.pydata.org/numba-doc/0.23.1/user/jit.html) decorator of [`numba`](http://numba.pydata.org/) on loop optimization. **This is totally optional.** Enabling such feature may speed up the run for up to _10x_.
 
-`numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. The compatibility between `numba`, `llvmlite`, and `llvm` needs to pay special attention to. The below specified `numba` and `llvmlite` versions have been tested to work with `llvm 3.6.2` on *Linux* machines. (Newer version combinations may work, but we haven't test since.)
+`numba` requires [`llvm`](http://llvm.org/), which can be installed through [`apt-get`](https://help.ubuntu.com/lts/serverguide/apt-get.html) on *Linux* or [`brew`](http://brew.sh/) on Mac *OSX*. It also requires `llvmlite`, which can be installed through `pip`. The compatibility between `numba`, `llvmlite`, and `llvm` needs to pay special attention to. The below specified `numba` and `llvmlite` versions have been tested to work with `llvm 3.6.2` on *Linux* machines.
 
 ```json
 llvmlite == 0.8.0
 numba == 0.23.1
 ```
+
+Or the following works with `llvm 3.7.1`.
+
+```json
+llvmlite == 0.12.1
+numba == 0.27.0
+```
+
+Newer version combinations may work, but we haven't test since.
 
 #### Test
 
@@ -60,20 +69,18 @@ job_1d = prm_1d.design('TTCTAATACGACTCACTATAGGCCAAAGGCGUCGAGUAGACGCCAACAACGGAAUU
 if job_1d.is_success:
 	print job_1d
 
-prm_2d = primerize.Primerize_2D
-job_2d = prm_2d.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_lib=1)
+job_2d = primerize.Primerize_2D.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_lib=1)
 if job_2d.is_success:
 	print job_2d
 	job_2d.save()
 
-prm_3d = primerize.Primerize_3D
-job_3d = prm_3d.design(job_1d, offset=-51, structures=['...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................'], N_mutations=1, which_lib=1, is_single=True, is_fillWT=True)
+job_3d = primerize.Primerize_3D.design(job_1d, offset=-51, structures=['...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................'], N_mutations=1, which_lib=1, is_single=True, is_fillWT=True)
 if job_3d.is_success:
     print job_3d
     job_3d.save()
 ```
 
-For advanced users, the returned `Design_Single` and `Design_Plate` result classes offer methods for `get()`, `save()` and `echo()`:
+For advanced users, the returned `Design_Single` and `Design_Plate` result classes (refer to the [**Documentation**](https://daslab.github.io/Primerize/primerize.wrapper)) offer methods for `get()`, `save()` and `echo()`:
 
 ```python
 MIN_TM = job_1d.get('MIN_TM')
@@ -104,6 +111,25 @@ prm_1d.reset()
 ```
 
 There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the [**Documentation**](https://daslab.github.io/Primerize/primerize.util).
+
+Additionally, you can specify your customized list of mutations through the `Primerize_Custom` factory instance:
+
+```python
+mut_list = primerize.util.Construct_List()
+mut_list.push(['T120C'])
+job_cm = primerize.Primerize_Custom.design(job_1d, offset=-51, mut_list=mut_list)
+```
+
+More importantly, you can use the `merge()` method of `Construct_List` to combine multiple results into one:
+
+```python
+mut_list = job_2d.get('CONSTRUCT')
+mut_list.merge(job_3d.get('CONSTRUCT'))
+job_cm = primerize.Primerize_Custom.design(job_1d, offset=-51, mut_list=mut_list)
+if job_cm.is_success:
+    print job_2d
+    job_2d.save()
+```
 
 
 #### MATLAB Code _(Deprecated)_
