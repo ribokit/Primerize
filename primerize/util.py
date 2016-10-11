@@ -523,6 +523,26 @@ class Construct_List(object):
         return False
 
 
+    def merge(self, other):
+        """Merge 2 lists of constructs.
+
+        Args:
+            other: ``primerize.util.Construct_List``: Another list of construct.
+
+        Returns:
+            ``primerize.util.Construct_List``: A list of duplicated constructs between inputs.
+        """
+
+        if not isinstance(other, Construct_List): 
+            raise TypeError('\033[41mERROR\033[0m: Illegal input type for \033[94m%s.merge()\033[0m.\n' % self.__class__)
+        repeated = Construct_List()
+        for mut in other:
+            flag = self.push(mut)
+            if not flag: repeated.push(mut)
+        repeated.pop('WT')
+        return repeated
+
+
     def list(self):
         """Return a list of all constructs.
 

@@ -93,6 +93,10 @@ class TestUtilClass(unittest.TestCase):
     def test_construct_list(self):
         inst = primerize.Construct_List()
         self.assertEqual(len(inst), 1)
+        inst.pop('WT')
+        self.assertEqual(len(inst), 0)
+
+        inst = primerize.Construct_List()
         self.assertEqual(inst._data[0], 'WT')
         inst.push(primerize.util.Mutation('G12C'))
         self.assertFalse(inst.push('G12C'))
@@ -109,6 +113,14 @@ class TestUtilClass(unittest.TestCase):
         self.assertEqual(len(inst), 3)
         self.assertTrue(inst.pop(primerize.Mutation(['C1A', 'G12C'])))
         print(inst.echo())
+
+        other = primerize.Construct_List()
+        other.push('C11A')
+        inst.merge(other)
+        self.assertEqual(len(inst), 3)
+        repeat = inst.merge(other)
+        self.assertEqual(len(inst), 3)
+        self.assertEqual(len(repeat), 1)
 
     def test_96well_plate(self):
         inst = primerize.Plate_96Well()
