@@ -4,7 +4,7 @@ function mutate_primers( primers, muts );
 % Inputs
 %
 %  primers = cell of strings that hold primers (forward, reverse, forward, reverse, etc.)
-%  muts    = alignment of sequences: name first, space, then sequence
+%  muts    = alignment of sequences: sequence first, space, then name
 % 
 % (C) R. Das 2009-2016
 
