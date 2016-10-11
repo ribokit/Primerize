@@ -184,8 +184,8 @@ class Primerize_2D(Singleton):
             for m_pos in xrange(-1, len(which_muts)):
                 # m is actual position along sequence
                 m = -1 if m_pos == -1 else offset + which_muts[m_pos] - 1
-                mut_name = 'WT' if m == -1 else '%s%d%s' % (sequence[m], which_muts[m_pos], util.get_mutation(sequence[m], which_lib))
-                constructs.push(mut_name)
+                if m != -1:
+                    constructs.push('%s%d%s' % (sequence[m], which_muts[m_pos], util.get_mutation(sequence[m], which_lib)))
 
             plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')

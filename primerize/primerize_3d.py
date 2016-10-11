@@ -209,7 +209,6 @@ class Primerize_3D(Singleton):
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': False, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         N_constructs = (sum(map(len, bps)) - N_mutations + 1) * (is_single * 2 + 1) + 1
-        constructs.push('WT')
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
         plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
 

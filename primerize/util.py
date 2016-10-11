@@ -290,7 +290,7 @@ class Mutation(object):
     """Collection of mutations for a construct.
 
     Args:
-        mut_list: ``list(str)``: `(Optional)` List of mutations. When nonspecified, an empty instance is created; when specified, it calls ``push()``.
+        mut_list: ``list(str)``: `(Optional)` List of mutations. When nonspecified, an empty instance is created; when specified, it calls ``push()``. An empty instance means no mutations, i.e. Wild-type.
 
     Attributes:
         _data: Data of mutations, in format of ``dict: { int: tuple(str, str) }``, i.e. ``dict: {'seqpos': ('wt_char', 'mut_char') }``.
@@ -365,16 +365,21 @@ class Mutation(object):
         """Add a list of mutations.
 
         Args:
-            mut_list: ``list(str)``: Mutations. Valid keywords are the same as ``has()``. Each ``'seq_pos'`` can only be mutated once. Conflicting mutations are overwritten and the most recent one is saved.
+            mut_list: ``list(str)``: Mutations. Valid keywords are the same as ``has()``. Each ``'seq_pos'`` can only be mutated once. Conflicting mutations are overwritten and the most recent one is saved. ``'WT'`` is ignored.
+
+        Raises:
+            ValueError: For illegal Mutation.
         """
 
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
         for mut in mut_str:
             if mut == 'WT': continue
 
-            seq_org = RNA2DNA(mut[0])
-            seq_mut = RNA2DNA(mut[-1])
+            seq_org = complement(complement(RNA2DNA(mut[0])))
+            seq_mut = complement(complement(RNA2DNA(mut[-1])))
             seq_pos = int(mut[1:-1])
+            if seq_org == seq_mut:
+                raise ValueError('\033[41mERROR\033[0m: Unchanged sequence identity by \033[94mMutation\033[0m \033[92m%s\033[0m.\n' % mut)
             self._data[seq_pos] = (seq_org, seq_mut)
 
 
@@ -428,14 +433,14 @@ class Mutation(object):
 
 
 class Construct_List(object):
-    """Collection of mutant constructs.
+    """Collection of mutant constructs. An empty isntance of ``primerize.util.Mutation`` is always initiated as the first element, i.e. a Wild-type well as the first of list.
 
     Attributes:
         _data: Data of constructs, in format of ``list(primerize.util.Mutation)``.
     """
 
     def __init__(self):
-        self._data = []
+        self._data = [Mutation()]
 
     def __repr__(self):
         """Representation of the ``Construct_List`` class.
@@ -1138,7 +1143,7 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
                 plates[p][plate_num].set(well_tag, mut, mut_primer)
 
         for m in is_valid:
-            print('\033[93mWARNING\033[0m: Unmatched \033[94mMutation\033[0m position \033[92m%s\033[0m in construct %s.\n' % (m, mut))
+            print('\033[93mWARNING\033[0m: Unmatched (or out of bound) \033[94mMutation\033[0m position \033[92m%s\033[0m in construct %s.\n' % (m, mut))
 
     return plates
 

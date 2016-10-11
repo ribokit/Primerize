@@ -200,6 +200,8 @@ class Design_Plate(object):
             self._data['illustration'] = util._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
             self._data['illustration'] = util._draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
+        else:
+            self._data['illustration'] = {'lines': ''}
 
     def __repr__(self):
         """Representation of the ``Design_Plate`` class.
