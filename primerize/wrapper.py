@@ -2,6 +2,7 @@ import math
 import os
 
 from . import util
+from . import util_server
 
 
 class Design_Single(object):
@@ -197,9 +198,9 @@ class Design_Plate(object):
             setattr(self, key_rename, init_dict[key])
 
         if self.get('TYPE') == 'Mutate-and-Map':
-            self._data['illustration'] = util._draw_region(self.sequence, self._params)
+            self._data['illustration'] = util_server._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
-            self._data['illustration'] = util._draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
+            self._data['illustration'] = util_server._draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
         else:
             self._data['illustration'] = {'lines': ''}
 
