@@ -473,7 +473,6 @@ class Construct_List(object):
         for i in xrange(len(self._data)):
             yield self._data[i]
 
-
     def __contains__(self, mut_list):
         """Test if a list of given mutant construct is present.
 
@@ -995,6 +994,7 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
         plate_num = int(math.floor(i / 96.0))
         plate_pos = i % 96 + 1
         well_tag = num_to_coord(plate_pos)
+        # keep track of unmatched mutations
         is_valid = mut.list()
 
         for p in xrange(len(primer_set)):
@@ -1010,6 +1010,7 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
                 if (k >= primers[0, p] and k <= primers[1, p]):
                     m_shift = int(k - primers[0, p])
                     mut_primer = list(mut_primer)
+                    # check for mismatch in mutations
                     if seq[0] != mut_primer[m_shift]:
                         raise ValueError('\033[41mERROR\033[0m: Mismatch of \033[94mMutation\033[0m %s with input sequence "\033[95m%s\033[0m" at positon \033[92m%d\033[0m.\n' % (mut, mut_primer[m_shift], k))
                     mut_primer[m_shift] = seq[1]

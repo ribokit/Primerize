@@ -145,5 +145,17 @@
         "diff": {
             "plate": 26
         }
+    },
+    "custom": {
+        "normal": {
+            "param": {
+                "N_BP": 259, 
+                "N_CONSTRUCT": 4, 
+                "N_PLATE": 1, 
+                "N_PRIMER": 8, 
+                "offset": -51, 
+                "type": "Custom"
+            }
+        }
     }
 }
