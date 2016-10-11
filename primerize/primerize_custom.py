@@ -10,6 +10,19 @@ from .thermo import Singleton
 
 
 class Primerize_Custom(Singleton):
+    """Construct a worker for Custom Primer Design (Custom Plates).
+
+    Args:
+        offset: ``int``: `(Optional)` Sequence numbering offset, which is one minus the final number of the first nucleotide.
+        COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
+        prefix: ``str``: `(Optional)` Construct prefix/name.
+
+    Returns:
+        ``primerize.Primerize_Custom``
+
+    Note:
+        This ``class`` follows the singleton pattern so that only one instance is created. An instance is already initialized as ``primerize.Primerize_Custom``.
+    """
 
     def __init__(self, offset=0, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
@@ -81,6 +94,17 @@ class Primerize_Custom(Singleton):
 
 
     def design(self, sequence, primer_set=[], mut_list=[], offset=None, prefix=None, is_force=False):
+        """Run design code to get customized plates for input sequence and specified list of constructs. Current worker parameters are used for nonspecified optional arguments.
+
+        Args:
+            job_1d: ``primerize.Design_Single``: Result of ``primerize.Primerize_1D.design()``. Its ``sequence``, ``primer_set``, and ``prefix`` are used.
+            mut_list: ``primerize.util.Construct_List``: List of constructs for design.
+            offset: ``int``: `(Optional)` Sequence numbering offset.
+
+        Returns:
+            ``primerize.Design_Plate``
+        """
+
         if isinstance(sequence, Design_Single):
             design_1d = sequence
             sequence = design_1d.sequence

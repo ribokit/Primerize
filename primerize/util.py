@@ -368,7 +368,7 @@ class Mutation(object):
             mut_list: ``list(str)``: Mutations. Valid keywords are the same as ``has()``. Each ``'seq_pos'`` can only be mutated once. Conflicting mutations are overwritten and the most recent one is saved. ``'WT'`` is ignored.
 
         Raises:
-            ValueError: For illegal Mutation.
+            ValueError: For illegal **mut_str**.
         """
 
         if isinstance(mut_str, (str, unicode)): mut_str = [mut_str]
@@ -401,6 +401,22 @@ class Mutation(object):
             else:
                 return False
         return True
+
+
+    def merge(self, other):
+        """Merge 2 lists of mutations.
+
+        Args:
+            other: ``primerize.util.Mutation``: Another list of mutations.
+
+        Raises:
+            TypeError: For illegal **other**.
+        """
+
+        if not isinstance(other, Mutation):
+            raise TypeError('\033[41mERROR\033[0m: Illegal input type for \033[94m%s.merge()\033[0m.\n' % self.__class__)
+        for mut in other.list():
+            self.push(mut)
 
 
     def list(self):
@@ -527,13 +543,16 @@ class Construct_List(object):
         """Merge 2 lists of constructs.
 
         Args:
-            other: ``primerize.util.Construct_List``: Another list of construct.
+            other: ``primerize.util.Construct_List``: Another list of constructs.
 
         Returns:
             ``primerize.util.Construct_List``: A list of duplicated constructs between inputs.
+
+        Raises:
+            TypeError: For illegal **other**.
         """
 
-        if not isinstance(other, Construct_List): 
+        if not isinstance(other, Construct_List):
             raise TypeError('\033[41mERROR\033[0m: Illegal input type for \033[94m%s.merge()\033[0m.\n' % self.__class__)
         repeated = Construct_List()
         for mut in other:
@@ -601,6 +620,9 @@ def complement(sequence):
 
     Returns:
         ``str``: String of complement DNA strand.
+
+    Raises:
+        ValueError: For illegal **sequence**.
     """
 
     rc_dict = {'A': 'T', 'T': 'A', 'C': 'G', 'G': 'C', 'U': 'A'}

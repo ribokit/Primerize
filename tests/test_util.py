@@ -90,6 +90,13 @@ class TestUtilClass(unittest.TestCase):
         self.assertEqual(inst, other)
         self.assertRaises(ValueError, inst.push, 'G12G')
 
+        other.push('A100C')
+        inst.merge(other)
+        self.assertEqual(inst, other)
+        other = primerize.Mutation(['C99G', 'G101T'])
+        inst.merge(other)
+        self.assertNotEqual(inst, other)
+
     def test_construct_list(self):
         inst = primerize.Construct_List()
         self.assertEqual(len(inst), 1)
