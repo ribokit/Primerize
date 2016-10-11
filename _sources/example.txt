@@ -12,19 +12,17 @@ For simple Primer Design tasks, follow this example:
     if job_1d.is_success:
         print job_1d
 
-    prm_2d = primerize.Primerize_2D
-    job_2d = prm_2d.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_lib=1)
+    job_2d = primerize.Primerize_2D.design(job_1d, offset=-51, which_muts=range(102, 261 + 1), which_lib=1)
     if job_2d.is_success:
         print job_2d
         job_2d.save()
 
-    prm_3d = primerize.Primerize_3D
-    job_3d = prm_3d.design(job_1d, offset=-51, structures=['...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................'], N_mutations=1, which_lib=1, is_single=True, is_fillWT=True)
+    job_3d = primerize.Primerize_3D.design(job_1d, offset=-51, structures=['...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................'], N_mutations=1, which_lib=1, is_single=True, is_fillWT=True)
     if job_3d.is_success:
         print job_3d
         job_3d.save()
 
-For advanced users, the returned ``Design_Single`` and ``Design_Plate`` result classes offer methods for ``get()``, ``save()`` and ``echo()``:
+For advanced users, the returned ``Design_Single`` and ``Design_Plate`` result classes (please refer to the `Documentation <../primerize.wrapper>`_) offer methods for ``get()``, ``save()`` and ``echo()``:
 
 .. code-block:: python
 
@@ -55,3 +53,23 @@ Besides ``design()``, the ``Primerize_1D``, ``Primerize_2D``, and ``Primerize_3D
     prm_1d.reset()
 
 There are also ``Assembly``, ``Mutation``, ``Construct_List``, and ``Plate_96Well`` helper classes. For more details, please refer to the `Documentation <../primerize.util>`_.
+
+
+Additionally, you can specify your customized list of mutations through the ``Primerize_Custom`` factory instance:
+
+.. code-block:: python
+
+    mut_list = primerize.util.Construct_List()
+    mut_list.push(['T120C'])
+    job_cm = primerize.Primerize_Custom.design(job_1d, offset=-51, mut_list=mut_list)
+
+More importantly, you can use the ``merge()`` method of ``Construct_List`` to combine multiple results into one:
+
+.. code-block:: python
+
+    mut_list = job_2d.get('CONSTRUCT')
+    mut_list.merge(job_3d.get('CONSTRUCT'))
+    job_cm = primerize.Primerize_Custom.design(job_1d, offset=-51, mut_list=mut_list)
+    if job_cm.is_success:
+        print job_2d
+        job_2d.save()

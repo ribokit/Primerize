@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     
-    <title>Example Scripts &mdash; Primerize 1.4.1 : PCR Assembly Primer Design | RiboKit</title>
+    <title>Example Scripts &mdash; Primerize 1.5.2 : PCR Assembly Primer Design | RiboKit</title>
     
 
     
@@ -24,7 +24,10 @@
 
     
     
-      <link rel="top" title="Primerize 1.4.1 : PCR Assembly Primer Design" href="index.html"/>
+          <link rel="index" title="Index"
+                href="genindex.html"/>
+          <link rel="search" title="Search" href="search.html"/>
+      <link rel="top" title="Primerize 1.5.2 : PCR Assembly Primer Design" href="index.html"/>
           <link rel="next" title="Modules" href="content.html"/>
           <link rel="prev" title="Installation" href="install.html"/> 
 
@@ -70,7 +73,7 @@
     
       
       
-        <div class="version"><span>1.4.1</span></div>
+        <div class="version"><span>1.5.2</span></div>
       
     
 
@@ -125,20 +128,18 @@
 <span class="k">if</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">job_1d</span>
 
-<span class="n">prm_2d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_2D</span>
-<span class="n">job_2d</span> <span class="o">=</span> <span class="n">prm_2d</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">which_muts</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="mi">261</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">job_2d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_2D</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">which_muts</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="mi">261</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">job_2d</span>
     <span class="n">job_2d</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 
-<span class="n">prm_3d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_3D</span>
-<span class="n">job_3d</span> <span class="o">=</span> <span class="n">prm_3d</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">structures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................&#39;</span><span class="p">],</span> <span class="n">N_mutations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_single</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_fillWT</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">job_3d</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_3D</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">structures</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;...........................((((((.....))))))...........((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...)).............((((((.....))))))......................&#39;</span><span class="p">],</span> <span class="n">N_mutations</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">which_lib</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">is_single</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">is_fillWT</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">job_3d</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
     <span class="k">print</span> <span class="n">job_3d</span>
     <span class="n">job_3d</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>For advanced users, the returned <code class="docutils literal"><span class="pre">Design_Single</span></code> and <code class="docutils literal"><span class="pre">Design_Plate</span></code> result classes offer methods for <code class="docutils literal"><span class="pre">get()</span></code>, <code class="docutils literal"><span class="pre">save()</span></code> and <code class="docutils literal"><span class="pre">echo()</span></code>:</p>
+<p>For advanced users, the returned <code class="docutils literal"><span class="pre">Design_Single</span></code> and <code class="docutils literal"><span class="pre">Design_Plate</span></code> result classes (please refer to the <a class="reference external" href="../primerize.wrapper">Documentation</a>) offer methods for <code class="docutils literal"><span class="pre">get()</span></code>, <code class="docutils literal"><span class="pre">save()</span></code> and <code class="docutils literal"><span class="pre">echo()</span></code>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">MIN_TM</span> <span class="o">=</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MIN_TM&#39;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MISPRIME&#39;</span><span class="p">)</span>
 <span class="k">print</span> <span class="n">job_1d</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="s1">&#39;WARNING&#39;</span><span class="p">)</span>
@@ -165,6 +166,21 @@
 </pre></div>
 </div>
 <p>There are also <code class="docutils literal"><span class="pre">Assembly</span></code>, <code class="docutils literal"><span class="pre">Mutation</span></code>, <code class="docutils literal"><span class="pre">Construct_List</span></code>, and <code class="docutils literal"><span class="pre">Plate_96Well</span></code> helper classes. For more details, please refer to the <a class="reference external" href="../primerize.util">Documentation</a>.</p>
+<p>Additionally, you can specify your customized list of mutations through the <code class="docutils literal"><span class="pre">Primerize_Custom</span></code> factory instance:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mut_list</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Construct_List</span><span class="p">()</span>
+<span class="n">mut_list</span><span class="o">.</span><span class="n">push</span><span class="p">([</span><span class="s1">&#39;T120C&#39;</span><span class="p">])</span>
+<span class="n">job_cm</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_Custom</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">mut_list</span><span class="o">=</span><span class="n">mut_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>More importantly, you can use the <code class="docutils literal"><span class="pre">merge()</span></code> method of <code class="docutils literal"><span class="pre">Construct_List</span></code> to combine multiple results into one:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">mut_list</span> <span class="o">=</span> <span class="n">job_2d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRUCT&#39;</span><span class="p">)</span>
+<span class="n">mut_list</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">job_3d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;CONSTRUCT&#39;</span><span class="p">))</span>
+<span class="n">job_cm</span> <span class="o">=</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Primerize_Custom</span><span class="o">.</span><span class="n">design</span><span class="p">(</span><span class="n">job_1d</span><span class="p">,</span> <span class="n">offset</span><span class="o">=-</span><span class="mi">51</span><span class="p">,</span> <span class="n">mut_list</span><span class="o">=</span><span class="n">mut_list</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">job_cm</span><span class="o">.</span><span class="n">is_success</span><span class="p">:</span>
+    <span class="k">print</span> <span class="n">job_2d</span>
+    <span class="n">job_2d</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -187,7 +203,7 @@
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Aug 13, 2016.
+      <small>Last updated on</small> Oct 10, 2016.
       
     </p>
 
@@ -211,7 +227,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'1.4.1',
+              VERSION:'1.5.2',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
               HAS_SOURCE:  true
