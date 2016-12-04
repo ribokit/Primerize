@@ -31,9 +31,30 @@ Table of Contents
 
 ----------
 
+Experimental Protocol
+----------------------------
+
+Please visit the **Primerize** server for a complete guidance on primer designs and RNA synthesis:
+
+* `DNA template design <https://primerize.stanford.edu/protocol/#temp_design>`_
+
+* `IDT oligo ordering <https://primerize.stanford.edu/protocol/#IDT>`_
+
+* `PCR assembly <https://primerize.stanford.edu/protocol/#PCR>`_
+
+* `_in vitro_ transcription <https://primerize.stanford.edu/protocol/#TX>`_
+
+* `Massively parallel preparation <https://primerize.stanford.edu/protocol/#par_prep>`_
+
+----------
+
 Reference
 ----------------------------
 
+| Tian, S., and Das, R. (**2016**)
+| `Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping. <>`_
+| *Bioinformatics* **in press**.
+|
 | Tian, S., Yesselman, J.D., Cordero, P., and Das, R. (**2015**)
 | `Primerize: Automated Primer Assembly for Transcribing Interesting RNAs. <http://nar.oxfordjournals.org/content/43/W1/W522.full>`_
 | *Nucleic Acid Research* **43 (W1)**: W522-W526.

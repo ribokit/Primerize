@@ -138,7 +138,9 @@ Instructions on *MATLAB* usage is available at old [README.md](https://github.co
 
 ## Documentation
 
-Documentation is available at https://daslab.github.io/Primerize/ or https://primerize.stanford.edu/docs/.
+Code Documentation is available at https://daslab.github.io/Primerize/ or https://primerize.stanford.edu/docs/.
+
+Experimental Protocol is available at https://primerize.stanford.edu/protocol/.
 
 ## License
 
