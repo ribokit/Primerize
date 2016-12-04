@@ -42,7 +42,7 @@ Please visit the **Primerize** server for a complete guidance on primer designs 
 
 * `PCR assembly <https://primerize.stanford.edu/protocol/#PCR>`_
 
-* `_in vitro_ transcription <https://primerize.stanford.edu/protocol/#TX>`_
+* `in vitro transcription <https://primerize.stanford.edu/protocol/#TX>`_
 
 * `Massively parallel preparation <https://primerize.stanford.edu/protocol/#par_prep>`_
 
@@ -52,7 +52,7 @@ Reference
 ----------------------------
 
 | Tian, S., and Das, R. (**2016**)
-| `Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping. <>`_
+| `Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping. <https://daslab.stanford.edu>`_
 | *Bioinformatics* **in press**.
 |
 | Tian, S., Yesselman, J.D., Cordero, P., and Das, R. (**2015**)
@@ -67,4 +67,4 @@ Reference
 
 Developed by **Das lab**, `Leland Stanford Junior University`.
 
-README by `t47 <http://t47.io/>`_, *January 2016*.
+README by `t47 <https://t47.io/>`_, *January 2016*.
