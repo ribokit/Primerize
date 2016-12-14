@@ -27,6 +27,24 @@ class TestUtilFunc(unittest.TestCase):
         for i, nt in enumerate('ACGT'):
             self.assertEqual(primerize.util.get_mutation(nt, 4), 'CATG'[i])
 
+    def test_valid_pair(self):
+        self.assertTrue(primerize.util.valid_WC_pair('A', 'U'))
+        self.assertTrue(primerize.util.valid_WC_pair('A', 'T'))
+        self.assertTrue(primerize.util.valid_WC_pair('U', 'A'))
+        self.assertTrue(primerize.util.valid_WC_pair('T', 'A'))
+        self.assertTrue(primerize.util.valid_WC_pair('C', 'G'))
+        self.assertTrue(primerize.util.valid_WC_pair('G', 'C'))
+        self.assertTrue(primerize.util.valid_WC_pair('G', 'U'))
+        self.assertTrue(primerize.util.valid_WC_pair('G', 'T'))
+        self.assertTrue(primerize.util.valid_WC_pair('U', 'G'))
+        self.assertTrue(primerize.util.valid_WC_pair('T', 'G'))
+        self.assertFalse(primerize.util.valid_WC_pair('U', 'U'))
+        self.assertFalse(primerize.util.valid_WC_pair('A', 'A'))
+        self.assertFalse(primerize.util.valid_WC_pair('C', 'C'))
+        self.assertFalse(primerize.util.valid_WC_pair('G', 'G'))
+        self.assertFalse(primerize.util.valid_WC_pair('C', 'A'))
+        self.assertFalse(primerize.util.valid_WC_pair('C', 'U'))
+
     def test_num2coord(self):
         self.assertEqual(primerize.util.num_to_coord(1), 'A01')
         self.assertEqual(primerize.util.num_to_coord(96), 'H12')
