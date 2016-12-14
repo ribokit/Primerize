@@ -922,10 +922,14 @@ def _save_construct_key(keys, name, path='./', prefix=''):
     open(os.path.join(path, '%s_keys.txt' % name), 'w').write(lines)
 
 
-def _save_structures(structures, name, path='./'):
+def _save_structures(structures, warnings, sequence, offset, name, path='./'):
     print('Creating structures file ...')
-    lines = '\n'.join(structures)
-    open(os.path.join(path, '%s_structures.txt' % name), 'w').write(lines)
+    lines = structures
+    if warnings:
+        lines.extend(['', 'WARNINGS:', ''])
+        for pair in warnings:
+            lines.append('Mismatch in base-pair between %s%d and %s%d.' % (sequence[pair[0] - 1], pair[0] - offset, sequence[pair[1] - 1], pair[1] - offset))
+    open(os.path.join(path, '%s_structures.txt' % name), 'w').write('\n'.join(lines))
 
 
 def _save_plates_excel(plates, ref_primer=[], prefix='', path='./'):
@@ -1071,5 +1075,19 @@ def _mutate_primers(plates, primers, primer_set, offset, constructs, which_lib=1
 
     return plates
 
+
+def valid_WC_pair(nt_1, nt_2):
+    """Check if two nucleotides form a valid Watson-Crick base-pair.
+
+    Args:
+        nt_1: ``str``: Nucleotide.
+        nt_2: ``str``: Nucleotide.
+
+    Returns:
+        ``bool``
+    """
+
+    pair = ''.join(sorted([DNA2RNA(nt_1), DNA2RNA(nt_2)]))
+    return pair in ['AU', 'CG', 'GU']
 
 

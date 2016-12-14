@@ -199,7 +199,8 @@ class Primerize_3D(Singleton):
 
         assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = util.Construct_List()
-        data.update({'assembly': assembly, 'constructs': constructs})
+        warnings = []
+        data.update({'assembly': assembly, 'constructs': constructs, 'warnings': warnings})
 
         bps = util.diff_bps(structures)
         bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
@@ -225,6 +226,8 @@ class Primerize_3D(Singleton):
                         mut_list_l.append('T%dG' % (helix[i + j][0] - offset))
                         mut_list_r.append('G%dC' % (helix[i + j][1] - offset))
                     else:
+                        if not util.valid_WC_pair(nt_1, nt_2):
+                            warnings.append((helix[i + j][0], helix[i + j][1]))
                         mut_list_l.append('%s%d%s' % (nt_1, helix[i + j][0] - offset, util.get_mutation(nt_1, which_lib)))
                         mut_list_r.append('%s%d%s' % (nt_2, helix[i + j][1] - offset, util.get_mutation(nt_2, which_lib)))
 
@@ -243,7 +246,7 @@ class Primerize_3D(Singleton):
             print('\033[41mERROR\033[0m: Primerize 3D design() encountered error.\n')
 
         params.update({'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
-        data.update({'plates': plates, 'constructs': constructs, 'bps': bps})
+        data.update({'plates': plates, 'constructs': constructs, 'bps': bps, 'warnings': warnings})
         return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
 
