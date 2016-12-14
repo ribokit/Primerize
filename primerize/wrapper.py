@@ -320,8 +320,11 @@ class Design_Plate(object):
                 return self._data['assembly'].echo()
             elif key == 'region':
                 structures = '\n'.join(self._data['illustration']['lines'])
-                warnings = util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset'])
-                return structures if not warnings else '%s\n\n%s\n' % (structures, warnings)
+                if self.get('TYPE') == 'Mutation/Rescue':
+                    warnings = util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset'])
+                    return structures if not warnings else '%s\n\n%s\n' % (structures, warnings)
+                else:
+                    return structures
 
             elif not key:
                 return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')

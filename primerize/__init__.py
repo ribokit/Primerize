@@ -15,4 +15,4 @@ Primerize_2D = Primerize_2D()
 Primerize_3D = Primerize_3D()
 Primerize_Custom = Primerize_Custom()
 
-__all__ = ['Primerize_1D', 'Primerize_2D', 'Primerize_3D', 'Primerize_Custom', 'Design_Single', 'Design_Plate', 'misprime', 'Nearest_Neighbor', 'Singleton', 'Assembly', 'Plate_96Well', 'Mutation', 'Construct_List', 'util']
+__all__ = ['Primerize_1D', 'Primerize_2D', 'Primerize_3D', 'Primerize_Custom', 'Design_Single', 'Design_Plate', 'Nearest_Neighbor', 'Singleton', 'Assembly', 'Plate_96Well', 'Mutation', 'Construct_List', 'misprime', 'util']
