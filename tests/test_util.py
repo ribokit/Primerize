@@ -16,6 +16,8 @@ class TestUtilFunc(unittest.TestCase):
         self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((......).))).....'], -10), [[(19, 27), (20, 26)], [(19, 26)]])
         self.assertListEqual(primerize.util.diff_bps('.....[[(((...]]..))).....'), [[(6, 15), (7, 14)], [(8, 20), (9, 19), (10, 18)]])
         self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....(((((.....))))).....']), [])
+        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....(((((.....))))).....'], flag=False), [[(6, 20), (7, 19), (8, 18), (9, 17), (10, 16)]])
+        self.assertListEqual(primerize.util.diff_bps(['.....(((((.....))))).....', '.....((((.(...).)))).....'], flag=False), [[(6, 20), (7, 19), (8, 18), (9, 17), (10, 16)], [(11, 15)]])
 
     def test_get_mut(self):
         for i, nt in enumerate('ACGT'):
