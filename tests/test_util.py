@@ -78,8 +78,8 @@ class TestUtilFunc(unittest.TestCase):
         self.assertRaises(ValueError, primerize.util.complement, 'ABCDE')
 
     def test_suffix(self):
-        self.assertIn('R', primerize.util._primer_suffix(1))
-        self.assertIn('F', primerize.util._primer_suffix(2))
+        self.assertIn('R', primerize.util_func._primer_suffix(1))
+        self.assertIn('F', primerize.util_func._primer_suffix(2))
 
 
 class TestUtilClass(unittest.TestCase):
@@ -125,7 +125,7 @@ class TestUtilClass(unittest.TestCase):
 
         inst = primerize.Construct_List()
         self.assertEqual(inst._data[0], 'WT')
-        inst.push(primerize.util.Mutation('G12C'))
+        inst.push(primerize.Mutation('G12C'))
         self.assertFalse(inst.push('G12C'))
         self.assertTrue(inst.push('A11U'))
         self.assertTrue(inst.push(primerize.Mutation(['C1A', 'G12C'])))
