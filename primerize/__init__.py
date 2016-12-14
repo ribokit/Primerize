@@ -1,5 +1,5 @@
 from .thermo import Nearest_Neighbor, Singleton
-from .util import Assembly, Plate_96Well, Mutation, Construct_List
+from .util_class import Assembly, Plate_96Well, Mutation, Construct_List
 from .wrapper import Design_Single, Design_Plate
 
 from .primerize_1d import Primerize_1D
@@ -7,7 +7,7 @@ from .primerize_2d import Primerize_2D
 from .primerize_3d import Primerize_3D
 from .primerize_custom import Primerize_Custom
 
-__version__ = '1.5.4'
+__version__ = '1.6.0'
 
 
 Primerize_1D = Primerize_1D()

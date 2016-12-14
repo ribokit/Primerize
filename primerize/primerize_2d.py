@@ -4,6 +4,8 @@ import time
 import traceback
 
 from . import util
+from . import util_class
+from . import util_func
 from .primerize_1d import Primerize_1D
 from .thermo import Singleton
 from .wrapper import Design_Single, Design_Plate
@@ -170,14 +172,14 @@ class Primerize_2D(Singleton):
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers, 'N_PLATE': N_plates, 'N_CONSTRUCT': N_constructs})
 
-        (primers, is_success) = util._get_primer_index(primer_set, sequence)
+        (primers, is_success) = util_func._get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
-        assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
-        constructs = util.Construct_List()
-        plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
+        assembly = util_class.Assembly(sequence, primers, name, self.COL_SIZE)
+        constructs = util_class.Construct_List()
+        plates = [[util_class.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
         print('Filling out sequences ...')
 
         try:
@@ -187,7 +189,7 @@ class Primerize_2D(Singleton):
                 if m != -1:
                     constructs.push('%s%d%s' % (sequence[m], which_muts[m_pos], util.get_mutation(sequence[m], which_lib)))
 
-            plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
+            plates = util_func._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize 2D design() finished.\n')
         except:
             is_success = False

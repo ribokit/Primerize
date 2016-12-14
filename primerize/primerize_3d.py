@@ -4,6 +4,8 @@ import time
 import traceback
 
 from . import util
+from . import util_class
+from . import util_func
 from .primerize_1d import Primerize_1D
 from .wrapper import Design_Single, Design_Plate
 from .thermo import Singleton
@@ -199,26 +201,26 @@ class Primerize_3D(Singleton):
         N_primers = len(primer_set)
         params.update({'which_muts': which_muts, 'which_lib': which_lib, 'N_PRIMER': N_primers})
 
-        (primers, is_success) = util._get_primer_index(primer_set, sequence)
+        (primers, is_success) = util_func._get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
-        assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
-        constructs = util.Construct_List()
+        assembly = util_class.Assembly(sequence, primers, name, self.COL_SIZE)
+        constructs = util_class.Construct_List()
         warnings = []
         data.update({'assembly': assembly, 'constructs': constructs, 'warnings': warnings})
 
         bps = util.diff_bps(structures, flag=is_exclude)
         bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
-        bps = filter(lambda x: len(x), bps)
+        bps = filter(len, bps)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': False, 'primer_set': primer_set, 'structures': structures, 'params': params, 'data': data})
 
         N_constructs = (sum(map(len, bps)) - N_mutations + 1) * (is_single * 2 + 1) + 1
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-        plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
+        plates = [[util_class.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
 
         for helix in bps:
             for i in xrange(len(helix) - N_mutations + 1):
@@ -245,7 +247,7 @@ class Primerize_3D(Singleton):
         N_constructs = len(constructs)
 
         try:
-            plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
+            plates = util_func._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib, is_fillWT)
             print('\033[92mSUCCESS\033[0m: Primerize 3D design() finished.\n')
         except:
             is_success = False

@@ -4,6 +4,8 @@ import time
 import traceback
 
 from . import util
+from . import util_class
+from . import util_func
 from .primerize_1d import Primerize_1D
 from .wrapper import Design_Single, Design_Plate
 from .thermo import Singleton
@@ -98,7 +100,7 @@ class Primerize_Custom(Singleton):
 
         Args:
             job_1d: ``primerize.Design_Single``: Result of ``primerize.Primerize_1D.design()``. Its ``sequence``, ``primer_set``, and ``prefix`` are used.
-            mut_list: ``primerize.util.Construct_List``: List of constructs for design.
+            mut_list: ``primerize.Construct_List``: List of constructs for design.
             offset: ``int``: `(Optional)` Sequence numbering offset.
 
         Returns:
@@ -124,7 +126,7 @@ class Primerize_Custom(Singleton):
         data = {'plates': [], 'assembly': [], 'constructs': []}
 
         is_success = True
-        if not isinstance(mut_list, util.Construct_List):
+        if not isinstance(mut_list, util_class.Construct_List):
             is_success = False
             print('\033[41mFAIL\033[0m: \033[91mIllegal\033[0m type of given \033[92mmut_list\033[0m. Should be \033[94mConstruct_List\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
@@ -148,22 +150,22 @@ class Primerize_Custom(Singleton):
 
         N_primers = len(primer_set)
         params.update({'N_PRIMER': N_primers})
-        (primers, is_success) = util._get_primer_index(primer_set, sequence)
+        (primers, is_success) = util_func._get_primer_index(primer_set, sequence)
         if not is_success:
             print('\033[41mFAIL\033[0m: \033[91mMismatch\033[0m of given \033[92mprimer_set\033[0m for given \033[92msequence\033[0m.\n')
             return Design_Plate({'sequence': sequence, 'name': name, 'is_success': is_success, 'primer_set': primer_set, 'params': params, 'data': data})
 
-        assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
+        assembly = util_class.Assembly(sequence, primers, name, self.COL_SIZE)
         constructs = mut_list
         data.update({'assembly': assembly, 'constructs': constructs})
 
         which_lib = 0
         N_constructs = len(constructs)
         N_plates = int(math.floor((N_constructs - 1) / 96.0) + 1)
-        plates = [[util.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
+        plates = [[util_class.Plate_96Well(which_lib) for i in xrange(N_plates)] for j in xrange(N_primers)]
 
         try:
-            plates = util._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
+            plates = util_func._mutate_primers(plates, primers, primer_set, offset, constructs, which_lib)
             print('\033[92mSUCCESS\033[0m: Primerize Custom design() finished.\n')
         except:
             is_success = False

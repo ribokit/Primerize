@@ -2,6 +2,7 @@ import math
 import os
 
 from . import util
+from . import util_func
 from . import util_server
 
 
@@ -29,7 +30,7 @@ class Design_Single(object):
                 dict: {
                     'misprime_score': [str, str],
                     'warnings': list(tuple(int, int, int, int)),
-                    'assembly': primerize.util.Assembly
+                    'assembly': primerize.Assembly
                 }
     """
 
@@ -137,16 +138,16 @@ class Design_Single(object):
             elif key == 'warning':
                 output = ''
                 for warning in self._data['warnings']:
-                    p_1 = '\033[100m%d\033[0m%s' % (warning[0], util._primer_suffix(warning[0] - 1))
-                    p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, util._primer_suffix(x - 1)) for x in warning[3])
+                    p_1 = '\033[100m%d\033[0m%s' % (warning[0], util_func._primer_suffix(warning[0] - 1))
+                    p_2 = ', '.join('\033[100m%d\033[0m%s' % (x, util_func._primer_suffix(x - 1)) for x in warning[3])
                     output += '\033[93mWARNING\033[0m: Primer %s can misprime with %d-residue overlap to position %s, which is covered by primers: %s\n' % (p_1.rjust(4), warning[1], str(int(warning[2])).rjust(3), p_2)
                 return output[:-1]
 
             elif key == 'primer':
                 output = '%s%s\tSEQUENCE\n' % ('PRIMERS'.ljust(20), 'LENGTH'.ljust(10))
                 for i, primer in enumerate(self.primer_set):
-                    name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, util._primer_suffix(i))
-                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(primer)).ljust(10), util._primer_suffix(i).replace(' R', primer).replace(' F', primer))
+                    name = '%s-\033[100m%s\033[0m%s' % (self.name, i + 1, util_func._primer_suffix(i))
+                    output += '%s\033[93m%s\033[0m\t%s\n' % (name.ljust(39), str(len(primer)).ljust(10), util_func._primer_suffix(i).replace(' R', primer).replace(' F', primer))
                 return output[:-1]
 
             elif key == 'assembly':
@@ -187,9 +188,9 @@ class Design_Plate(object):
         _data: Data of assembly solution, in format of ::
 
                 dict: {
-                    'constructs': primerize.util.Construct_List,
-                    'plates': list(list(primerize.util.Plate_96Well)),
-                    'assembly': primerize.util.Assembly,
+                    'constructs': primerize.Construct_List,
+                    'plates': list(list(primerize.Plate_96Well)),
+                    'assembly': primerize.Assembly,
                     'illustration': { 'labels': list(str), 'fragments': list(str), 'lines': tuple(str) },
                 }
 
@@ -273,15 +274,15 @@ class Design_Plate(object):
             name = self.name if name is None else name
             key = key.lower()
             if key == 'table':
-                util._save_plates_excel(self._data['plates'], self.primer_set, name, path)
+                util_func._save_plates_excel(self._data['plates'], self.primer_set, name, path)
             elif key == 'image':
-                util._save_plate_layout(self._data['plates'], self.primer_set, name, path)
+                util_func._save_plate_layout(self._data['plates'], self.primer_set, name, path)
             elif key == 'constructs':
-                util._save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
+                util_func._save_construct_key(self._data['constructs'], name, path, self._params['which_lib'])
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
             elif key == 'structures' and self.get('TYPE') == 'Mutation/Rescue':
-                util._save_structures(self.structures, self._data['warnings'], self.sequence, self._params['offset'], name, path)
+                util_func._save_structures(self.structures, self._data['warnings'], self.sequence, self._params['offset'], name, path)
 
             elif not key:
                 keys = ['table', 'image', 'constructs', 'assembly']

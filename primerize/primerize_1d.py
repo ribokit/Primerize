@@ -7,6 +7,7 @@ import traceback
 from . import misprime
 from . import thermo
 from . import util
+from . import util_class
 from .wrapper import Design_Single
 
 
@@ -176,7 +177,7 @@ class Primerize_1D(thermo.Singleton):
                     allow_reverse_line[i] = str(int(min(num_match_reverse[0, i] + 1, 9)))
 
                 misprime_score = [''.join(allow_forward_line).strip(), ''.join(allow_reverse_line).strip()]
-                assembly = util.Assembly(sequence, primers, name, self.COL_SIZE)
+                assembly = util_class.Assembly(sequence, primers, name, self.COL_SIZE)
                 print('\033[92mSUCCESS\033[0m: Primerize 1D design() finished.\n')
             else:
                 print('\033[41mFAIL\033[0m: \033[41mNO Solution\033[0m found under given contraints.\n')
