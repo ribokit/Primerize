@@ -23,6 +23,7 @@ class Primerize_3D(Singleton):
 
             Note: G:U pairs are always replaced by C:G pairs.
 
+        is_exclude: ``bool``: `(Optional)` Flag for whether exclude shared helices across structures.
         is_single: ``bool``: `(Optional)` Flag for whether include single mutants on the plate.
         is_fillWT: ``bool``: `(Optional)` Flag for whether include Wild-type primers at all WellPositions.
         COL_SIZE: ``int``: `(Optional)` Column width for assembly output. Positive number only.
@@ -35,11 +36,12 @@ class Primerize_3D(Singleton):
         This ``class`` follows the singleton pattern so that only one instance is created. An instance is already initialized as ``primerize.Primerize_3D``.
     """
 
-    def __init__(self, offset=0, N_mutations=1, which_lib=1, is_single=True, is_fillWT=False, COL_SIZE=142, prefix='lib'):
+    def __init__(self, offset=0, N_mutations=1, which_lib=1, is_exclude=False, is_single=True, is_fillWT=False, COL_SIZE=142, prefix='lib'):
         self.prefix = prefix
         self.offset = offset
         self.N_mutations = max(min(N_mutations, 3), 1)
         self.which_lib = max(min(which_lib, 4), 1)
+        self.is_exclude = bool(is_exclude)
         self.is_single = bool(is_single)
         self.is_fillWT = bool(is_fillWT)
         self.COL_SIZE = max(COL_SIZE, 0)
@@ -55,7 +57,7 @@ class Primerize_3D(Singleton):
         """Get current worker parameters.
 
         Args:
-            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'N_mutations'``, ``'which_lib'``, ``'is_single'``, ``'is_fillWT'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive.
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'N_mutations'``, ``'which_lib'``, ``'is_exclude'``, ``'is_single'``, ``'is_fillWT'``, ``'COL_SIZE'``, ``'prefix'``; case insensitive.
 
         Returns:
             value of specified **key**.
@@ -99,6 +101,8 @@ class Primerize_3D(Singleton):
                 self.N_mutations = int(value)
             elif key == 'which_lib' and isinstance(value, (float, int)) and value in (1, 4, 5):
                 self.which_lib = int(value)
+            elif key == 'is_exclude':
+                self.is_exclude = bool(value)
             elif key == 'is_single':
                 self.is_single = bool(value)
             elif key == 'is_fillwt':
@@ -119,12 +123,13 @@ class Primerize_3D(Singleton):
         self.offset = 0
         self.N_mutations = 1
         self.which_lib = 1
+        self.is_exclude = False
         self.is_single = True
         self.is_fillWT = False
         self.COL_SIZE = 142
 
 
-    def design(self, sequence, primer_set=[], structures=[], offset=None, N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_single=None, is_fillWT=False, is_force=False):
+    def design(self, sequence, primer_set=[], structures=[], offset=None, N_mutations=None, which_lib=None, which_muts=[], prefix=None, is_exclude=None, is_single=None, is_fillWT=None, is_force=False):
         """Run design code to get library plates for input sequence and structures according to specified library options. Current worker parameters are used for nonspecified optional arguments.
 
         Args:
@@ -134,6 +139,7 @@ class Primerize_3D(Singleton):
             N_mutations: ``int``: `(Optional)` Number of consecutive mutations for "single mutants".
             which_lib: ``int``: `(Optional)` Mutation library choice.
             which_muts: ``list(int)``: `(Optional)` Array of mutation positions. Use numbering based on ``offset``. When nonspecified, the entire sequence is included for mutagenesis.
+            is_exclude: ``bool``: `(Optional)` Flag for whether exclude shared helices across structures.
             is_single: ``bool``: `(Optional)` Flag for whether include single mutants on the plate.
             is_fillWT: ``bool``: `(Optional)` Flag for whether include Wild-type primers at all WellPositions.
 
@@ -151,6 +157,7 @@ class Primerize_3D(Singleton):
         structures = [structures] if isinstance(structures, str) else structures
         N_mutations = self.N_mutations if N_mutations is None else N_mutations
         which_lib = self.which_lib if which_lib is None else which_lib
+        is_exclude = self.is_exclude if is_exclude is None else is_exclude
         is_single = self.is_single if is_single is None else is_single
         is_fillWT = self.is_fillWT if is_fillWT is None else is_fillWT
         prefix = self.prefix if prefix is None else prefix
@@ -163,7 +170,7 @@ class Primerize_3D(Singleton):
         name = prefix
         sequence = util.RNA2DNA(sequence)
         N_BP = len(sequence)
-        params = {'offset': offset, 'which_lib': which_lib, 'is_single': is_single, 'is_fillWT': is_fillWT, 'N_MUTATION': N_mutations, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
+        params = {'offset': offset, 'which_lib': which_lib, 'is_exclude': is_exclude, 'is_single': is_single, 'is_fillWT': is_fillWT, 'N_MUTATION': N_mutations, 'N_BP': N_BP, 'type': 'Mutation/Rescue'}
         data = {'plates': [], 'assembly': [], 'constructs': [], 'bps': []}
 
         is_success = True
@@ -202,7 +209,7 @@ class Primerize_3D(Singleton):
         warnings = []
         data.update({'assembly': assembly, 'constructs': constructs, 'warnings': warnings})
 
-        bps = util.diff_bps(structures)
+        bps = util.diff_bps(structures, flag=is_exclude)
         bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
         bps = filter(lambda x: len(x), bps)
         if not bps:
@@ -262,6 +269,7 @@ def main():
     group1.add_argument('-u', metavar='MUT_END', type=int, help='Last Position of Mutagenesis (Inclusive), numbering with OFFSET applied', dest='mut_end', default=None)
     group1.add_argument('-n', metavar='N_MUTATION', type=int, choices=(1, 2, 3), help='Number of mutations for "single mutant" {1, 2, 3}', dest='N_mutations', default=1)
     group1.add_argument('-w', metavar='LIB', type=int, choices=(1, 4), help='Mutation Library Choices {1, 4}, GU pairs will be mutated to CG pairs', dest='which_lib', default=1)
+    group1.add_argument('-x', '--exclude', action='store_true', dest='is_exclude', help='Exclude shared helices')
     group1.add_argument('-g', '--single', action='store_true', dest='is_single', help='Include single mutants')
     group1.add_argument('-f', '--fill', action='store_true', dest='is_fillWT', help='Fill Wild-Type primers')
     group2 = parser.add_argument_group('commandline options')
@@ -278,7 +286,7 @@ def main():
     args.structures = [] if args.structures is None else args.structures[0]
 
     prm = Primerize_3D()
-    res = prm.design(args.sequence, args.primer_set, args.structures, args.offset, args.N_mutations, args.which_lib, which_muts, args.prefix, args.is_single, args.is_fillWT, True)
+    res = prm.design(args.sequence, args.primer_set, args.structures, args.offset, args.N_mutations, args.which_lib, which_muts, args.prefix, args.is_exclude, args.is_single, args.is_fillWT, True)
     if res.is_success:
         if not args.is_quiet:
             print(res)

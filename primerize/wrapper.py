@@ -182,7 +182,7 @@ class Design_Plate(object):
         structures: ``list(str)``: Strings of input secondary structures.
         _params: Input parameters, in format of ``dict: { 'offset': int, 'which_muts': list(int), 'which_lib': list(int), 'N_PRIMER': int, 'N_PLATE': int, 'N_CONSTRUCT': int, 'N_BP': int, 'type': str }``.
 
-            For ``primerize.Primerize_3D.design()`` results, it also has ``'N_MUTATION': int, 'is_single': bool, 'is_fillWT': bool``.
+            For ``primerize.Primerize_3D.design()`` results, it also has ``'N_MUTATION': int, 'is_exclude': bool, 'is_single': bool, 'is_fillWT': bool``.
 
         _data: Data of assembly solution, in format of ::
 
@@ -193,7 +193,7 @@ class Design_Plate(object):
                     'illustration': { 'labels': list(str), 'fragments': list(str), 'lines': tuple(str) },
                 }
 
-            For ``primerize.Primerize_3D.design()`` results, it also has ``'bps': list(tuple(int, int))`` and ``'warnings': list(tuple(int, int))``.
+            For ``primerize.Primerize_3D.design()`` results, it also has ``'bps': list(tuple(int, int)), 'warnings': list(tuple(int, int))``.
     """
 
     def __init__(self, init_dict):
@@ -230,7 +230,7 @@ class Design_Plate(object):
         """Get result parameters.
 
         Args:
-            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'STRUCTURE'`` and ``'WARNING'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'is_exclude'``, ``'is_signle'``, ``'is_fillWT'``, ``'STRUCTURE'`` and ``'WARNING'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
 
         Returns:
             value of specified **key**.

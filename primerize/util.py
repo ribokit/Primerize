@@ -1010,12 +1010,13 @@ def str_to_bps(structure, offset=0):
     return helices
 
 
-def diff_bps(structures, offset=0):
+def diff_bps(structures, offset=0, flag=True):
     """Find base-pairs that are not present in all secondary structure inputs. Each input secondary structure is compared to all the others.
 
     Args:
         structures: ``list(str)``: Input secondary structures.
         offst: ``int``: `(Optional)` Index numbering offset for output numbers.
+        flag: ``bool``: `(Optional)` Overriding flag for excluding shared helices.
 
     Returns:
         ``list(list(tuple(int, int)))``: List of helices, and each helix is a list of tuple of base-pairs with their ``seqpos``.
@@ -1028,10 +1029,16 @@ def diff_bps(structures, offset=0):
     else:
         helix_all = [helix for structure in structures for helix in str_to_bps(structure, offset)]
         bps_all = ['%d@%d' % (bp[0], bp[1]) for helix in helix_all for bp in helix]
-        bps = filter(lambda x: (bps_all.count(x) < len(structures)), set(bps_all))
+        if flag:
+            bps = filter(lambda x: (bps_all.count(x) < len(structures)), set(bps_all))
+        else:
+            bps = set(bps_all)
         bps = [(int(x[0]), int(x[1])) for x in map(lambda x: x.split('@'), bps)]
 
-        helix_all = [filter(lambda x: x in bps, helix) for helix in helix_all]
+        for i in xrange(len(helix_all)):
+            helix = helix_all[i]
+            helix_all[i] = filter(lambda x: x in bps, helix)
+            bps = filter(lambda x: x not in helix, bps)
         return filter(len, helix_all)
 
 
