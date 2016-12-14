@@ -149,7 +149,7 @@ def _draw_region(sequence, params):
     return {'labels': labels, 'fragments': fragments, 'lines': (illustration_1, illustration_2, illustration_3)}
 
 
-def _draw_str_region(sequence, structures, bps, params):
+def _draw_str_region(sequence, structures, bps, warnings, params):
     offset = params['offset']
     start = params['which_muts'][0] + offset - 1
     end = params['which_muts'][-1] + offset - 1
@@ -168,11 +168,16 @@ def _draw_str_region(sequence, structures, bps, params):
         this_bps = [bp for helix in util.str_to_bps(structure) for bp in helix]
         this_bps = filter(lambda x: (x in bps), this_bps)
         bps = filter(lambda x: (x not in this_bps), bps)
-        this_bps = [nt for bp in this_bps for nt in bp]
+        this_nts = [nt for bp in this_bps for nt in bp]
+        mismatch = filter(lambda x: (x in this_bps), warnings)
+        this_mis = [nt for bp in mismatch for nt in bp]
 
         for i, nt in enumerate(structure):
-            if i + 1 in this_bps:
-                illustration_str += '\033[41m%s\033[0m' % nt
+            if i + 1 in this_nts:
+                if i + 1 in this_mis:
+                    illustration_str += '\033[41m%s\033[0m' % nt
+                else:
+                    illustration_str += '\033[43m%s\033[0m' % nt
             else:
                 illustration_str += nt
         illustration_str += '\n'

@@ -1,7 +1,6 @@
 import math
 import os
 
-from . import util
 from . import util_func
 from . import util_server
 
@@ -207,9 +206,8 @@ class Design_Plate(object):
         if self.get('TYPE') == 'Mutate-and-Map':
             self._data['illustration'] = util_server._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
-            self._data['illustration'] = util_server._draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
-            for pair in self._data['warnings']:
-                print('\033[93mWARNING\033[0m: Mismatch in base-pair between \033[96m%s\033[0m\033[93m%s\033[0m and \033[96m%s\033[0m\033[93m%s\033[0m.' % (self.sequence[pair[0] - 1], pair[0] - self._params['offset'], self.sequence[pair[1] - 1], pair[1] - self._params['offset']))
+            self._data['illustration'] = util_server._draw_str_region(self.sequence, self.structures, self._data['bps'], self._data['warnings'], self._params)
+            print util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset'])
         else:
             self._data['illustration'] = {'lines': ''}
 
@@ -321,7 +319,9 @@ class Design_Plate(object):
             elif key == 'assembly':
                 return self._data['assembly'].echo()
             elif key == 'region':
-                return '\n'.join(self._data['illustration']['lines'])
+                structures = '\n'.join(self._data['illustration']['lines'])
+                warnings = util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset'])
+                return structures if not warnings else '%s\n\n%s\n' % (structures, warnings)
 
             elif not key:
                 return self.echo('assembly') + '\n\n' + self.echo('plate') + '\n\n' + self.echo('region')

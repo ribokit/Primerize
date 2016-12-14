@@ -76,6 +76,13 @@ def _print_primer_plate(plate, ref_primer):
     return string
 
 
+def _print_pair_mismatch_warning(sequence, warnings, offset):
+    string = ''
+    for pair in warnings:
+        string += '\033[93mWARNING\033[0m: Mismatch in base-pair between \033[96m%s\033[0m\033[93m%s\033[0m and \033[96m%s\033[0m\033[93m%s\033[0m.\n' % (sequence[pair[0] - 1], pair[0] - offset, sequence[pair[1] - 1], pair[1] - offset)
+    return string
+
+
 def _save_plate_layout(plates, ref_primer=[], prefix='', path='./'):
     for k in xrange(len(plates[0])):
         for p in xrange(len(plates)):
