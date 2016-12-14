@@ -7,7 +7,7 @@ from .primerize_2d import Primerize_2D
 from .primerize_3d import Primerize_3D
 from .primerize_custom import Primerize_Custom
 
-__version__ = '1.5.3'
+__version__ = '1.5.4'
 
 
 Primerize_1D = Primerize_1D()

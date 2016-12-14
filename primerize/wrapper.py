@@ -24,7 +24,13 @@ class Design_Single(object):
         is_success: ``bool``: Flag for whether a solution is found.
         primer_set: ``list(str)``: Strings of solution primers.
         _params: Input parameters, in format of ``dict: { 'MIN_TM': float, 'NUM_PRIMERS': int, 'MIN_LENGTH': int, 'MAX_LENGTH': int, 'N_BP': int, 'COL_SIZE': int, 'WARN_CUTOFF': int }``.
-        _data: Data of assembly solution, in format of ``dict: { 'misprime_score': [str, str], 'warnings': list(list(int)), 'assembly': primerize.util.Assembly }``.
+        _data: Data of assembly solution, in format of ::
+
+                dict: {
+                    'misprime_score': [str, str],
+                    'warnings': list(tuple(int, int, int, int)),
+                    'assembly': primerize.util.Assembly
+                }
     """
 
     def __init__(self, init_dict):
@@ -184,10 +190,10 @@ class Design_Plate(object):
                     'constructs': primerize.util.Construct_List,
                     'plates': list(list(primerize.util.Plate_96Well)),
                     'assembly': primerize.util.Assembly,
-                    'illustration': { 'labels': list(str), 'fragments': list(str), 'lines': tuple(str) }
+                    'illustration': { 'labels': list(str), 'fragments': list(str), 'lines': tuple(str) },
                 }
 
-            For ``primerize.Primerize_2D.design()`` results, it also has ``'bps': list(tuple(int, int))``.
+            For ``primerize.Primerize_3D.design()`` results, it also has ``'bps': list(tuple(int, int))`` and ``'warnings': list(tuple(int, int))``.
     """
 
     def __init__(self, init_dict):
@@ -201,6 +207,8 @@ class Design_Plate(object):
             self._data['illustration'] = util_server._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
             self._data['illustration'] = util_server._draw_str_region(self.sequence, self.structures, self._data['bps'], self._params)
+            for pair in self._data['warnings']:
+                print('\033[93mWARNING\033[0m: Mismatch in base-pair between \033[96m%s\033[0m\033[93m%s\033[0m and \033[96m%s\033[0m\033[93m%s\033[0m.' % (self.sequence[pair[0] - 1], pair[0] - self._params['offset'], self.sequence[pair[1] - 1], pair[1] - self._params['offset']))
         else:
             self._data['illustration'] = {'lines': ''}
 
@@ -222,7 +230,7 @@ class Design_Plate(object):
         """Get result parameters.
 
         Args:
-            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'STRUCTURE'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
+            key: ``str``: Keyword of parameter. Valid keywords are ``'offset'``, ``'which_muts'``, ``'which_lib'``, ``'N_PRIMER'``, ``'N_PLATE'``, ``'N_CONSTRUCT'``, ``'N_BP'``, ``'PRIMER'``, ``'CONSTRUCT'``, (``'STRUCTURE'`` and ``'WARNING'`` only for ``primerize.Primerize_3D.design()`` results); case insensitive.
 
         Returns:
             value of specified **key**.
@@ -242,6 +250,8 @@ class Design_Plate(object):
             return self._data['constructs']
         elif key == 'STRUCTURE' and self.get('TYPE') == 'Mutation/Rescue':
             return self.structures
+        elif key == 'WARNING' and self.get('TYPE') == 'Mutation/Rescue':
+            return self._data['warnings']
         else:
             raise AttributeError('\033[41mERROR\033[0m: Unrecognized key \033[92m%s\033[0m for \033[94m%s.get()\033[0m.\n' % (key, self.__class__))
 
@@ -271,7 +281,7 @@ class Design_Plate(object):
             elif key == 'assembly':
                 self._data['assembly'].save(path, name)
             elif key == 'structures' and self.get('TYPE') == 'Mutation/Rescue':
-                util._save_structures(self.structures, name, path)
+                util._save_structures(self.structures, self._data['warnings'], self.sequence, self._params['offset'], name, path)
 
             elif not key:
                 keys = ['table', 'image', 'constructs', 'assembly']
