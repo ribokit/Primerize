@@ -10,4 +10,5 @@ Modules
    primerize.primerize_custom
    primerize.thermo
    primerize.util
+   primerize.util_class
    primerize.wrapper
