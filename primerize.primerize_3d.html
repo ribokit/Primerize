@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     
-    <title>primerize.primerize_3d Module &mdash; Primerize 1.5.3 : PCR Assembly Primer Design | RiboKit</title>
+    <title>primerize.primerize_3d Module &mdash; Primerize 1.6.1 : PCR Assembly Primer Design | RiboKit</title>
     
 
     
@@ -27,7 +27,7 @@
           <link rel="index" title="Index"
                 href="genindex.html"/>
           <link rel="search" title="Search" href="search.html"/>
-      <link rel="top" title="Primerize 1.5.3 : PCR Assembly Primer Design" href="index.html"/>
+      <link rel="top" title="Primerize 1.6.1 : PCR Assembly Primer Design" href="index.html"/>
           <link rel="up" title="Modules" href="content.html"/>
           <link rel="next" title="primerize.primerize_custom Module" href="primerize.primerize_custom.html"/>
           <link rel="prev" title="primerize.primerize_2d Module" href="primerize.primerize_2d.html"/> 
@@ -74,7 +74,7 @@
     
       
       
-        <div class="version"><span>1.5.3</span></div>
+        <div class="version"><span>1.6.1</span></div>
       
     
 
@@ -132,7 +132,7 @@
 <span id="primerize-primerize-3d-module"></span><h1><code class="docutils literal"><span class="pre">primerize.primerize_3d</span></code> Module<a class="headerlink" href="#module-primerize.primerize_3d" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="primerize.primerize_3d.Primerize_3D">
-<em class="property">class </em><code class="descclassname">primerize.primerize_3d.</code><code class="descname">Primerize_3D</code><span class="sig-paren">(</span><em>offset=0</em>, <em>N_mutations=1</em>, <em>which_lib=1</em>, <em>is_single=True</em>, <em>is_fillWT=False</em>, <em>COL_SIZE=142</em>, <em>prefix='lib'</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_3d.Primerize_3D" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">primerize.primerize_3d.</code><code class="descname">Primerize_3D</code><span class="sig-paren">(</span><em>offset=0</em>, <em>N_mutations=1</em>, <em>which_lib=1</em>, <em>is_exclude=False</em>, <em>is_single=True</em>, <em>is_fillWT=False</em>, <em>COL_SIZE=142</em>, <em>prefix='lib'</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_3d.Primerize_3D" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="primerize.thermo.html#primerize.thermo.Singleton" title="primerize.thermo.Singleton"><code class="xref py py-class docutils literal"><span class="pre">primerize.thermo.Singleton</span></code></a></p>
 <p>Construct a worker for 3D Primer Design (Mutation/Rescue Plates).</p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -146,10 +146,12 @@
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="o">*</span> <span class="mi">1</span> <span class="n">represents</span> <span class="s2">&quot;A:U-&gt;U:A, G:C-&gt;C:G&quot;</span> <span class="n">library</span> <span class="p">(</span><span class="s2">&quot;swap&quot;</span><span class="p">);</span>
 <span class="o">*</span> <span class="mi">4</span> <span class="n">represents</span> <span class="s2">&quot;A:U-&gt;C:G, G:C-&gt;U:A&quot;</span> <span class="n">library</span> <span class="p">(</span><span class="s2">&quot;cross&quot;</span><span class="p">);</span>
 <span class="o">*</span> <span class="mi">5</span> <span class="n">represents</span> <span class="s2">&quot;A:U-&gt;C:G, G:C-&gt;C:G&quot;</span> <span class="n">library</span> <span class="p">(</span><span class="s2">&quot;stable&quot;</span><span class="p">);</span>
+
+<span class="n">Note</span><span class="p">:</span> <span class="n">G</span><span class="p">:</span><span class="n">U</span> <span class="n">pairs</span> <span class="n">are</span> <span class="n">always</span> <span class="n">replaced</span> <span class="n">by</span> <span class="n">C</span><span class="p">:</span><span class="n">G</span> <span class="n">pairs</span><span class="o">.</span>
 </pre></div>
 </div>
-<p>Note: G:U pairs are always replaced by C:G pairs.</p>
 </li>
+<li><strong>is_exclude</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether exclude shared helices across structures.</li>
 <li><strong>is_single</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether include single mutants on the plate.</li>
 <li><strong>is_fillWT</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether include Wild-type primers at all WellPositions.</li>
 <li><strong>COL_SIZE</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Column width for assembly output. Positive number only.</li>
@@ -168,7 +170,7 @@
 </div>
 <dl class="method">
 <dt id="primerize.primerize_3d.Primerize_3D.design">
-<code class="descname">design</code><span class="sig-paren">(</span><em>sequence</em>, <em>primer_set=[]</em>, <em>structures=[]</em>, <em>offset=None</em>, <em>N_mutations=None</em>, <em>which_lib=None</em>, <em>which_muts=[]</em>, <em>prefix=None</em>, <em>is_single=None</em>, <em>is_fillWT=False</em>, <em>is_force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_3d.Primerize_3D.design" title="Permalink to this definition">¶</a></dt>
+<code class="descname">design</code><span class="sig-paren">(</span><em>sequence</em>, <em>primer_set=[]</em>, <em>structures=[]</em>, <em>offset=None</em>, <em>N_mutations=None</em>, <em>which_lib=None</em>, <em>which_muts=[]</em>, <em>prefix=None</em>, <em>is_exclude=None</em>, <em>is_single=None</em>, <em>is_fillWT=None</em>, <em>is_force=False</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_3d.Primerize_3D.design" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run design code to get library plates for input sequence and structures according to specified library options. Current worker parameters are used for nonspecified optional arguments.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -181,6 +183,7 @@
 <li><strong>N_mutations</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Number of consecutive mutations for &quot;single mutants&quot;.</li>
 <li><strong>which_lib</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Mutation library choice.</li>
 <li><strong>which_muts</strong> -- <code class="docutils literal"><span class="pre">list(int)</span></code>: <cite>(Optional)</cite> Array of mutation positions. Use numbering based on <code class="docutils literal"><span class="pre">offset</span></code>. When nonspecified, the entire sequence is included for mutagenesis.</li>
+<li><strong>is_exclude</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether exclude shared helices across structures.</li>
 <li><strong>is_single</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether include single mutants on the plate.</li>
 <li><strong>is_fillWT</strong> -- <code class="docutils literal"><span class="pre">bool</span></code>: <cite>(Optional)</cite> Flag for whether include Wild-type primers at all WellPositions.</li>
 </ul>
@@ -201,7 +204,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal"><span class="pre">'offset'</span></code>, <code class="docutils literal"><span class="pre">'N_mutations'</span></code>, <code class="docutils literal"><span class="pre">'which_lib'</span></code>, <code class="docutils literal"><span class="pre">'is_single'</span></code>, <code class="docutils literal"><span class="pre">'is_fillWT'</span></code>, <code class="docutils literal"><span class="pre">'COL_SIZE'</span></code>, <code class="docutils literal"><span class="pre">'prefix'</span></code>; case insensitive.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal"><span class="pre">'offset'</span></code>, <code class="docutils literal"><span class="pre">'N_mutations'</span></code>, <code class="docutils literal"><span class="pre">'which_lib'</span></code>, <code class="docutils literal"><span class="pre">'is_exclude'</span></code>, <code class="docutils literal"><span class="pre">'is_single'</span></code>, <code class="docutils literal"><span class="pre">'is_fillWT'</span></code>, <code class="docutils literal"><span class="pre">'COL_SIZE'</span></code>, <code class="docutils literal"><span class="pre">'prefix'</span></code>; case insensitive.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value of specified <strong>key</strong>.</td>
 </tr>
@@ -265,7 +268,7 @@
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Dec 03, 2016.
+      <small>Last updated on</small> Dec 15, 2016.
       
     </p>
 
@@ -289,7 +292,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'1.5.3',
+              VERSION:'1.6.1',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
               HAS_SOURCE:  true

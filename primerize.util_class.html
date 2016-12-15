@@ -1,0 +1,739 @@
+
+
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    
+    <title>primerize.util_class Module &mdash; Primerize 1.6.1 : PCR Assembly Primer Design | RiboKit</title>
+    
+
+    
+      <link rel="shortcut icon" href="_static/primerize_icon.png"/>
+    
+
+    <link rel="stylesheet" href="_static/css/styles.css" type="text/css" />
+    <link rel="stylesheet" href="_static/css/github-dark.css" type="text/css" />
+
+    
+      
+    
+
+    
+    
+          <link rel="index" title="Index"
+                href="genindex.html"/>
+          <link rel="search" title="Search" href="search.html"/>
+      <link rel="top" title="Primerize 1.6.1 : PCR Assembly Primer Design" href="index.html"/> 
+
+    <script type="text/javascript">
+      if (window.location.protocol.indexOf('https') == -1 && window.location.hostname.indexOf('.github.io') != -1) { window.location.href = window.location.href.replace('http:', 'https:'); }
+    </script>
+    <script type="text/javascript">
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','_static/js/ga.js','ga');
+
+      ga('create', 'UA-36037648-4', 'auto');
+      ga('send', 'pageview');
+    </script>
+  </head>
+
+  <body>
+    <header>
+    <h1>
+        <a href="/">RiboKit</a> 
+        
+        : <a href="index.html">Primerize</a>
+        
+    </h1>
+    <p>PCR Assembly Primer Design</p>
+</header>
+    <div id="banner">
+  <div class="banner-inner">
+    <span id="logo"><span class="octicon octicon-mark-github"></span></span>
+
+    
+      <a href="https://github.com/DasLab/Primerize" target="_blank" class="button fork"><strong>View On GitHub</strong></a>
+    
+
+    
+  <form id="rtd-search-form" class="search-form" action="search.html" method="get">
+    <input type="text" name="q" class="search-box" placeholder="Search for Docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+
+    
+      
+      
+        <div class="version"><span>1.6.1</span></div>
+      
+    
+
+    
+    
+      <div class="downloads">
+        <span>Downloads</span>
+        <ul>
+          <li><a href="https://github.com/DasLab/Primerize/zipball/master" target="_blank" class="button">ZIP</a></li>
+          <li><a href="https://github.com/DasLab/Primerize/tarball/master" target="_blank" class="button">TAR</a></li>
+        </ul>
+      </div>
+    
+  
+  </div>
+</div>
+
+
+    <div class="wrapper">
+      <nav>
+    <ul style="margin-bottom:0;">
+        <li class="tag-h1"><a href="index.html">Primerize Documentation</a></li>
+    </ul>
+    
+        
+        
+            <ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="content.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="matlab.html">MATLAB <cite>(Deprecated)</cite></a></li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
+</ul>
+
+        
+    
+</nav>
+      <section>
+      
+  <div class="section" id="primerize-util-class-module">
+<h1><code class="docutils literal"><span class="pre">primerize.util_class</span></code> Module<a class="headerlink" href="#primerize-util-class-module" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-primerize.util_class"></span><dl class="class">
+<dt id="primerize.util_class.Assembly">
+<em class="property">class </em><code class="descclassname">primerize.util_class.</code><code class="descname">Assembly</code><span class="sig-paren">(</span><em>sequence</em>, <em>primers</em>, <em>name</em>, <em>COL_SIZE=142</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Assembly" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Collection of result data essential for drawing an assembly scheme.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>sequence</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Sequence of assembly design.</li>
+<li><strong>primers</strong> -- <code class="docutils literal"><span class="pre">list(list(int)</span></code>: Numeric representation (end numbering and direction) of primers.</li>
+<li><strong>name</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Construct prefix/name.</li>
+<li><strong>COL_SIZE</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Column width for assembly output. Positive number only.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.sequence">
+<code class="descname">sequence</code><a class="headerlink" href="#primerize.util_class.Assembly.sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">str</span></code>: Sequence of assembly design.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.primers">
+<code class="descname">primers</code><a class="headerlink" href="#primerize.util_class.Assembly.primers" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">list(list(int))</span></code>: Numeric representation (end numbering and direction) of primers.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.name">
+<code class="descname">name</code><a class="headerlink" href="#primerize.util_class.Assembly.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">str</span></code>: Construct prefix/name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.bp_lines">
+<code class="descname">bp_lines</code><a class="headerlink" href="#primerize.util_class.Assembly.bp_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">list(str)</span></code>: Strings for base-pairing lines (<code class="docutils literal"><span class="pre">'|'</span></code>).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.seq_lines">
+<code class="descname">seq_lines</code><a class="headerlink" href="#primerize.util_class.Assembly.seq_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">list(str)</span></code>: Strings for primer sequence lines.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.print_lines">
+<code class="descname">print_lines</code><a class="headerlink" href="#primerize.util_class.Assembly.print_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">list(tuple(str,</span> <span class="pre">str))</span></code>: Strings for all lines assembled, i.e. <code class="docutils literal"><span class="pre">list(tuple('marker',</span> <span class="pre">'print_line'))</span></code>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Assembly.Tm_overlaps">
+<code class="descname">Tm_overlaps</code><a class="headerlink" href="#primerize.util_class.Assembly.Tm_overlaps" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">list(float)</span></code>: List of melting temperature for all overlapping regions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Assembly.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Assembly.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of the <code class="docutils literal"><span class="pre">Assembly</span></code> class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Assembly.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Assembly.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results of the <code class="docutils literal"><span class="pre">Assembly</span></code> class. Calls <code class="docutils literal"><span class="pre">echo()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Assembly.echo">
+<code class="descname">echo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Assembly.echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print result in rich-text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Assembly.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>path='./'</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Assembly.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save result to text file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>path</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> Path for file saving. Use either relative or absolute path.</li>
+<li><strong>name</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> Prefix/name for file name. When nonspecified, current object's name is used.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="primerize.util_class.Construct_List">
+<em class="property">class </em><code class="descclassname">primerize.util_class.</code><code class="descname">Construct_List</code><a class="headerlink" href="#primerize.util_class.Construct_List" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Collection of mutant constructs. An empty isntance of <code class="docutils literal"><span class="pre">primerize.Mutation</span></code> is always initiated as the first element, i.e. a Wild-type well as the first of list.</p>
+<dl class="attribute">
+<dt id="primerize.util_class.Construct_List._data">
+<code class="descname">_data</code><a class="headerlink" href="#primerize.util_class.Construct_List._data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data of constructs, in format of <code class="docutils literal"><span class="pre">list(primerize.Mutation)</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>mut_list</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a list of given mutant construct is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>: A mutant represented by <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterator through all constructs.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.__len__">
+<code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of filled wells.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of the <code class="docutils literal"><span class="pre">Construct_List</span></code> class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results of the <code class="docutils literal"><span class="pre">Construct_List</span></code> class. Calls <code class="docutils literal"><span class="pre">echo()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.echo">
+<code class="descname">echo</code><span class="sig-paren">(</span><em>prefix=''</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print result in rich-text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.list">
+<code class="descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all constructs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">list(list(str))</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge 2 lists of constructs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> -- <code class="docutils literal"><span class="pre">primerize.Construct_List</span></code>: Another list of constructs.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">primerize.Construct_List</span></code> -- A list of duplicated constructs between inputs.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> -- For illegal <strong>other</strong>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><em>mut_list</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a list of mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>: A mutant represented by <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>. Mutant that is not present will result in a premature return with <code class="docutils literal"><span class="pre">False</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code> -- Whether <strong>mut_list</strong> is successfully removed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Construct_List.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>mut_list</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Construct_List.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>: Mutations. A mutant represented by <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>. If the mutant is already present, it will return <code class="docutils literal"><span class="pre">False</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code> -- Whether <strong>mut_list</strong> is successfully added.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="primerize.util_class.Mutation">
+<em class="property">class </em><code class="descclassname">primerize.util_class.</code><code class="descname">Mutation</code><span class="sig-paren">(</span><em>mut_str=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Collection of mutations for a construct.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: <cite>(Optional)</cite> List of mutations. When nonspecified, an empty instance is created; when specified, it calls <code class="docutils literal"><span class="pre">push()</span></code>. An empty instance means no mutations, i.e. Wild-type.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="primerize.util_class.Mutation._data">
+<code class="descname">_data</code><a class="headerlink" href="#primerize.util_class.Mutation._data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data of mutations, in format of <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{</span> <span class="pre">int:</span> <span class="pre">tuple(str,</span> <span class="pre">str)</span> <span class="pre">}</span></code>, i.e. <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{'seqpos':</span> <span class="pre">('wt_char',</span> <span class="pre">'mut_char')</span> <span class="pre">}</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>mut_str</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if a list of given mutation is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: Mutations in format of <code class="docutils literal"><span class="pre">'wt_char'</span></code>, <code class="docutils literal"><span class="pre">'seq_pos'</span></code>, <code class="docutils literal"><span class="pre">'mut_char'</span></code>, (e.g. <code class="docutils literal"><span class="pre">['G13C',</span> <span class="pre">'A15T']</span></code>).</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__eq__">
+<code class="descname">__eq__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__eq__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comparison method for whether two <code class="docutils literal"><span class="pre">Mutation</span></code> objects contain the same set of mutations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__iter__">
+<code class="descname">__iter__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__iter__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterator through all mutations.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__len__">
+<code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of filled wells.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of the <code class="docutils literal"><span class="pre">Mutation</span></code> class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results of the <code class="docutils literal"><span class="pre">Mutation</span></code> class. Calls <code class="docutils literal"><span class="pre">echo()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.echo">
+<code class="descname">echo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print result in rich-text, delimited by <code class="docutils literal"><span class="pre">';'</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.list">
+<code class="descname">list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of all mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">list(str)</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.merge">
+<code class="descname">merge</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.merge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Merge 2 lists of mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> -- <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>: Another list of mutations.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">TypeError</span></code> -- For illegal <strong>other</strong>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.pop">
+<code class="descname">pop</code><span class="sig-paren">(</span><em>mut_str</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a list of mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: Mutations. Valid keywords are the same as <code class="docutils literal"><span class="pre">has()</span></code>. Mutations that are not present will result in a premature return with <code class="docutils literal"><span class="pre">False</span></code>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code> -- Whether all mutations in <strong>mut_list</strong> are successfully removed.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Mutation.push">
+<code class="descname">push</code><span class="sig-paren">(</span><em>mut_str</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Mutation.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a list of mutations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>mut_list</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: Mutations. Valid keywords are the same as <code class="docutils literal"><span class="pre">has()</span></code>. Each <code class="docutils literal"><span class="pre">'seq_pos'</span></code> can only be mutated once. Conflicting mutations are overwritten and the most recent one is saved. <code class="docutils literal"><span class="pre">'WT'</span></code> is ignored.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> -- For illegal <strong>mut_str</strong>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="primerize.util_class.Plate_96Well">
+<em class="property">class </em><code class="descclassname">primerize.util_class.</code><code class="descname">Plate_96Well</code><span class="sig-paren">(</span><em>tag=1</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstraction of 96-well plates.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tag</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Mutation library tag. Use <strong>which_lib</strong> number.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="primerize.util_class.Plate_96Well.coords">
+<code class="descname">coords</code><a class="headerlink" href="#primerize.util_class.Plate_96Well.coords" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">set(str)</span></code>: Filled 96-Well Coordinates.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="primerize.util_class.Plate_96Well._data">
+<code class="descname">_data</code><a class="headerlink" href="#primerize.util_class.Plate_96Well._data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data of primers and names, in format of <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{</span> <span class="pre">str:</span> <span class="pre">tuple(primerize.Mutation,</span> <span class="pre">str)</span> <span class="pre">}</span></code>, i.e. <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{'coord':</span> <span class="pre">('tag',</span> <span class="pre">'primer')</span> <span class="pre">}</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.__contains__">
+<code class="descname">__contains__</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.__contains__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if data of a given WellPosition is present.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: WellPosition (e.g. <code class="docutils literal"><span class="pre">'A01'</span></code>) for data.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">bool</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.__len__">
+<code class="descname">__len__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.__len__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of filled wells.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">int</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of the <code class="docutils literal"><span class="pre">Plate_96Well</span></code> class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.__str__">
+<code class="descname">__str__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.__str__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Results of the <code class="docutils literal"><span class="pre">Plate_96Well</span></code> class. Calls <code class="docutils literal"><span class="pre">echo()</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.echo">
+<code class="descname">echo</code><span class="sig-paren">(</span><em>ref_primer=''</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.echo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print result in rich-text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ref_primer</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: <cite>(Optional)</cite> List of Wild-type <strong>primer_set</strong> for highlighting. If nonspecified, highlighting is disabled.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><code class="docutils literal"><span class="pre">str</span></code></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get data of a particular well or number of wells filled.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Use WellPosition for well data.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value of specified <strong>coord</strong>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal WellPosition (out of <code class="docutils literal"><span class="pre">range(0,</span> <span class="pre">96)</span> <span class="pre">+</span> <span class="pre">1</span></code>).</li>
+<li><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> -- For nonexisted <strong>coord</strong>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear current plate data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.save">
+<code class="descname">save</code><span class="sig-paren">(</span><em>ref_primer=''</em>, <em>file_name='./plate.svg'</em>, <em>title=''</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.save" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save plate layout to image file (<cite>SVG</cite>).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ref_primer</strong> -- <code class="docutils literal"><span class="pre">list(str)</span></code>: <cite>(Optional)</cite> List of Wild-type primer_set for highlighting. If nonspecified, highlighting is disabled.</li>
+<li><strong>file_name</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> File name. Include path into <strong>file_name</strong> when specifying. Use either relative or absolute path.</li>
+<li><strong>title</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> Title to display on image. LaTex NOT supported.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="primerize.util_class.Plate_96Well.set">
+<code class="descname">set</code><span class="sig-paren">(</span><em>coord</em>, <em>tag</em>, <em>primer</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.util_class.Plate_96Well.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Record data of a particular well.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>coord</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: WellPosition for data. Use same range as <code class="docutils literal"><span class="pre">get()</span></code>. Existing data for the same well is overwritten.</li>
+<li><strong>tag</strong> -- <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>: Mutant representd by <code class="docutils literal"><span class="pre">primerize.Mutation</span></code>. <code class="docutils literal"><span class="pre">str</span></code> is only supported for backward compatibility.</li>
+<li><strong>primer</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Primer seuqence of well. Use sense-strand.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal WellPosition.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+      </section>
+    </div>
+
+    <p class="wrapper">
+      <small>Built with</small>
+      <a href="http://sphinx-doc.org/" target="_blank">Sphinx</a>
+      <small>using a</small>
+      <a href="https://github.com/t47io/ribokit-Sphinx-theme" target="_blank">RiboKit Theme</a>
+      <small>. Hosted on</small> GitHub Pages.
+    </p>
+
+    <p class="wrapper">
+      <small>
+        &copy; Copyright 2008-2016 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
+      </small>
+    </p>
+
+    <p class="wrapper">
+      
+      <small>Last updated on</small> Dec 15, 2016.
+      
+    </p>
+
+    <footer>
+  <p style="margin:0;">
+      <small>Project maintained by</small>
+      <br/>
+      <a href="https://github.com/DasLab"><b>Das Lab</b></a>&nbsp;
+      
+        <br/>
+        <small>Page created by</small>
+        <br/>
+        <span style="color: #39c;"><i>Siqi Tian</i></span>&nbsp;
+      
+  </p>
+</footer>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    
+      <script type="text/javascript">
+          var DOCUMENTATION_OPTIONS = {
+              URL_ROOT:'./',
+              VERSION:'1.6.1',
+              COLLAPSE_INDEX:false,
+              FILE_SUFFIX:'.html',
+              HAS_SOURCE:  true
+          };
+      </script>
+        
+        
+        
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+        
+        
+          <script type="text/javascript" src="_static/doctools.js"></script>
+        
+        
+          <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        
+    
+
+    <script type="text/javascript" src="_static/js/main.js"></script>
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+     
+  </body>
+</html>

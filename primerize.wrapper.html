@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     
-    <title>primerize.wrapper Module &mdash; Primerize 1.5.3 : PCR Assembly Primer Design | RiboKit</title>
+    <title>primerize.wrapper Module &mdash; Primerize 1.6.1 : PCR Assembly Primer Design | RiboKit</title>
     
 
     
@@ -27,7 +27,7 @@
           <link rel="index" title="Index"
                 href="genindex.html"/>
           <link rel="search" title="Search" href="search.html"/>
-      <link rel="top" title="Primerize 1.5.3 : PCR Assembly Primer Design" href="index.html"/>
+      <link rel="top" title="Primerize 1.6.1 : PCR Assembly Primer Design" href="index.html"/>
           <link rel="up" title="Modules" href="content.html"/>
           <link rel="next" title="MATLAB (Deprecated)" href="matlab.html"/>
           <link rel="prev" title="primerize.util Module" href="primerize.util.html"/> 
@@ -74,7 +74,7 @@
     
       
       
-        <div class="version"><span>1.5.3</span></div>
+        <div class="version"><span>1.6.1</span></div>
       
     
 
@@ -187,7 +187,7 @@
 <dt id="primerize.wrapper.Design_Plate._params">
 <code class="descname">_params</code><a class="headerlink" href="#primerize.wrapper.Design_Plate._params" title="Permalink to this definition">¶</a></dt>
 <dd><p>Input parameters, in format of <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{</span> <span class="pre">'offset':</span> <span class="pre">int,</span> <span class="pre">'which_muts':</span> <span class="pre">list(int),</span> <span class="pre">'which_lib':</span> <span class="pre">list(int),</span> <span class="pre">'N_PRIMER':</span> <span class="pre">int,</span> <span class="pre">'N_PLATE':</span> <span class="pre">int,</span> <span class="pre">'N_CONSTRUCT':</span> <span class="pre">int,</span> <span class="pre">'N_BP':</span> <span class="pre">int,</span> <span class="pre">'type':</span> <span class="pre">str</span> <span class="pre">}</span></code>.</p>
-<p>For <code class="docutils literal"><span class="pre">primerize.Primerize_3D.design()</span></code> results, it also has <code class="docutils literal"><span class="pre">'N_MUTATION':</span> <span class="pre">int,</span> <span class="pre">'is_single':</span> <span class="pre">bool,</span> <span class="pre">'is_fillWT':</span> <span class="pre">bool</span></code>.</p>
+<p>For <code class="docutils literal"><span class="pre">primerize.Primerize_3D.design()</span></code> results, it also has <code class="docutils literal"><span class="pre">'N_MUTATION':</span> <span class="pre">int,</span> <span class="pre">'is_exclude':</span> <span class="pre">bool,</span> <span class="pre">'is_single':</span> <span class="pre">bool,</span> <span class="pre">'is_fillWT':</span> <span class="pre">bool</span></code>.</p>
 </dd></dl>
 
 <dl class="attribute">
@@ -195,14 +195,14 @@
 <code class="descname">_data</code><a class="headerlink" href="#primerize.wrapper.Design_Plate._data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Data of assembly solution, in format of</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">dict</span><span class="p">:</span> <span class="p">{</span>
-    <span class="s1">&#39;constructs&#39;</span><span class="p">:</span> <span class="n">primerize</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Construct_List</span><span class="p">,</span>
-    <span class="s1">&#39;plates&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">primerize</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Plate_96Well</span><span class="p">)),</span>
-    <span class="s1">&#39;assembly&#39;</span><span class="p">:</span> <span class="n">primerize</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">Assembly</span><span class="p">,</span>
-    <span class="s1">&#39;illustration&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="s1">&#39;fragments&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="s1">&#39;lines&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="p">}</span>
+    <span class="s1">&#39;constructs&#39;</span><span class="p">:</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Construct_List</span><span class="p">,</span>
+    <span class="s1">&#39;plates&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">primerize</span><span class="o">.</span><span class="n">Plate_96Well</span><span class="p">)),</span>
+    <span class="s1">&#39;assembly&#39;</span><span class="p">:</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Assembly</span><span class="p">,</span>
+    <span class="s1">&#39;illustration&#39;</span><span class="p">:</span> <span class="p">{</span> <span class="s1">&#39;labels&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="s1">&#39;fragments&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="s1">&#39;lines&#39;</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="p">},</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>For <code class="docutils literal"><span class="pre">primerize.Primerize_2D.design()</span></code> results, it also has <code class="docutils literal"><span class="pre">'bps':</span> <span class="pre">list(tuple(int,</span> <span class="pre">int))</span></code>.</p>
+<p>For <code class="docutils literal"><span class="pre">primerize.Primerize_3D.design()</span></code> results, it also has <code class="docutils literal"><span class="pre">'bps':</span> <span class="pre">list(tuple(int,</span> <span class="pre">int)),</span> <span class="pre">'warnings':</span> <span class="pre">list(tuple(int,</span> <span class="pre">int))</span></code>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -249,7 +249,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal"><span class="pre">'offset'</span></code>, <code class="docutils literal"><span class="pre">'which_muts'</span></code>, <code class="docutils literal"><span class="pre">'which_lib'</span></code>, <code class="docutils literal"><span class="pre">'N_PRIMER'</span></code>, <code class="docutils literal"><span class="pre">'N_PLATE'</span></code>, <code class="docutils literal"><span class="pre">'N_CONSTRUCT'</span></code>, <code class="docutils literal"><span class="pre">'N_BP'</span></code>, <code class="docutils literal"><span class="pre">'PRIMER'</span></code>, <code class="docutils literal"><span class="pre">'CONSTRUCT'</span></code>, (<code class="docutils literal"><span class="pre">'STRUCTURE'</span></code> only for <code class="docutils literal"><span class="pre">primerize.Primerize_3D.design()</span></code> results); case insensitive.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal"><span class="pre">'offset'</span></code>, <code class="docutils literal"><span class="pre">'which_muts'</span></code>, <code class="docutils literal"><span class="pre">'which_lib'</span></code>, <code class="docutils literal"><span class="pre">'N_PRIMER'</span></code>, <code class="docutils literal"><span class="pre">'N_PLATE'</span></code>, <code class="docutils literal"><span class="pre">'N_CONSTRUCT'</span></code>, <code class="docutils literal"><span class="pre">'N_BP'</span></code>, <code class="docutils literal"><span class="pre">'PRIMER'</span></code>, <code class="docutils literal"><span class="pre">'CONSTRUCT'</span></code>, (<code class="docutils literal"><span class="pre">'is_exclude'</span></code>, <code class="docutils literal"><span class="pre">'is_signle'</span></code>, <code class="docutils literal"><span class="pre">'is_fillWT'</span></code>, <code class="docutils literal"><span class="pre">'STRUCTURE'</span></code> and <code class="docutils literal"><span class="pre">'WARNING'</span></code> only for <code class="docutils literal"><span class="pre">primerize.Primerize_3D.design()</span></code> results); case insensitive.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value of specified <strong>key</strong>.</td>
 </tr>
@@ -341,7 +341,14 @@
 <dl class="attribute">
 <dt id="primerize.wrapper.Design_Single._data">
 <code class="descname">_data</code><a class="headerlink" href="#primerize.wrapper.Design_Single._data" title="Permalink to this definition">¶</a></dt>
-<dd><p>Data of assembly solution, in format of <code class="docutils literal"><span class="pre">dict:</span> <span class="pre">{</span> <span class="pre">'misprime_score':</span> <span class="pre">[str,</span> <span class="pre">str],</span> <span class="pre">'warnings':</span> <span class="pre">list(list(int)),</span> <span class="pre">'assembly':</span> <span class="pre">primerize.util.Assembly</span> <span class="pre">}</span></code>.</p>
+<dd><p>Data of assembly solution, in format of</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="nb">dict</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;misprime_score&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="s1">&#39;warnings&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">)),</span>
+    <span class="s1">&#39;assembly&#39;</span><span class="p">:</span> <span class="n">primerize</span><span class="o">.</span><span class="n">Assembly</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="method">
@@ -440,7 +447,7 @@
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Dec 03, 2016.
+      <small>Last updated on</small> Dec 15, 2016.
       
     </p>
 
@@ -464,7 +471,7 @@
       <script type="text/javascript">
           var DOCUMENTATION_OPTIONS = {
               URL_ROOT:'./',
-              VERSION:'1.5.3',
+              VERSION:'1.6.1',
               COLLAPSE_INDEX:false,
               FILE_SUFFIX:'.html',
               HAS_SOURCE:  true
