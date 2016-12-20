@@ -166,6 +166,10 @@ class Primerize_3D(Singleton):
 
         if len(primer_set) % 2:
             raise ValueError('\033[41mERROR\033[0m: Illegal length \033[95m%s\033[0m of value for params \033[92mprimer_set\033[0m for \033[94m%s.design()\033[0m.\n' % (len(primer_set), self.__class__))
+        num_str = len(structures)
+        structures = filter(lambda x: len(x) == len(sequence), structures)
+        if len(structures) != num_str:
+            print('\033[93mWARNING\033[0m: Mismatch length of input \033[92mstructures\033[0m to \033[92msequence\033[0m for \033[94m%s.design()\033[0m.\n' % self.__class__)
         if not structures:
             raise ValueError('\033[41mERROR\033[0m: Missing input \033[92mstructures\033[0m for \033[94m%s.design()\033[0m.\n' % self.__class__)
 
@@ -211,6 +215,7 @@ class Primerize_3D(Singleton):
         warnings = []
         data.update({'assembly': assembly, 'constructs': constructs, 'warnings': warnings})
 
+        is_exclude = is_exclude if len(structures) > 1 else False
         bps = util.diff_bps(structures, flag=is_exclude)
         bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
         bps = filter(len, bps)
