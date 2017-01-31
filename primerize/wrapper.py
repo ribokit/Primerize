@@ -109,7 +109,7 @@ class Design_Single(object):
             f.write('------/* END */------\n------/* NOTE: use "Lab Ready" for "Normalization" */------\n')
             f.close()
         else:
-            raise UnboundLocalError('\033[41mFAIL\033[0m: Result of key \033[92m%s\033[0m unavailable for \033[94m%s\033[0m where \033[94mis_success\033[0m = \033[41mFalse\033[0m.\n' % (key, self.__class__))
+            raise UnboundLocalError('\033[41mFAIL\033[0m: Result unavailable for \033[94m%s\033[0m where \033[94mis_success\033[0m = \033[41mFalse\033[0m.\n' % self.__class__)
 
 
     def echo(self, key=''):
