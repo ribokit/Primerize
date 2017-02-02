@@ -8,6 +8,9 @@ from . import util
 from . import util_func
 from . import util_server
 
+mpl_version = matplotlib.__version__.split('.')[0]
+svg_well_area = 31**2 if mpl_version == '1' else 25**2
+svg_well_stroke = 5 if mpl_version == '1' else 4
 
 class Assembly(object):
     """Collection of result data essential for drawing an assembly scheme.
@@ -273,9 +276,9 @@ class Plate_96Well(object):
                 else:
                     x_gray.append(j * 1.125 + 0.75)
                     y_gray.append(i * 1.125 + 0.75)
-        ax.scatter(x_gray, y_gray, 961, c='#ffffff', edgecolor='#333333', linewidth=5)
-        ax.scatter(x_violet, y_violet, 961, c='#ecddf4', edgecolor='#c28fdd', linewidth=5)
-        ax.scatter(x_green, y_green, 961, c='#beebde', edgecolor='#29be92', linewidth=5)
+        ax.scatter(x_gray, y_gray, svg_well_area, c='#ffffff', edgecolor='#333333', linewidth=svg_well_stroke)
+        ax.scatter(x_violet, y_violet, svg_well_area, c='#ecddf4', edgecolor='#c28fdd', linewidth=svg_well_stroke)
+        ax.scatter(x_green, y_green, svg_well_area, c='#beebde', edgecolor='#29be92', linewidth=svg_well_stroke)
 
         matplotlib.rcParams['svg.fonttype'] = 'none'
         matplotlib.rcParams['xtick.labelsize'] = 14

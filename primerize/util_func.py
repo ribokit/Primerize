@@ -1,7 +1,4 @@
 import math
-import matplotlib
-matplotlib.use('SVG')
-import matplotlib.pyplot as pyplot
 import numpy
 import os
 import re
