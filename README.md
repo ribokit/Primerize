@@ -157,7 +157,8 @@ Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](htt
 >[On the Design of Oligos for Gene Synthesis.](http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554)<br/>
 >*Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
 
-<br/>
+<hr/>
+
 Developed by **Das lab**, _Leland Stanford Junior University_.
-<br/>
-README by [**t47**](http://t47.io/), *January 2016*.
+
+README by [**t47**](https://t47.io/), *January 2016*.
