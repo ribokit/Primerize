@@ -11,4 +11,6 @@ Modules
    primerize.thermo
    primerize.util
    primerize.util_class
+   primerize.util_func
+   primerize.util_server
    primerize.wrapper
