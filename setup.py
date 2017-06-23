@@ -11,7 +11,7 @@ setup(
     author='Siqi Tian, Rhiju Das',
     author_email='rhiju@stanford.edu',
 
-    url='https://github.com/DasLab/Primerize/',
+    url='https://github.com/ribokit/Primerize/',
     license='https://primerize.stanford.edu/license',
 
     packages=find_packages(),

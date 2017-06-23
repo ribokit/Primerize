@@ -7,7 +7,7 @@
 
 To install legacy MATLAB scripts for **Primerize** (previously called **NA_Thermo**), simply:
 
-- Download the zip or tar file of the repository and unpack; or `git clone https://github.com/DasLab/Primerize.git`.
+- Download the zip or tar file of the repository and unpack; or `git clone https://github.com/ribokit/Primerize.git`.
 
 - In *MATLAB*, go to "**Set Path**". Then "**Add with Subfolders**" of the target `path/to/Primerize/MATLAB/Scripts/`.
 

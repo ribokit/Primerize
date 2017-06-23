@@ -80,7 +80,7 @@ if job_3d.is_success:
     job_3d.save()
 ```
 
-For advanced users, the returned `Design_Single` and `Design_Plate` result classes (refer to the [**Documentation**](https://daslab.github.io/Primerize/primerize.wrapper)) offer methods for `get()`, `save()` and `echo()`:
+For advanced users, the returned `Design_Single` and `Design_Plate` result classes (refer to the [**Documentation**](https://ribokit.github.io/Primerize/primerize.wrapper)) offer methods for `get()`, `save()` and `echo()`:
 
 ```python
 MIN_TM = job_1d.get('MIN_TM')
@@ -110,7 +110,7 @@ prm_1d.set('MIN_LENGTH', 30)
 prm_1d.reset()
 ```
 
-There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the [**Documentation**](https://daslab.github.io/Primerize/primerize.util).
+There are also `Assembly`, `Mutation`, `Construct_List`, and `Plate_96Well` helper classes. For more details, please refer to the [**Documentation**](https://ribokit.github.io/Primerize/primerize.util).
 
 Additionally, you can specify your customized list of mutations through the `Primerize_Custom` factory instance:
 
@@ -134,23 +134,27 @@ if job_cm.is_success:
 
 #### MATLAB Code _(Deprecated)_
 
-Instructions on *MATLAB* usage is available at old [README.md](https://github.com/DasLab/Primerize/blob/master/MATLAB/README.md). Please note that *MATLAB* code is no longer actively under development or fully maintained.
+Instructions on *MATLAB* usage is available at old [README.md](https://github.com/ribokit/Primerize/blob/master/MATLAB/README.md). Please note that *MATLAB* code is no longer actively under development or fully maintained.
 
 ## Documentation
 
-Code Documentation is available at https://daslab.github.io/Primerize/ or https://primerize.stanford.edu/docs/.
+Code Documentation is available at https://ribokit.github.io/Primerize/ or https://primerize.stanford.edu/docs/.
 
 Experimental Protocol is available at https://primerize.stanford.edu/protocol/.
 
 ## License
 
-Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](https://github.com/DasLab/Primerize/blob/master/LICENSE.md).
+Copyright &copy; of **Primerize** _Source Code_ is described in [LICENSE.md](https://github.com/ribokit/Primerize/blob/master/LICENSE.md).
 
 ## Reference
 
 >Tian, S., *et al.* (**2015**)<br/>
 >[Primerize: Automated Primer Assembly for Transcribing Interesting RNAs.](http://nar.oxfordjournals.org/content/43/W1/W522.full)<br/>
 >*Nucleic Acid Research* **43 (W1)**: W522-W526.
+
+>Tian, S., and Das, R. (**2017**)<br/>
+>[Primerize-2D: automated primer design for RNA multidimensional chemical mapping.](https://academic.oup.com/bioinformatics/article-abstract/33/9/1405/2801460/Primerize-2D-automated-primer-design-for-RNA)<br/>
+>*Bioinformatics* **33 (9)**: 1405-1406.
 
 <hr/>
 
