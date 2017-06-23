@@ -12,7 +12,7 @@ To install ``NA_Thermo``, simply:
 
 .. code-block:: bash
 
-    git clone https://github.com/DasLab/Primerize.git
+    git clone https://github.com/ribokit/Primerize.git
 
 * In *MATLAB*, go to "**Set Path**". Then "**Add with Subfolders**" of the target ``path/to/Primerize/MATLAB/Scripts/``.
 

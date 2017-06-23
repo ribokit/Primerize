@@ -7,7 +7,7 @@ Installation
 
 .. code-block:: bash
 
-    git clone https://github.com/DasLab/Primerize.git
+    git clone https://github.com/ribokit/Primerize.git
 
 * To install ``Primerize``, simply:
 

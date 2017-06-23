@@ -65,6 +65,20 @@ Reference
 
 ----------
 
+Workflows
+----------------------------
+
+* `I have just discovered an RNA molecule </workflows/from_scratch/>`_
+
+* `I want to learn an RNA’s secondary structure </workflows/2D_modeling/>`_
+
+* `I want to test an RNA secondary structure model </workflows/mutation_rescue/>`_
+
+* `I think my RNA has interesting alternative states </workflows/alternative_states/>`_
+
+
+----------
+
 Developed by **Das lab**, `Leland Stanford Junior University`.
 
 README by `t47 <https://t47.io/>`_, *January 2016*.
