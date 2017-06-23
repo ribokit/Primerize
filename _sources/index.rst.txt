@@ -51,17 +51,13 @@ Please visit the **Primerize** server for a complete guidance on primer designs 
 Reference
 ----------------------------
 
-| Tian, S., and Das, R. (**2016**)
-| `Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping. <https://daslab.stanford.edu>`_
-| *Bioinformatics* **in press**.
-|
 | Tian, S., Yesselman, J.D., Cordero, P., and Das, R. (**2015**)
 | `Primerize: Automated Primer Assembly for Transcribing Interesting RNAs. <http://nar.oxfordjournals.org/content/43/W1/W522.full>`_
 | *Nucleic Acid Research* **43 (W1)**: W522-W526.
 |
-| Thachuk, C., and Condon, A. (**2007**)
-| `On the Design of Oligos for Gene Synthesis. <http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=4375554>`_
-| *Proceedings of the 7th IEEE International Conference on Bioinformatics and Bioengineering* **2007**: 123-130.
+| Tian, S., and Das, R. (**2017**)
+| `Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping. <https://academic.oup.com/bioinformatics/article-abstract/33/9/1405/2801460/Primerize-2D-automated-primer-design-for-RNA>`_
+| *Bioinformatics* **33 (9)**: 1405-1406.
 
 ----------
 
