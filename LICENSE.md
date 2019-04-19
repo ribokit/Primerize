@@ -1,10 +1,10 @@
-## LICENSE for Primerize, v1.3
+## LICENSE for Primerize
 
-1. Copyright &copy; 2008-2016 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved. Permission to use, copy, and modify, (but not to distribute, transfer or sublicense), this software and its documentation for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that you comply with the following terms.  (To obtain a license for commercial use, please contact Ximena Ares at the Stanford Office of Technology Licensing: ximena.ares@stanford.edu, TE 650-724-0960)
+1. Copyright &copy; 2008-2016,2019 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved. Permission to use, copy, and modify, (but not to distribute, transfer or sublicense), this software and its documentation for educational, research and non-profit purposes, without fee, and without a written agreement is hereby granted, provided that you comply with the following terms.  (To obtain a license for commercial use, please contact Rhiju Das (rhiju@stanford.edu), who will put you in contact with the Stanford Office of Technology Licensing)
 
 2. You agree to use this software solely for non-commercial internal research purposes and not for commercial use (which includes commercial research or consulting). You agree not to use this software for diagnosis, treatment, cure, prevention, or mitigation of disease or other conditions in man or other animals.  You agree to not distribute nor transfer this software to any other person.
 
-3. You agree to use this software solely for non-commercial research purposes. You represent and warrant that you are not an employee of a for-profit entity, and that your use of this software is not directed towards commercial advantage or for-profit activities. Commercial entities wishing to use this software should contact Stanford University's Office of Technology Licensing.
+3. You agree to use this software solely for non-commercial research purposes. You represent and warrant that you are not an employee of a for-profit entity, and that your use of this software is not directed towards commercial advantage or for-profit activities. Commercial entities wishing to use this software should contact Rhiju Das and Stanford University's Office of Technology Licensing.
 
 4. This software program and documentation are copyrighted by The Board of Trustees of the Leland Stanford Junior University ("Stanford"), and you agree to preserve the same.  You agree to assign to Stanford any changes or modifications made to this software and related materials. 
 
