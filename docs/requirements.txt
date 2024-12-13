@@ -1,0 +1,8 @@
+sphinx==8.1.3
+# Ideally we'd just reference the root requirements.txt, but the required versions are
+# ancient which makes building docs with a newer version of python ~impossible.
+# We should be able to get away with newer versions for the purposes of the docs
+# -r ../requirements.txt
+numpy==2.2.0
+matplotlib==3.9.4
+xlwt==1.3.0
