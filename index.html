@@ -12,7 +12,8 @@
     
 
     
-      <link rel="shortcut icon" href="_static/primerize_icon.png"/>
+      <link rel="shortcut icon" type="image/gif" href="_static/ribokit_icon.png" />
+      <link rel="icon" type="image/gif" href="_static/ribokit_icon.png" />
     
 
     <link rel="stylesheet" href="_static/css/styles.css" type="text/css" />
@@ -22,6 +23,8 @@
       
     
 
+    
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     
           <link rel="index" title="Index" href="genindex.html" />
@@ -105,7 +108,6 @@
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content.html">Modules</a></li>
 <li class="toctree-l1"><a class="reference internal" href="matlab.html">MATLAB <cite>(Deprecated)</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
 </ul>
 
         
@@ -113,34 +115,36 @@
 </nav>
       <section>
       
-  <div class="section" id="primerize-documentation">
-<h1><code class="docutils literal"><span class="pre">Primerize</span></code> Documentation<a class="headerlink" href="#primerize-documentation" title="Permalink to this headline">¶</a></h1>
-<a class="reference external image-reference" href="https://primerize.stanford.edu/"><img alt="Primerize Logo" class="align-right" src="_images/primerize_logo.png" style="width: 241.5px; height: 154.5px;" /></a>
-<p><code class="docutils literal"><span class="pre">Primerize</span></code> (previously named <code class="docutils literal"><span class="pre">NA_thermo</span></code>), is an archive of <em>Python</em> and <em>MATLAB</em> scripts for primer design and nucleic acid thermodynamic scripts developed by the <a class="reference external" href="https://daslab.stanford.edu/">Das Lab</a> at Stanford University for high-throughput RNA synthesis and design.</p>
-<p>The algorithm designs <em>forward</em> (sense strand) and <em>reverse</em> (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, <code class="docutils literal"><span class="pre">Primerize</span></code> is a special case of the general ‘<em>Gapped Oligo Design</em>’ algorithm, optimizing the mispriming score and sequence span instead of T<sub>m</sub>.</p>
+  <section id="primerize-documentation">
+<h1><code class="docutils literal notranslate"><span class="pre">Primerize</span></code> Documentation<a class="headerlink" href="#primerize-documentation" title="Link to this heading">¶</a></h1>
+<a class="reference external image-reference" href="https://primerize.stanford.edu/"><img alt="Primerize Logo" class="align-right" src="_images/primerize_logo.png" style="width: 241.5px; height: 154.5px;" />
+</a>
+<p><code class="docutils literal notranslate"><span class="pre">Primerize</span></code> (previously named <code class="docutils literal notranslate"><span class="pre">NA_thermo</span></code>), is an archive of <em>Python</em> and <em>MATLAB</em> scripts for primer design and nucleic acid thermodynamic scripts developed by the <a class="reference external" href="https://daslab.stanford.edu/">Das Lab</a> at Stanford University for high-throughput RNA synthesis and design.</p>
+<p>The algorithm designs <em>forward</em> (sense strand) and <em>reverse</em> (anti-sense strand) primers that minimize the total length, and therefore the total synthesis cost, of the oligonucleotides. Although developed independently, <code class="docutils literal notranslate"><span class="pre">Primerize</span></code> is a special case of the general ‘<em>Gapped Oligo Design</em>’ algorithm, optimizing the mispriming score and sequence span instead of T<sub>m</sub>.</p>
 <p>An online user-friendly GUI is available as the <a class="reference external" href="https://primerize.stanford.edu/">Primerize Server</a>.</p>
+<p>The code for Primerize is available at <cite>&lt;https://github.com/ribokit/Primerize&gt;`_</cite></p>
 <hr class="docutils" />
-<div class="section" id="table-of-contents">
-<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this headline">¶</a></h2>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#loop-optimization-with-numba-optional">Loop Optimization with <code class="docutils literal"><span class="pre">numba</span></code> <em>(Optional)</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#loop-optimization-with-numba-optional">Loop Optimization with <code class="docutils literal notranslate"><span class="pre">numba</span></code> <em>(Optional)</em></a></li>
 <li class="toctree-l2"><a class="reference internal" href="install.html#test">Test</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="content.html">Modules</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_1d.html"><code class="docutils literal"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.thermo.html"><code class="docutils literal"><span class="pre">primerize.thermo</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal"><span class="pre">primerize.util</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal"><span class="pre">primerize.util_class</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal"><span class="pre">primerize.util_func</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal"><span class="pre">primerize.util_server</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal"><span class="pre">primerize.wrapper</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_1d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.thermo.html"><code class="docutils literal notranslate"><span class="pre">primerize.thermo</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal notranslate"><span class="pre">primerize.util</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_class</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_func</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_server</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal notranslate"><span class="pre">primerize.wrapper</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="matlab.html">MATLAB <cite>(Deprecated)</cite></a><ul>
@@ -148,25 +152,29 @@
 <li class="toctree-l2"><a class="reference internal" href="matlab.html#usage">Usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
 </ul>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="experimental-protocol">
-<h2>Experimental Protocol<a class="headerlink" href="#experimental-protocol" title="Permalink to this headline">¶</a></h2>
+<section id="experimental-protocol">
+<h2>Experimental Protocol<a class="headerlink" href="#experimental-protocol" title="Link to this heading">¶</a></h2>
 <p>Please visit the <strong>Primerize</strong> server for a complete guidance on primer designs and RNA synthesis:</p>
 <ul class="simple">
-<li><a class="reference external" href="https://primerize.stanford.edu/protocol/#temp_design">DNA template design</a></li>
-<li><a class="reference external" href="https://primerize.stanford.edu/protocol/#IDT">IDT oligo ordering</a></li>
-<li><a class="reference external" href="https://primerize.stanford.edu/protocol/#PCR">PCR assembly</a></li>
-<li><a class="reference external" href="https://primerize.stanford.edu/protocol/#TX">in vitro transcription</a></li>
-<li><a class="reference external" href="https://primerize.stanford.edu/protocol/#par_prep">Massively parallel preparation</a></li>
+<li><p><a class="reference external" href="https://primerize.stanford.edu/protocol/#temp_design">DNA template design</a></p></li>
+<li><p><a class="reference external" href="https://primerize.stanford.edu/protocol/#IDT">IDT oligo ordering</a></p></li>
+<li><p><a class="reference external" href="https://primerize.stanford.edu/protocol/#PCR">PCR assembly</a></p></li>
+<li><p><a class="reference external" href="https://primerize.stanford.edu/protocol/#TX">in vitro transcription</a></p></li>
+<li><p><a class="reference external" href="https://primerize.stanford.edu/protocol/#par_prep">Massively parallel preparation</a></p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="reference">
-<h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
+<p>Copyright &amp;copy; of <strong>Biers</strong> <em>Source Code</em> is described in <a class="reference external" href="https://github.com/ribokit/Primerize/blob/master/LICENSE">LICENSE</a>.</p>
+</section>
+<hr class="docutils" />
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
 <div class="line-block">
 <div class="line">Tian, S., Yesselman, J.D., Cordero, P., and Das, R. (<strong>2015</strong>)</div>
 <div class="line"><a class="reference external" href="http://nar.oxfordjournals.org/content/43/W1/W522.full">Primerize: Automated Primer Assembly for Transcribing Interesting RNAs.</a></div>
@@ -176,21 +184,21 @@
 <div class="line"><a class="reference external" href="https://academic.oup.com/bioinformatics/article-abstract/33/9/1405/2801460/Primerize-2D-automated-primer-design-for-RNA">Primerize-2D: Automated Primer Design for RNA Multidimensional Chemical Mapping.</a></div>
 <div class="line"><em>Bioinformatics</em> <strong>33 (9)</strong>: 1405-1406.</div>
 </div>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="workflows">
-<h2>Workflows<a class="headerlink" href="#workflows" title="Permalink to this headline">¶</a></h2>
+<section id="workflows">
+<h2>Workflows<a class="headerlink" href="#workflows" title="Link to this heading">¶</a></h2>
 <ul class="simple">
-<li><a class="reference external" href="/workflows/from_scratch/">I have just discovered an RNA molecule</a></li>
-<li><a class="reference external" href="/workflows/2D_modeling/">I want to learn an RNA’s secondary structure</a></li>
-<li><a class="reference external" href="/workflows/mutation_rescue/">I want to test an RNA secondary structure model</a></li>
-<li><a class="reference external" href="/workflows/alternative_states/">I think my RNA has interesting alternative states</a></li>
+<li><p><a class="reference external" href="/workflows/from_scratch/">I have just discovered an RNA molecule</a></p></li>
+<li><p><a class="reference external" href="/workflows/2D_modeling/">I want to learn an RNA’s secondary structure</a></p></li>
+<li><p><a class="reference external" href="/workflows/mutation_rescue/">I want to test an RNA secondary structure model</a></p></li>
+<li><p><a class="reference external" href="/workflows/alternative_states/">I think my RNA has interesting alternative states</a></p></li>
 </ul>
 <hr class="docutils" />
 <p>Developed by <strong>Das lab</strong>, <cite>Leland Stanford Junior University</cite>.</p>
 <p>README by <a class="reference external" href="https://t47.io/">t47</a>, <em>January 2016</em>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
       </section>
@@ -206,13 +214,13 @@
 
     <p class="wrapper">
       <small>
-        &copy; Copyright 2008-2017 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
+        &copy; Copyright 2008-2024 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
       </small>
     </p>
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Jun 22, 2017.
+      <small>Last updated on</small> Dec 13, 2024.
       
     </p>
 
@@ -243,15 +251,13 @@
           };
       </script>
         
-        
-        
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+          <script type="text/javascript" src="_static/documentation_options.js"></script>
         
         
           <script type="text/javascript" src="_static/doctools.js"></script>
         
         
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+          <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
         
     
 

@@ -12,7 +12,8 @@
     
 
     
-      <link rel="shortcut icon" href="_static/primerize_icon.png"/>
+      <link rel="shortcut icon" type="image/gif" href="_static/ribokit_icon.png" />
+      <link rel="icon" type="image/gif" href="_static/ribokit_icon.png" />
     
 
     <link rel="stylesheet" href="_static/css/styles.css" type="text/css" />
@@ -23,11 +24,12 @@
     
 
     
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     
           <link rel="index" title="Index" href="genindex.html" />
           <link rel="search" title="Search" href="search.html" />
       <link rel="top" title="Primerize 1.6.4 : PCR Assembly Primer Design" href="index.html" />
-          <link rel="next" title="LICENSE" href="license.html" />
           <link rel="prev" title="primerize.wrapper Module" href="primerize.wrapper.html" /> 
 
     <script type="text/javascript">
@@ -89,8 +91,6 @@
             <li><a href="primerize.wrapper.html" class="button">&#x21E6;</a></li>
           
           
-            <li><a href="license.html" class="button">&#x21E8;</a></li>
-          
         </ul>
       </div>
   
@@ -115,7 +115,6 @@
 <li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
 </ul>
 
         
@@ -123,47 +122,47 @@
 </nav>
       <section>
       
-  <div class="section" id="matlab-deprecated">
-<h1>MATLAB <cite>(Deprecated)</cite><a class="headerlink" href="#matlab-deprecated" title="Permalink to this headline">¶</a></h1>
+  <section id="matlab-deprecated">
+<h1>MATLAB <cite>(Deprecated)</cite><a class="headerlink" href="#matlab-deprecated" title="Link to this heading">¶</a></h1>
 <p>Please note that <em>MATLAB</em> code is no longer actively under development or fully maintained.</p>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>To install <code class="docutils literal"><span class="pre">NA_Thermo</span></code>, simply:</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
+<p>To install <code class="docutils literal notranslate"><span class="pre">NA_Thermo</span></code>, simply:</p>
 <ul class="simple">
-<li>Download the zip or tar file of the repository and unpack; or:</li>
+<li><p>Download the zip or tar file of the repository and unpack; or:</p></li>
 </ul>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/ribokit/Primerize.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/ribokit/Primerize.git
 </pre></div>
 </div>
 <ul class="simple">
-<li>In <em>MATLAB</em>, go to &quot;<strong>Set Path</strong>&quot;. Then &quot;<strong>Add with Subfolders</strong>&quot; of the target <code class="docutils literal"><span class="pre">path/to/Primerize/MATLAB/Scripts/</span></code>.</li>
+<li><p>In <em>MATLAB</em>, go to “<strong>Set Path</strong>”. Then “<strong>Add with Subfolders</strong>” of the target <code class="docutils literal notranslate"><span class="pre">path/to/Primerize/MATLAB/Scripts/</span></code>.</p></li>
 </ul>
-</div>
+</section>
 <hr class="docutils" />
-<div class="section" id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
 <p>To design primers for your sequence, just follow these easy steps:</p>
 <ol class="arabic simple">
-<li>Define your sequence. For example:</li>
+<li><p>Define your sequence. For example:</p></li>
 </ol>
-<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="n">sequence</span> <span class="p">=</span> <span class="s">&#39;TTCTAATACGACTCACTATAGGCCAAAACAACGGAATTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGGGGAAACTTTGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAGCCAAGTCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCAAAGAAACAACAACAACAAC&#39;</span><span class="p">;</span>
-<span class="n">tag</span> <span class="p">=</span> <span class="s">&#39;P4P6&#39;</span><span class="p">;</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">sequence</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;TTCTAATACGACTCACTATAGGCCAAAACAACGGAATTGCGGGAAAGGGGTCAACAGCCGTTCAGTACCAAGTCTCAGGGGAAACTTTGAGATGGCCTTGCAAAGGGTATGGTAATAAGCTGACGGACATGGTCCTAACCACGCAGCCAAGTCCTAAGTCAACAGATCTTCTGTTGATATGGATGCAGTTCAAAACCAAACCAAAGAAACAACAACAACAAC&#39;</span><span class="p">;</span>
+<span class="n">tag</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;P4P6&#39;</span><span class="p">;</span>
 </pre></div>
 </div>
-<p>This sequences includes a 20-nucleotide <cite>T7 promoter</cite> sequence at the beginning, and then a construct (starting with <code class="docutils literal"><span class="pre">GG...</span></code>) encoding the <cite>P4-P6 domain</cite> of the Tetrahymena ribozyme along with flanking sequences.</p>
+<p>This sequences includes a 20-nucleotide <cite>T7 promoter</cite> sequence at the beginning, and then a construct (starting with <code class="docutils literal notranslate"><span class="pre">GG...</span></code>) encoding the <cite>P4-P6 domain</cite> of the Tetrahymena ribozyme along with flanking sequences.</p>
 <ol class="arabic simple" start="2">
-<li>Run with:</li>
+<li><p>Run with:</p></li>
 </ol>
-<div class="highlight-matlab"><div class="highlight"><pre><span></span><span class="n">primers</span> <span class="p">=</span> <span class="n">design_primers</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span> <span class="n">tag</span><span class="p">);</span>
+<div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">primers</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="n">design_primers</span><span class="p">(</span><span class="n">sequence</span><span class="p">,</span><span class="w"> </span><span class="n">tag</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>This will compute primers with minimal length, annealing temperatures above a cutoff (<strong>60 C</strong>, by default), through a recursive strategy. An additional score term helps avoid primers that share multiple 3' nucleotides with other parts of the sequence, as a heuristic to reduce mispriming. The algorithm has similarities (but was developed independently) of <cite>Thachuk &amp; Condon (2007), BIBE, Proc. of 7th IEEE International Conf., p. 123-130</cite>.</p>
-<p>If you want to use our original script (in use from 2008-2011), use <code class="docutils literal"><span class="pre">design_primers_OLD()</span></code>. (This was slower and did not rigorously optimize length.)</p>
+<p>This will compute primers with minimal length, annealing temperatures above a cutoff (<strong>60 C</strong>, by default), through a recursive strategy. An additional score term helps avoid primers that share multiple 3’ nucleotides with other parts of the sequence, as a heuristic to reduce mispriming. The algorithm has similarities (but was developed independently) of <cite>Thachuk &amp; Condon (2007), BIBE, Proc. of 7th IEEE International Conf., p. 123-130</cite>.</p>
+<p>If you want to use our original script (in use from 2008-2011), use <code class="docutils literal notranslate"><span class="pre">design_primers_OLD()</span></code>. (This was slower and did not rigorously optimize length.)</p>
 <ol class="arabic simple" start="3">
-<li>We usually copy/paste these to a Word or Excel document for easy look-up later. If you add primer labels, you can copy/paste these to the IDT website or wherever.</li>
+<li><p>We usually copy/paste these to a Word or Excel document for easy look-up later. If you add primer labels, you can copy/paste these to the IDT website or wherever.</p></li>
 </ol>
-</div>
-</div>
+</section>
+</section>
 
 
       </section>
@@ -179,13 +178,13 @@
 
     <p class="wrapper">
       <small>
-        &copy; Copyright 2008-2017 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
+        &copy; Copyright 2008-2024 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
       </small>
     </p>
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Jun 22, 2017.
+      <small>Last updated on</small> Dec 13, 2024.
       
     </p>
 
@@ -216,15 +215,13 @@
           };
       </script>
         
-        
-        
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+          <script type="text/javascript" src="_static/documentation_options.js"></script>
         
         
           <script type="text/javascript" src="_static/doctools.js"></script>
         
         
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+          <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
         
     
 

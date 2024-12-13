@@ -1,7 +1,7 @@
 Installation
 ------------------
 
-**Primerize** can be downloaded for non-commercial use at the `Primerize Server <https://primerize.stanford.edu/license/>`_. Commercial users, please `contact us <https://primerize.stanford.edu/about/#contact>`_.
+**Primerize** can be downloaded at `<https://github.com/ribokit/Primerize>`_.
 
 * Download the zip or tar file of the repository and unpack; or 
 

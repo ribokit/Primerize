@@ -12,7 +12,8 @@
     
 
     
-      <link rel="shortcut icon" href="_static/primerize_icon.png"/>
+      <link rel="shortcut icon" type="image/gif" href="_static/ribokit_icon.png" />
+      <link rel="icon" type="image/gif" href="_static/ribokit_icon.png" />
     
 
     <link rel="stylesheet" href="_static/css/styles.css" type="text/css" />
@@ -22,6 +23,8 @@
       
     
 
+    
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     
           <link rel="index" title="Index" href="genindex.html" />
@@ -111,20 +114,19 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="content.html">Modules</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.thermo.html"><code class="docutils literal"><span class="pre">primerize.thermo</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal"><span class="pre">primerize.util</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal"><span class="pre">primerize.util_class</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal"><span class="pre">primerize.util_func</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal"><span class="pre">primerize.util_server</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal"><span class="pre">primerize.wrapper</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.thermo.html"><code class="docutils literal notranslate"><span class="pre">primerize.thermo</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal notranslate"><span class="pre">primerize.util</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_class</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_func</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_server</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal notranslate"><span class="pre">primerize.wrapper</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="matlab.html">MATLAB <cite>(Deprecated)</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
 </ul>
 
         
@@ -132,119 +134,106 @@
 </nav>
       <section>
       
-  <div class="section" id="module-primerize.primerize_1d">
-<span id="primerize-primerize-1d-module"></span><h1><code class="docutils literal"><span class="pre">primerize.primerize_1d</span></code> Module<a class="headerlink" href="#module-primerize.primerize_1d" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="primerize.primerize_1d.Primerize_1D">
-<em class="property">class </em><code class="descclassname">primerize.primerize_1d.</code><code class="descname">Primerize_1D</code><span class="sig-paren">(</span><em>MIN_TM=60.0</em>, <em>NUM_PRIMERS=0</em>, <em>MIN_LENGTH=15</em>, <em>MAX_LENGTH=60</em>, <em>COL_SIZE=142</em>, <em>WARN_CUTOFF=3</em>, <em>prefix='primer'</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="primerize.thermo.html#primerize.thermo.Singleton" title="primerize.thermo.Singleton"><code class="xref py py-class docutils literal"><span class="pre">primerize.thermo.Singleton</span></code></a></p>
+  <section id="module-primerize.primerize_1d">
+<span id="primerize-primerize-1d-module"></span><h1><code class="docutils literal notranslate"><span class="pre">primerize.primerize_1d</span></code> Module<a class="headerlink" href="#module-primerize.primerize_1d" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">primerize.primerize_1d.</span></span><span class="sig-name descname"><span class="pre">Primerize_1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="primerize.thermo.html#primerize.thermo.Singleton" title="primerize.thermo.Singleton"><code class="xref py py-class docutils literal notranslate"><span class="pre">Singleton</span></code></a></p>
 <p>Construct a worker for 1D Primer Design (Simple Assembly).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>MIN_TM</strong> -- <code class="docutils literal"><span class="pre">float</span></code>: <cite>(Optional)</cite> Minimum annealing temperature for overlapping regions. Unit in Celsius. Positive number only.</li>
-<li><strong>NUM_PRIMERS</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Exact limit of number of primers in design. Non-negative even number only. <cite>0</cite> represents &quot;No limit&quot;.</li>
-<li><strong>MIN_LENGTH</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Minimum length allowed for each primer. Positive number only.</li>
-<li><strong>MAX_LENGTH</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Maximum length allowed for each primer. Positive number only.</li>
-<li><strong>COL_SIZE</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Column width for assembly output. Positive number only.</li>
-<li><strong>WARN_CUTOFF</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Threshold of pairing region length for misprime warning. Positive number only.</li>
-<li><strong>prefix</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> Construct prefix/name.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MIN_TM</strong> – <code class="docutils literal notranslate"><span class="pre">float</span></code>: <cite>(Optional)</cite> Minimum annealing temperature for overlapping regions. Unit in Celsius. Positive number only.</p></li>
+<li><p><strong>NUM_PRIMERS</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Exact limit of number of primers in design. Non-negative even number only. <cite>0</cite> represents “No limit”.</p></li>
+<li><p><strong>MIN_LENGTH</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Minimum length allowed for each primer. Positive number only.</p></li>
+<li><p><strong>MAX_LENGTH</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Maximum length allowed for each primer. Positive number only.</p></li>
+<li><p><strong>COL_SIZE</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Column width for assembly output. Positive number only.</p></li>
+<li><p><strong>WARN_CUTOFF</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Threshold of pairing region length for misprime warning. Positive number only.</p></li>
+<li><p><strong>prefix</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: <cite>(Optional)</cite> Construct prefix/name.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">primerize.Primerize_1D</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">primerize.Primerize_1D</span></code></p>
+</dd>
+</dl>
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This <code class="docutils literal"><span class="pre">class</span></code> follows the singleton pattern so that only one instance is created. An instance is already initialized as <code class="docutils literal"><span class="pre">primerize.Primerize_1D</span></code>.</p>
+<p class="admonition-title">Note</p>
+<p>This <code class="docutils literal notranslate"><span class="pre">class</span></code> follows the singleton pattern so that only one instance is created. An instance is already initialized as <code class="docutils literal notranslate"><span class="pre">primerize.Primerize_1D</span></code>.</p>
 </div>
-<dl class="method">
-<dt id="primerize.primerize_1d.Primerize_1D.__repr__">
-<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.__repr__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Representation of the <code class="docutils literal"><span class="pre">Primerize_1D</span></code> class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.__repr__" title="Link to this definition">¶</a></dt>
+<dd><p>Representation of the <code class="docutils literal notranslate"><span class="pre">Primerize_1D</span></code> class.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="primerize.primerize_1d.Primerize_1D.design">
-<code class="descname">design</code><span class="sig-paren">(</span><em>sequence</em>, <em>MIN_TM=None</em>, <em>NUM_PRIMERS=None</em>, <em>MIN_LENGTH=None</em>, <em>MAX_LENGTH=None</em>, <em>prefix=None</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.design" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D.design">
+<span class="sig-name descname"><span class="pre">design</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MIN_TM</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">NUM_PRIMERS</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MIN_LENGTH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MAX_LENGTH</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.design" title="Link to this definition">¶</a></dt>
 <dd><p>Run design code to get a PCR Assembly solution for input sequence under specified conditions. Current worker parameters are used for nonspecified optional arguments.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sequence</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Sequence for assembly design. Valid RNA/DNA sequence only, case insensitive.</li>
-<li><strong>MIN_TM</strong> -- <code class="docutils literal"><span class="pre">float</span></code>: <cite>(Optional)</cite> Minimum annealing temperature for overlapping regions.</li>
-<li><strong>NUM_PRIMERS</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Exact limit of number of primers in design.</li>
-<li><strong>MIN_LENGTH</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Minimum length allowed for each primer.</li>
-<li><strong>MAX_LENGTH</strong> -- <code class="docutils literal"><span class="pre">int</span></code>: <cite>(Optional)</cite> Maximum length allowed for each primer.</li>
-<li><strong>prefix</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: <cite>(Optional)</cite> Construct prefix/name.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: Sequence for assembly design. Valid RNA/DNA sequence only, case insensitive.</p></li>
+<li><p><strong>MIN_TM</strong> – <code class="docutils literal notranslate"><span class="pre">float</span></code>: <cite>(Optional)</cite> Minimum annealing temperature for overlapping regions.</p></li>
+<li><p><strong>NUM_PRIMERS</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Exact limit of number of primers in design.</p></li>
+<li><p><strong>MIN_LENGTH</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Minimum length allowed for each primer.</p></li>
+<li><p><strong>MAX_LENGTH</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code>: <cite>(Optional)</cite> Maximum length allowed for each primer.</p></li>
+<li><p><strong>prefix</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: <cite>(Optional)</cite> Construct prefix/name.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">primerize.Design_Single</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">primerize.Design_Single</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="primerize.primerize_1d.Primerize_1D.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.get" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.get" title="Link to this definition">¶</a></dt>
 <dd><p>Get current worker parameters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal"><span class="pre">'MIN_TM'</span></code>, <code class="docutils literal"><span class="pre">'NUM_PRIMERS'</span></code>, <code class="docutils literal"><span class="pre">'MIN_LENGTH'</span></code>, <code class="docutils literal"><span class="pre">'MAX_LENGTH'</span></code>, <code class="docutils literal"><span class="pre">'prefix'</span></code>; case insensitive.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">value of specified <strong>key</strong>.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal <strong>key</strong>.</td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are <code class="docutils literal notranslate"><span class="pre">'MIN_TM'</span></code>, <code class="docutils literal notranslate"><span class="pre">'NUM_PRIMERS'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MIN_LENGTH'</span></code>, <code class="docutils literal notranslate"><span class="pre">'MAX_LENGTH'</span></code>, <code class="docutils literal notranslate"><span class="pre">'prefix'</span></code>; case insensitive.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>value of specified <strong>key</strong>.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AttributeError</strong> – For illegal <strong>key</strong>.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="primerize.primerize_1d.Primerize_1D.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.reset" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.reset" title="Link to this definition">¶</a></dt>
 <dd><p>Reset current worker parameters to default.</p>
 </dd></dl>
 
-<dl class="method">
-<dt id="primerize.primerize_1d.Primerize_1D.set">
-<code class="descname">set</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.set" title="Permalink to this definition">¶</a></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="primerize.primerize_1d.Primerize_1D.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.primerize_1d.Primerize_1D.set" title="Link to this definition">¶</a></dt>
 <dd><p>Set current worker parameters.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>key</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are the same as <code class="docutils literal"><span class="pre">get()</span></code>.</li>
-<li><strong>value</strong> -- <code class="docutils literal"><span class="pre">(auto)</span></code>: New value for specified keyword. Type of value must match <strong>key</strong>.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: Keyword of parameter. Valid keywords are the same as <code class="docutils literal notranslate"><span class="pre">get()</span></code>.</p></li>
+<li><p><strong>value</strong> – <code class="docutils literal notranslate"><span class="pre">(auto)</span></code>: New value for specified keyword. Type of value must match <strong>key</strong>.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
-<li><code class="xref py py-exc docutils literal"><span class="pre">AttributeError</span></code> -- For illegal <strong>key</strong>.</li>
-<li><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> -- For illegal <strong>value</strong>.</li>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>AttributeError</strong> – For illegal <strong>key</strong>.</p></li>
+<li><p><strong>ValueError</strong> – For illegal <strong>value</strong>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
 
-</div>
+</section>
 
 
       </section>
@@ -260,13 +249,13 @@
 
     <p class="wrapper">
       <small>
-        &copy; Copyright 2008-2017 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
+        &copy; Copyright 2008-2024 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
       </small>
     </p>
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Jun 22, 2017.
+      <small>Last updated on</small> Dec 13, 2024.
       
     </p>
 
@@ -297,15 +286,13 @@
           };
       </script>
         
-        
-        
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+          <script type="text/javascript" src="_static/documentation_options.js"></script>
         
         
           <script type="text/javascript" src="_static/doctools.js"></script>
         
         
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+          <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
         
     
 

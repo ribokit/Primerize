@@ -12,7 +12,8 @@
     
 
     
-      <link rel="shortcut icon" href="_static/primerize_icon.png"/>
+      <link rel="shortcut icon" type="image/gif" href="_static/ribokit_icon.png" />
+      <link rel="icon" type="image/gif" href="_static/ribokit_icon.png" />
     
 
     <link rel="stylesheet" href="_static/css/styles.css" type="text/css" />
@@ -22,6 +23,8 @@
       
     
 
+    
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
     
           <link rel="index" title="Index" href="genindex.html" />
@@ -111,20 +114,19 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="example.html">Example Scripts</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="content.html">Modules</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_1d.html"><code class="docutils literal"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal"><span class="pre">primerize.thermo</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal"><span class="pre">primerize.util</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal"><span class="pre">primerize.util_class</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal"><span class="pre">primerize.util_func</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal"><span class="pre">primerize.util_server</span></code> Module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal"><span class="pre">primerize.wrapper</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_1d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_1d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_2d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_2d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_3d.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_3d</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.primerize_custom.html"><code class="docutils literal notranslate"><span class="pre">primerize.primerize_custom</span></code> Module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">primerize.thermo</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util.html"><code class="docutils literal notranslate"><span class="pre">primerize.util</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_class.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_class</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_func.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_func</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.util_server.html"><code class="docutils literal notranslate"><span class="pre">primerize.util_server</span></code> Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="primerize.wrapper.html"><code class="docutils literal notranslate"><span class="pre">primerize.wrapper</span></code> Module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="matlab.html">MATLAB <cite>(Deprecated)</cite></a></li>
-<li class="toctree-l1"><a class="reference internal" href="license.html">LICENSE</a></li>
 </ul>
 
         
@@ -132,122 +134,118 @@
 </nav>
       <section>
       
-  <div class="section" id="module-primerize.thermo">
-<span id="primerize-thermo-module"></span><h1><code class="docutils literal"><span class="pre">primerize.thermo</span></code> Module<a class="headerlink" href="#module-primerize.thermo" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter">
-<em class="property">class </em><code class="descclassname">primerize.thermo.</code><code class="descname">Nearest_Neighbor_Parameter</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#primerize.thermo.Singleton" title="primerize.thermo.Singleton"><code class="xref py py-class docutils literal"><span class="pre">primerize.thermo.Singleton</span></code></a></p>
+  <section id="module-primerize.thermo">
+<span id="primerize-thermo-module"></span><h1><code class="docutils literal notranslate"><span class="pre">primerize.thermo</span></code> Module<a class="headerlink" href="#module-primerize.thermo" title="Link to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">primerize.thermo.</span></span><span class="sig-name descname"><span class="pre">Nearest_Neighbor_Parameter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#primerize.thermo.Singleton" title="primerize.thermo.Singleton"><code class="xref py py-class docutils literal notranslate"><span class="pre">Singleton</span></code></a></p>
 <p>Wrapper object of Nearest Neighbor parameters; for internal use.</p>
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.T">
-<code class="descname">T</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.T" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">float</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.T">
+<span class="sig-name descname"><span class="pre">T</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.T" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delH_NN">
-<code class="descname">delH_NN</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_NN" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delH_NN">
+<span class="sig-name descname"><span class="pre">delH_NN</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_NN" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delS_NN">
-<code class="descname">delS_NN</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_NN" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delS_NN">
+<span class="sig-name descname"><span class="pre">delS_NN</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_NN" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delG_NN">
-<code class="descname">delG_NN</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_NN" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delG_NN">
+<span class="sig-name descname"><span class="pre">delG_NN</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_NN" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delH_AT_closing_penalty">
-<code class="descname">delH_AT_closing_penalty</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_AT_closing_penalty" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delH_AT_closing_penalty">
+<span class="sig-name descname"><span class="pre">delH_AT_closing_penalty</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_AT_closing_penalty" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delS_AT_closing_penalty">
-<code class="descname">delS_AT_closing_penalty</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_AT_closing_penalty" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delS_AT_closing_penalty">
+<span class="sig-name descname"><span class="pre">delS_AT_closing_penalty</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_AT_closing_penalty" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delG_AT_closing_penalty">
-<code class="descname">delG_AT_closing_penalty</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_AT_closing_penalty" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delG_AT_closing_penalty">
+<span class="sig-name descname"><span class="pre">delG_AT_closing_penalty</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_AT_closing_penalty" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(1,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delH_mismatch">
-<code class="descname">delH_mismatch</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_mismatch" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delH_mismatch">
+<span class="sig-name descname"><span class="pre">delH_mismatch</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_mismatch" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delS_mismatch">
-<code class="descname">delS_mismatch</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_mismatch" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delS_mismatch">
+<span class="sig-name descname"><span class="pre">delS_mismatch</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delS_mismatch" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delG_mismatch">
-<code class="descname">delG_mismatch</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_mismatch" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delG_mismatch">
+<span class="sig-name descname"><span class="pre">delG_mismatch</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delG_mismatch" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">numpy.array(float(4,</span> <span class="pre">4,</span> <span class="pre">4))</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.delH_init">
-<code class="descname">delH_init</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_init" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">float</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.delH_init">
+<span class="sig-name descname"><span class="pre">delH_init</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.delH_init" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd></dl>
 
-<dl class="attribute">
-<dt id="primerize.thermo.Nearest_Neighbor_Parameter.del_init">
-<code class="descname">del_init</code><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.del_init" title="Permalink to this definition">¶</a></dt>
-<dd><p><code class="docutils literal"><span class="pre">float</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="primerize.thermo.Nearest_Neighbor_Parameter.del_init">
+<span class="sig-name descname"><span class="pre">del_init</span></span><a class="headerlink" href="#primerize.thermo.Nearest_Neighbor_Parameter.del_init" title="Link to this definition">¶</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">float</span></code></p>
 </dd></dl>
 
 <div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">This <code class="docutils literal"><span class="pre">class</span></code> follows the singleton pattern so that only one instance is created. An instance is already initialized as <code class="docutils literal"><span class="pre">primerize.Nearest_Neighbor</span></code>.</p>
+<p class="admonition-title">Note</p>
+<p>This <code class="docutils literal notranslate"><span class="pre">class</span></code> follows the singleton pattern so that only one instance is created. An instance is already initialized as <code class="docutils literal notranslate"><span class="pre">primerize.Nearest_Neighbor</span></code>.</p>
 </div>
 </dd></dl>
 
-<dl class="class">
-<dt id="primerize.thermo.Singleton">
-<em class="property">class </em><code class="descclassname">primerize.thermo.</code><code class="descname">Singleton</code><a class="headerlink" href="#primerize.thermo.Singleton" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="primerize.thermo.Singleton">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">primerize.thermo.</span></span><span class="sig-name descname"><span class="pre">Singleton</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.thermo.Singleton" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Base class for singleton pattern</p>
 </dd></dl>
 
-<dl class="function">
-<dt id="primerize.thermo.calc_Tm">
-<code class="descclassname">primerize.thermo.</code><code class="descname">calc_Tm</code><span class="sig-paren">(</span><em>sequence</em>, <em>DNA_conc=1e-05</em>, <em>monovalent_conc=1.0</em>, <em>divalent_conc=0.0</em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.thermo.calc_Tm" title="Permalink to this definition">¶</a></dt>
+<dl class="py function">
+<dt class="sig sig-object py" id="primerize.thermo.calc_Tm">
+<span class="sig-prename descclassname"><span class="pre">primerize.thermo.</span></span><span class="sig-name descname"><span class="pre">calc_Tm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DNA_conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monovalent_conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divalent_conc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#primerize.thermo.calc_Tm" title="Link to this definition">¶</a></dt>
 <dd><p>Calculate melting temperature for a given sequence</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>sequence</strong> -- <code class="docutils literal"><span class="pre">str</span></code>: Annealing DNA sequence section.</li>
-<li><strong>DNA_conc</strong> -- <code class="docutils literal"><span class="pre">float</span></code>: <cite>(Optional)</cite> Concentration of DNA.</li>
-<li><strong>monovalent_conc</strong> -- <code class="docutils literal"><span class="pre">float</span></code>: <cite>(Optional)</cite> Monovalent cation concentration.</li>
-<li><strong>divalent_conc</strong> -- <code class="docutils literal"><span class="pre">float</span></code>: <cite>(Optional)</cite> Divalent cation concentration.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence</strong> – <code class="docutils literal notranslate"><span class="pre">str</span></code>: Annealing DNA sequence section.</p></li>
+<li><p><strong>DNA_conc</strong> – <code class="docutils literal notranslate"><span class="pre">float</span></code>: <cite>(Optional)</cite> Concentration of DNA.</p></li>
+<li><p><strong>monovalent_conc</strong> – <code class="docutils literal notranslate"><span class="pre">float</span></code>: <cite>(Optional)</cite> Monovalent cation concentration.</p></li>
+<li><p><strong>divalent_conc</strong> – <code class="docutils literal notranslate"><span class="pre">float</span></code>: <cite>(Optional)</cite> Divalent cation concentration.</p></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><code class="docutils literal"><span class="pre">float</span></code> -- Melting temperature in Celcius</p>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">float</span></code> – Melting temperature in Celcius</p>
+</dd>
+</dl>
 </dd></dl>
 
-</div>
+</section>
 
 
       </section>
@@ -263,13 +261,13 @@
 
     <p class="wrapper">
       <small>
-        &copy; Copyright 2008-2017 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
+        &copy; Copyright 2008-2024 The Board of Trustees of the Leland Stanford Junior University. All Rights Reserved.
       </small>
     </p>
 
     <p class="wrapper">
       
-      <small>Last updated on</small> Jun 22, 2017.
+      <small>Last updated on</small> Dec 13, 2024.
       
     </p>
 
@@ -300,15 +298,13 @@
           };
       </script>
         
-        
-        
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+          <script type="text/javascript" src="_static/documentation_options.js"></script>
         
         
           <script type="text/javascript" src="_static/doctools.js"></script>
         
         
-          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+          <script type="text/javascript" src="_static/sphinx_highlight.js"></script>
         
     
 
