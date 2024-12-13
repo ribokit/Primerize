@@ -12,7 +12,7 @@ setup(
     author_email='rhiju@stanford.edu',
 
     url='https://github.com/ribokit/Primerize/',
-    license='https://primerize.stanford.edu/license',
+    license='MIT',
 
     packages=find_packages(),
     install_requires=open('requirements.txt', 'r').readlines(),
