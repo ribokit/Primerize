@@ -207,7 +207,7 @@ class Design_Plate(object):
             self._data['illustration'] = util_server._draw_region(self.sequence, self._params)
         elif self.get('TYPE') == 'Mutation/Rescue':
             self._data['illustration'] = util_server._draw_str_region(self.sequence, self.structures, self._data['bps'], self._data['warnings'], self._params)
-            print util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset'])
+            print(util_func._print_pair_mismatch_warning(self.sequence, self._data['warnings'], self._params['offset']))
         else:
             self._data['illustration'] = {'lines': ''}
 

@@ -1,15 +1,27 @@
+set -e
+
 # start at /
 # e.g. run as docs/sphinx_make.sh
 cd docs
+
+mkdir -p source/_theme
+cd source/_theme
+if [ ! -d ribokit-Sphinx-theme ]; then
+    git clone https://github.com/ribokit/ribokit-Sphinx-theme/
+    cd ribokit-Sphinx-theme
+else
+    cd ribokit-Sphinx-theme
+    git fetch
+fi
+git checkout 90e4deea66cb17a6f7dcd7ccb6f619aa8e4e6279
+cd ../../..
+
 make clean
 make html
 
 cd build/html/_static/
 rm basic.css pygments.css
-rm jquery*.js underscore*.js
-rm ajax-loader.gif comment-bright.png comment-close.png comment.png down-pressed.png down.png file.png minus.png plus.png up-pressed.png up.png
-# rm -rf css/ fonts/ images/ js/
-# rm ribokit.gif
+rm file.png minus.png plus.png
 
 cd ../../../../
 

@@ -217,7 +217,7 @@ class Primerize_3D(Singleton):
 
         is_exclude = is_exclude if len(structures) > 1 else False
         bps = util.diff_bps(structures, flag=is_exclude)
-        bps = [filter(lambda (x, y): (x - offset in which_muts and y - offset in which_muts), helix) for helix in bps]
+        bps = [filter(lambda xy: (xy[0] - offset in which_muts and xy[1] - offset in which_muts), helix) for helix in bps]
         bps = filter(len, bps)
         if not bps:
             print('\033[41mFAIL\033[0m: \033[91mNo\033[0m base-pairs exist within given \033[92mstructures\033[0m and \033[92mwhich_muts\033[0m.\n')
