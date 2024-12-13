@@ -13,7 +13,7 @@ else
     cd ribokit-Sphinx-theme
     git fetch
 fi
-git checkout 90e4deea66cb17a6f7dcd7ccb6f619aa8e4e6279
+git checkout 0b57a28f712df24fc7bc15eaa79bf9bbed138329
 cd ../../..
 
 make clean

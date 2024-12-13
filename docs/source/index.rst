@@ -52,7 +52,7 @@ Please visit the **Primerize** server for a complete guidance on primer designs 
 License
 ----------------------------
 
-Copyright &copy; of **Biers** _Source Code_ is described in `LICENSE <https://github.com/ribokit/Primerize/blob/master/LICENSE>`_.
+Copyright &copy; of **Primerize** *Source Code* is described in `LICENSE <https://github.com/ribokit/Primerize/blob/master/LICENSE>`_.
 
 
 ----------
