@@ -14,6 +14,8 @@ The algorithm designs *forward* (sense strand) and *reverse* (anti-sense strand)
 
 An online user-friendly GUI is available as the `Primerize Server <https://primerize.stanford.edu/>`_.
 
+The code for Primerize is available at `<https://github.com/ribokit/Primerize>`_`
+
 ----------
 
 Table of Contents
@@ -27,7 +29,6 @@ Table of Contents
    example
    content
    matlab
-   license
 
 ----------
 
@@ -45,6 +46,14 @@ Please visit the **Primerize** server for a complete guidance on primer designs 
 * `in vitro transcription <https://primerize.stanford.edu/protocol/#TX>`_
 
 * `Massively parallel preparation <https://primerize.stanford.edu/protocol/#par_prep>`_
+
+----------
+
+License
+----------------------------
+
+Copyright &copy; of **Biers** _Source Code_ is described in `LICENSE <https://github.com/ribokit/Primerize/blob/master/LICENSE>`_.
+
 
 ----------
 
